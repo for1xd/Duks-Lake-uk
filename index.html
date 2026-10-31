@@ -2830,7 +2830,7 @@ async function boot(){
   db.collection('wObjects').onSnapshot(q=>{S.wObj=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
   db.collection('wMeters').onSnapshot(q=>{S.wMet=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
   db.collection('wPeriods').onSnapshot(q=>{S.wPerD={};q.docs.forEach(d=>{S.wPerD[d.id]=d.data()||{};});if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
-  db.collection('poker').onSnapshot(q=>{S.pkT=q.docs.map(d=>({id:d.id,...d.data()}));try{pkProgress();}catch(e){}setTimeout(()=>pkClaimOwed(),400);if(S.tab==='fun'&&S.funGame==='poker')pkRefresh();},()=>{});
+  db.collection('poker').onSnapshot(q=>{S.pkT=q.docs.map(d=>({id:d.id,...d.data()}));try{pkProgress();}catch(e){}setTimeout(()=>pkClaimOwed(),400);setTimeout(()=>pkJanitor(),1500);if(S.tab==='fun'&&S.funGame==='poker')pkRefresh();},()=>{});
   db.collection('wallets').onSnapshot(q=>{S.wal={};q.docs.forEach(d=>{S.wal[d.id]=d.data();});if(S.tab==='fun'&&S.funGame==='poker')pkRefresh();},()=>{});
   db.collection('games').onSnapshot(q=>{S.games=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='fun')render();},e=>fail(e));
   db.collection('shifts').onSnapshot(q=>{S.shifts=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='shift'||S.tab==='today')render();},e=>fail(e));
@@ -5030,8 +5030,21 @@ function pkShow(T,now){const h=T.hand;const live=pkLive(T);const ev={};live.forE
   Object.entries(won).forEach(([i,a])=>{if(T.seats[i])T.seats[i].stack+=a;});
   h.res={wins:Object.entries(won).filter(([,a])=>a>0).map(([i,a])=>({i:+i,amt:a,nm:pkNm(T,+i),hand:ev[i].name,best:ev[i].cards})),show:live,ev:Object.fromEntries(live.map(i=>[i,ev[i].name])),at:now};
   h.res.wins.forEach(w=>pkLog(T,w.nm+' виграє '+w.amt+' · '+w.hand));h.street='done';h.turn=-1;return true;}
-function pkTimeout(T,now){const h=T.hand;if(!h||h.street==='done'||h.turn<0||now<h.dl)return false;const i=h.turn;const s=T.seats[i];if(s){s.miss=(s.miss||0)+1;if(s.miss>=2)s.out=true;}
+function pkTimeout(T,now,force){const h=T.hand;if(!h||h.street==='done'||h.turn<0||(!force&&now<h.dl))return false;const i=h.turn;const s=T.seats[i];if(s){s.miss=(s.miss||0)+1;if(s.miss>=2)s.out=true;}
   return pkAct(T,i,h.curBet-h.p[i].bet>0?'fold':'check',0,now,true);}
+/* Хто з гравців зараз не в мережі (за статусом присутності застосунку) */
+function pkOffline(s){if(!s||s.bot||!S.pres||!Object.keys(S.pres).length)return false;const me=myStaff();if(me&&me.id===s.sid)return document.visibilityState!=='visible';
+  const p=S.pres[s.sid];if(!p)return true;const age=Date.now()-(p.at||0);return p.off?age>20000:age>180000;}
+function pkMarkOffline(X){let ch=false;X.seats.forEach(s=>{if(s&&!s.bot&&!s.out&&pkOffline(s)){s.out=true;ch=true;}});return ch;}
+/* Роздача, яку ніхто не веде понад 3 хв, скасовується: ставки повертаються гравцям */
+function pkCancelStale(X,now){const h=X.hand;if(!h||h.street==='done'||now-(X.upd||0)<180000)return false;
+  Object.keys(h.p).forEach(k=>{const s=X.seats[k];if(s)s.stack+=h.p[k].tot||0;});h.pot=0;Object.values(h.p).forEach(p=>{p.bet=0;p.tot=0;});
+  pkLog(X,'Роздачу скасовано — ставки повернуто');h.street='done';h.turn=-1;h.res={wins:[],show:[],at:now-PK_NEXT_MS};return true;}
+async function pkJanitor(){if(pkJanitor.busy||!S.db||!canPoker())return;const now=Date.now();pkJanitor.last=pkJanitor.last||{};pkJanitor.busy=true;
+  try{for(const T of pkTables()){if(now-(pkJanitor.last[T.id]||0)<30000)continue;const h=T.hand;const idle=!h||h.street==='done';
+      const need=(h&&h.street!=='done'&&now-(T.upd||0)>180000)||(idle&&(T.seats||[]).some(s=>s&&!s.bot&&(s.out||pkOffline(s))));if(!need)continue;pkJanitor.last[T.id]=now;
+      await pkMut(T.id,(X,n)=>{const a=pkCancelStale(X,n);const hh=X.hand;if(hh&&hh.street!=='done')return a?true:false;const b=pkMarkOffline(X);const c=pkSweep(X,n);return (a||b||c)?true:false;}).catch(()=>{});}}
+  finally{pkJanitor.busy=false;}}
 function pkOwe(T,sid,amt){amt=Math.round(amt||0);if(!sid||amt<=0||String(sid).startsWith('bot:'))return;T.owed=T.owed||{};(T.owed[sid]=T.owed[sid]||[]).push({k:Date.now().toString(36)+Math.random().toString(36).slice(2,7),a:amt});}
 /* Між роздачами: гравців, що відійшли, знімаємо зі столу, а їхні фішки відкладаємо до повернення в гаманець */
 function pkSweep(T,now){const h=T.hand;if(h&&h.street!=='done')return false;let ch=false;
@@ -5098,11 +5111,12 @@ function pkAway(away,now){const m=myStaff();if(!m||!S.db)return;clearTimeout(pkA
 async function pkBack(T){const i=pkMySeat(T);if(i<0)return;await pkMut(T.id,X=>{if(!X.seats[i])return false;X.seats[i].out=false;X.seats[i].miss=0;});}
 async function pkDo(T,kind,to){const i=pkMySeat(T);if(i<0)return;S.pkBusy=true;pkRefresh();
   const r=await pkMut(T.id,(X,now)=>pkAct(X,i,kind,to,now));S.pkBusy=false;S.pkRaise=null;if(!r)toast('Хід уже змінився');pkRefresh();}
-async function pkDeal(T){await pkMut(T.id,(X,now)=>{if(X.hand&&X.hand.street!=='done')return false;if(X.hand&&X.hand.res&&now<X.hand.res.at+PK_NEXT_MS-300)return false;const sw=pkSweep(X,now);const st=pkStart(X,now);return (sw||st)?true:false;});}
+async function pkDeal(T){await pkMut(T.id,(X,now)=>{if(X.hand&&X.hand.street!=='done')return false;if(X.hand&&X.hand.res&&now<X.hand.res.at+PK_NEXT_MS-300)return false;const mo=pkMarkOffline(X);const sw=pkSweep(X,now);const st=pkStart(X,now);return (mo||sw||st)?true:false;});}
 /* Автоматика: наступна роздача і пропуск ходу, коли гравець не відповідає */
 function pkSchedule(){clearTimeout(S.pkTm);if(S.tab!=='fun'||S.funGame!=='poker'||!S.pkTab)return;const T=pkTables().find(t=>t.id===S.pkTab);if(!T||pkMySeat(T)<0)return;
   const h=T.hand,now=Date.now();const jit=200+Math.random()*700;
-  if(h&&h.street==='done'&&h.res&&(pkReady(T).length>=2||T.seats.some(s=>s&&!s.bot&&s.out))){S.pkTm=setTimeout(()=>pkDeal(T),Math.max(0,h.res.at+PK_NEXT_MS-now)+jit);}
+  if(h&&h.street==='done'&&h.res&&(pkReady(T).length>=2||T.seats.some(s=>s&&!s.bot&&(s.out||pkOffline(s))))){S.pkTm=setTimeout(()=>pkDeal(T),Math.max(0,h.res.at+PK_NEXT_MS-now)+jit);}
+  else if(h&&h.street!=='done'&&h.turn>=0&&pkOffline(T.seats[h.turn])){const ti=h.turn;S.pkTm=setTimeout(()=>pkMut(T.id,(X,n)=>{const z=X.seats[ti];if(!z||!X.hand||X.hand.turn!==ti)return false;z.out=true;return pkTimeout(X,n,true);}),1500+jit);}
   else if(h&&h.street!=='done'&&h.turn>=0&&pkIsBot(T.seats[h.turn])){S.pkTm=setTimeout(()=>pkBotTurn(T),900+Math.random()*1500);}
   else if(h&&h.street!=='done'&&h.dl){S.pkTm=setTimeout(()=>pkMut(T.id,(X,n)=>pkTimeout(X,n)),Math.max(0,h.dl-now)+jit);}}
 setInterval(()=>{if(S.tab!=='fun'||S.funGame!=='poker')return;const now=Date.now();document.querySelectorAll('.pkr-tbar[data-dl]').forEach(b=>{const dl=+b.dataset.dl;const left=Math.max(0,dl-now);b.firstChild.style.width=(left/PK_TURN_MS*100)+'%';b.classList.toggle('low',left<8000);});
