@@ -2536,6 +2536,148 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 .pm-md{display:flex;flex-direction:column;align-items:flex-end;flex:none}.pm-md b{font-size:14px}.pm-md small{font-size:11.5px;font-weight:700}
 .rp-t .mt-st{white-space:normal}
 .pm-today .pm-c,.mt-card .pm-c{flex-wrap:wrap}.pm-today .pm-cr,.mt-card .pm-cr{max-width:none;width:100%;border-left:0;border-top:1px solid var(--line);padding:8px 0 0 52px}
+/* ===== Архітектура ===== */
+.ar-kpi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ar-k{display:flex;flex-direction:column;gap:2px;padding:14px}
+.ar-k span{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.ar-k b{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums;line-height:1.15}
+.ar-k small{font-size:12px;color:var(--muted);font-weight:600}
+.ar-search{flex-direction:row;align-items:center;gap:8px;background:var(--surface);border-radius:16px;padding:4px 6px 4px 14px;box-shadow:var(--shadow);color:var(--muted)}
+.ar-search>svg{width:20px;height:20px;flex:none}
+.ar-search input{border:0!important;background:transparent!important;padding:10px 4px;flex:1;min-width:0;color:var(--fg)}
+.ar-search input:focus{outline:none}
+.ar-clr{border:0;background:var(--surface-2);width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--muted);flex:none}
+.ar-clr svg{width:16px;height:16px}
+.ar-lt{flex:none;width:30px;height:30px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:15px;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2))}
+.ar-lt.big{width:48px;height:48px;border-radius:15px;font-size:22px;box-shadow:0 10px 20px -10px var(--c1)}
+.ar-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.ar-b{border:0;text-align:left;display:flex;flex-direction:column;gap:12px;color:inherit;font:inherit;width:100%;cursor:pointer;position:relative;overflow:hidden}
+.ar-b::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.ar-bh{display:flex;align-items:center;gap:12px}
+.ar-bt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ar-bt b{font-size:16px;line-height:1.25}
+.ar-bt small{font-size:13px;color:var(--muted);font-weight:600}
+.ar-bn{display:flex;align-items:baseline;gap:6px}
+.ar-bn b{font-family:var(--display);font-size:28px;font-variant-numeric:tabular-nums;line-height:1}
+.ar-bn span{color:var(--muted);font-weight:700}
+.ar-bar{display:flex;height:10px;border-radius:5px;overflow:hidden;gap:2px;background:var(--surface-2)}
+.ar-bar span{display:block;min-width:3px}
+.ar-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ar-chips span{font-size:12px;font-weight:800;padding:4px 9px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.ar-chips .ar-doc,.ar-doc{background:var(--ok-soft);color:var(--ok);font-size:12px;font-weight:800;padding:4px 9px;border-radius:999px}
+.ar-chips .ar-doc.plan,.ar-doc.plan{background:var(--amber-soft);color:var(--amber-ink)}
+.ar-ok{font-size:12px;font-weight:800;padding:4px 9px;border-radius:999px;background:var(--ok-soft);color:var(--ok)}
+.ar-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);font-weight:700}
+.ar-leg span{display:inline-flex;align-items:center;gap:6px}
+.ar-leg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.ar-leg b{color:var(--fg);font-variant-numeric:tabular-nums}
+.ar-cmp table{min-width:560px}
+.ar-cmp tbody tr{cursor:pointer}
+.ar-cmp tbody tr:hover td{background:var(--surface-2)}
+.ar-cmp td,.ar-cmp th{padding:10px 8px;text-align:right}
+.ar-cmp td.nm,.ar-cmp th.nm{text-align:left}
+.ar-tn{display:inline-flex;align-items:center;gap:8px}
+.ar-tn .ar-lt{width:24px;height:24px;font-size:12px;border-radius:8px}
+.ar-res{display:flex;flex-direction:column;gap:8px}
+.ar-ri{border:0;display:flex;align-items:center;gap:12px;text-align:left;width:100%;color:inherit;font:inherit;padding:12px 14px;cursor:pointer}
+.ar-rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ar-rt b{font-size:15px}
+.ar-rt small{font-size:12.5px;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ar-ra{font-variant-numeric:tabular-nums;white-space:nowrap}
+.ar-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px;border-radius:24px;background:linear-gradient(135deg,color-mix(in srgb,var(--c1) 18%,var(--surface)),var(--surface));box-shadow:var(--shadow)}
+.ar-ht{flex:1 1 220px;min-width:0}
+.ar-ht h2{margin:2px 0;font-size:19px;line-height:1.25}
+.ar-ht p{margin:0;color:var(--muted);font-weight:600;font-size:14px}
+.ar-hn{display:flex;flex-direction:column;align-items:flex-end}
+.ar-hn b{font-family:var(--display);font-size:26px;font-variant-numeric:tabular-nums;line-height:1.1}
+.ar-hn small{color:var(--muted);font-weight:700;font-size:12px}
+@media (max-width:520px){.ar-hn{align-items:flex-start;width:100%;flex-direction:row;align-items:baseline;gap:8px}}
+.ar-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:14px;background:var(--surface);box-shadow:var(--shadow)}
+.ar-seg button{border:0;background:transparent;border-radius:10px;min-height:42px;font-weight:800;color:var(--muted);padding:6px 10px}
+.ar-seg button[aria-selected="true"]{background:var(--accent);color:var(--accent-fg)}
+.ar-cols{display:flex;flex-direction:column;gap:12px}
+.ar-sh{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.ar-sh b{font-size:15px}
+.ar-stack{display:flex;flex-direction:column;gap:6px}
+.ar-floors{display:flex;flex-direction:column;gap:4px}
+.ar-fl{border:0;background:transparent;display:grid;grid-template-columns:34px minmax(0,1fr) 64px;align-items:center;gap:8px;padding:6px 6px;border-radius:12px;min-height:40px;color:inherit;font:inherit;text-align:left}
+.ar-fl:hover{background:var(--surface-2)}
+.ar-fl.on{background:var(--accent-soft);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.ar-fl.ug{border-top:2px dashed var(--line);border-radius:0 0 12px 12px;margin-top:4px}
+.ar-fn{font-family:var(--display);font-weight:700;font-size:15px;text-align:center}
+.ar-fw{display:block}
+.ar-fb{display:block;min-width:24px}
+.ar-fb .ar-bar{height:16px;border-radius:5px}
+.ar-fa{font-size:13px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.ar-fl.on .ar-fn,.ar-fl.on .ar-fa{color:var(--accent-ink)}
+.ar-det{display:flex;flex-direction:column;gap:10px;scroll-margin-top:90px}
+.ar-fh{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ar-pill{font-size:13px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ar-fk{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.ar-fkc{background:var(--surface);border-radius:14px;padding:10px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:1px}
+.ar-fkc small{font-size:12px;font-weight:700;color:var(--muted)}
+.ar-fkc b{font-family:var(--display);font-size:19px;font-variant-numeric:tabular-nums}
+.ar-h3{margin:6px 0 0;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.ar-units{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.ar-u{padding:0;overflow:hidden}
+.ar-u summary{list-style:none;display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;min-height:56px}
+.ar-u summary::-webkit-details-marker{display:none}
+.ar-uid{flex:none;min-width:44px;height:36px;padding:0 8px;border-radius:11px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:13px;background:color-mix(in srgb,var(--c1) 16%,var(--surface));color:var(--c1)}
+.ar-u.k-tech .ar-uid{background:var(--amber-soft);color:var(--amber-ink)}
+.ar-u.k-park .ar-uid{background:#DCE6FB;color:#2F54C6}
+.ar-ut{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.ar-ut b{font-size:15px}
+.ar-ut small{font-size:12.5px;color:var(--muted);font-weight:600}
+.ar-ua{display:flex;align-items:baseline;gap:3px;white-space:nowrap}
+.ar-ua b{font-family:var(--display);font-size:17px;font-variant-numeric:tabular-nums}
+.ar-ua small{font-size:12px;color:var(--muted);font-weight:700}
+.ar-u[open] summary{border-bottom:1px solid var(--line)}
+.ar-u.hi{box-shadow:0 0 0 2px var(--amber),var(--shadow)}
+.ar-rooms,.ar-common{display:flex;flex-direction:column;padding:4px 14px 8px}
+.ar-common{padding:6px 14px}
+.ar-room{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.ar-room:last-child{border-bottom:0}
+.ar-room.main span:nth-child(2){font-weight:800}
+.ar-room b{font-variant-numeric:tabular-nums}
+.ar-room.tot{font-weight:800}
+.ar-room.tot b{font-family:var(--display)}
+.ar-rn{font-size:12px;font-weight:800;color:var(--muted)}
+.ar-spots{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.ar-spot{background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:10px;display:flex;flex-direction:column;align-items:center;gap:2px;border-top:4px solid #5C8DF0}
+.ar-spot b{font-family:var(--display);font-size:20px}
+.ar-spot small{font-size:12px;color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums}
+.ar-spot.hi{box-shadow:0 0 0 2px var(--amber),var(--shadow)}
+.ar-dl,.ar-tep{display:grid;grid-template-columns:minmax(0,1fr);gap:0;margin:0}
+.ar-dl dt,.ar-tep dt{font-size:12px;font-weight:700;color:var(--muted);padding-top:8px}
+.ar-dl dd{margin:0;padding-bottom:8px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;font-weight:700;overflow-wrap:anywhere}
+.ar-dl dd span{flex:1;min-width:0}
+.ar-dl dd:last-child{border-bottom:0}
+.ar-tep{grid-template-columns:minmax(0,1fr) auto;column-gap:12px}
+.ar-tep dt{padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;font-weight:600}
+.ar-tep dd{margin:0;padding:9px 0;border-bottom:1px solid var(--line);font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.ar-tep dt:nth-last-child(2),.ar-tep dd:last-child{border-bottom:0}
+.ar-cp{border:0;background:var(--surface-2);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);flex:none}
+.ar-cp svg{width:16px;height:16px}
+.ar-pgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:start}
+.ar-eng{display:flex;flex-wrap:wrap;gap:8px}
+.ar-e{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:6px 10px 6px 8px;border-radius:999px;background:var(--ok-soft);color:var(--fg)}
+.ar-e svg{width:15px;height:15px;color:var(--ok);flex:none}
+.ar-e.no{background:var(--surface-2);color:var(--muted)}
+.ar-e.no svg{color:var(--warn)}
+.ar-land{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.ar-li .ar-sh{margin-bottom:6px}
+.ar-mono{font-variant-numeric:tabular-nums;letter-spacing:.01em;overflow-wrap:anywhere}
+@media (min-width:600px){.ar-kpi{grid-template-columns:repeat(4,minmax(0,1fr))}.ar-grid,.ar-units,.ar-land{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:900px){
+  .ar-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ar-cols{display:grid;grid-template-columns:320px minmax(0,1fr);gap:20px;align-items:start}
+  .ar-stack{position:sticky;top:96px}
+  .ar-pgrid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+  .ar-head{padding:22px 24px}.ar-ht h2{font-size:22px}
+}
+@media (min-width:1200px){.ar-units{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ar-u.k-park .ar-uid{background:#1F2D52;color:#A9C1F5}}
+:root[data-theme="dark"] .ar-u.k-park .ar-uid{background:#1F2D52;color:#A9C1F5}
 </style>
 
 <div id="scroller"><div class="wrap">
@@ -2780,7 +2922,7 @@ setInterval(()=>{if(WIDE.matches)renderHdrInfo();},30000);
 function render(){{const fe=document.fullscreenElement||document.webkitFullscreenElement;if(fe&&fe.classList&&fe.classList.contains('pk-3d')){S._pendRender=true;return;}}if(typeof dzTipOff==='function')dzTipOff();hwDeco();setTimeout(()=>{renderHdrInfo();tgHead();fitTitle();fancySel(document.getElementById('app'));},0);document.body.dataset.tab=S.tab;setTimeout(fitPad,0);setTimeout(chatFade,0);setTimeout(chatFade,300);requestAnimationFrame(fitTitle);setTimeout(fitTitle,250);updBar();
   asBar();if(!S.db)return;
   renderTabs();renderMe();if(S.loaded&&S.loaded.staff)welcomeMaybe();
-  const td=TABS.find(t=>t.id===S.tab);document.getElementById('pageTitle').textContent=(S.tab==='uk'&&S.wObjSel&&S.ukSec==='water')?((S.wObj.find(o=>o.id===S.wObjSel)||{}).name||'Об’єкт'):(S.tab==='uk'&&S.ukSec)?(WIDE.matches?UKS[S.ukSec].name:UKS[S.ukSec].short):(S.tab==='uk'&&S.fg)?(FG.find(g=>g.id===S.fg)||{}).name:(S.tab==='chat'&&S.room&&!WIDE2.matches)?roomMeta(S.room).name:td?tabName(td):(S.tab==='ticket'?'Запит':((staffById(S.viewSid)||{}).name||'Профіль'));
+  const td=TABS.find(t=>t.id===S.tab);document.getElementById('pageTitle').textContent=(S.tab==='uk'&&S.wObjSel&&S.ukSec==='water')?((S.wObj.find(o=>o.id===S.wObjSel)||{}).name||'Об’єкт'):(S.tab==='uk'&&S.ukSec)?(WIDE.matches?UKS[S.ukSec].name:UKS[S.ukSec].short):(S.tab==='uk'&&S.fg==='arch'&&S.arB)?arTitle():(S.tab==='uk'&&S.fg)?(FG.find(g=>g.id===S.fg)||{}).name:(S.tab==='chat'&&S.room&&!WIDE2.matches)?roomMeta(S.room).name:td?tabName(td):(S.tab==='ticket'?'Запит':((staffById(S.viewSid)||{}).name||'Профіль'));
   const app=document.getElementById('app');
   if(!S.loaded.staff){return;}
   const view={uk:viewUK,fun:viewFun,shift:viewShift,today:viewToday,schedule:viewSchedule,map:mapView,sos:viewSos,pm:viewPm,meet:viewMeet,tasks:viewTasks,team:viewTeam,chat:viewChat,profile:viewProfile,person:viewPerson,support:viewSupport,ticket:viewTicket}[S.tab]();
@@ -2833,10 +2975,10 @@ function placeComposer(){setTimeout(fitChatPad,0);requestAnimationFrame(placeAsi
 window.addEventListener('resize',()=>requestAnimationFrame(placeComposer));
 function drawFab(){const b=document.getElementById('toBottom');if(!b)return;const show=S.tab==='chat'&&!S.chatStick;b.hidden=!show;
   b.replaceChildren(...[svg('<path d="M12 5v14M6 13l6 6 6-6"/>'),S.belowNew?el('span',{class:'badge',text:String(S.belowNew)}):null].filter(Boolean));}
-function snap(){return {tab:S.tab,sid:S.viewSid,tk:S.viewTicket,room:S.room,uk:S.ukSec,wo:S.wObjSel,fg:S.fg};}
+function snap(){return {tab:S.tab,sid:S.viewSid,tk:S.viewTicket,room:S.room,uk:S.ukSec,wo:S.wObjSel,fg:S.fg,ab:S.arB,af:S.arF,at:S.arT};}
 function animIn(dir){const a=document.getElementById('app');a.style.transition='';a.style.transform='';a.style.opacity='';a.classList.remove('enter-l','enter-r');void a.offsetWidth;a.classList.add(dir>0?'enter-r':'enter-l');
   const t=document.getElementById('pageTitle');t.classList.remove('tfade');void t.offsetWidth;t.classList.add('tfade');}
-function go(id,opt){if(id==='uk'&&S.tab==='uk'&&(S.ukSec||S.fg)){closeMenu();S.hist=S.hist.filter(h=>h.tab!=='uk');S.ukSec=null;S.wObjSel=null;S.fg=null;SC().scrollTop=0;render();animIn(-1);return;}
+function go(id,opt){if(id==='uk'&&S.tab==='uk'&&(S.ukSec||S.fg)){closeMenu();S.hist=S.hist.filter(h=>h.tab!=='uk');S.ukSec=null;S.wObjSel=null;S.fg=null;S.arB=null;SC().scrollTop=0;render();animIn(-1);return;}
   if(id==='chat'&&S.tab==='chat'&&S.room&&!WIDE2.matches){closeMenu();S.hist=S.hist.filter(h=>h.tab!=='chat');S.room=null;SC().scrollTop=0;render();animIn(-1);return;}
   if(id===S.tab){closeMenu();SC().scrollTo({top:0,behavior:'smooth'});return;}if(id==='chat')S.room=null;if(id==='uk'){S.ukSec=null;S.wObjSel=null;}
   const order=TABS.map(t=>t.id);const dir=(S.tab==='person'||S.tab==='ticket')?-1:(order.indexOf(id)>order.indexOf(S.tab)?1:-1);
@@ -2846,7 +2988,7 @@ function go(id,opt){if(id==='uk'&&S.tab==='uk'&&(S.ukSec||S.fg)){closeMenu();S.h
   S.tab=id;S.chatStick=true;try{localStorage.setItem('dl.tab',id);}catch(e){}closeMenu();SC().scrollTop=0;render();animIn(dir);}
 function canBack(){if(S.tab==='chat'&&S.room&&!WIDE2.matches)return true;return S.hist.length>0||!(BAR.includes(S.tab)&&S.tab!=='chat');}
 function back(){closeMenu();const p=S.hist.pop();
-  if(p){S.tab=p.tab;S.viewSid=p.sid;S.viewTicket=p.tk;S.room=p.room||null;S.ukSec=p.uk||null;S.wObjSel=p.wo||null;S.fg=p.fg||null;}else if(S.tab==='chat'&&S.room){S.room=null;}else{S.tab='today';}
+  if(p){S.tab=p.tab;S.viewSid=p.sid;S.viewTicket=p.tk;S.room=p.room||null;S.ukSec=p.uk||null;S.wObjSel=p.wo||null;S.fg=p.fg||null;S.arB=p.ab||null;S.arF=p.af==null?null:p.af;S.arT=p.at||'fl';S.arHi=null;}else if(S.tab==='chat'&&S.room){S.room=null;}else{S.tab='today';}
   S.chatStick=true;try{if(TABS.some(t=>t.id===S.tab))localStorage.setItem('dl.tab',S.tab);}catch(e){}SC().scrollTop=0;render();animIn(-1);}
 function initEdgeSwipe(){let st=null,raf=0;const app=()=>document.getElementById('app');
   const ind=el('div',{class:'edge-ind','aria-hidden':'true'},svg('<path d="M15 5l-7 7 7 7"/>'));document.body.append(ind);
@@ -5572,20 +5714,123 @@ function ukStat(id){try{
 }catch(e){}return null;}
 const FG=[
  {id:'obl',name:'Облік',sub:'Вода, сміття, дебіторка, паркінг, інвентар, електроенергія',c1:'#1F6F78',c2:'#3aa7a0',ic:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'},
- {id:'arch',name:'Архітектура та інформація',sub:'Плани, креслення, технічні паспорти',c1:'#5B6CD9',c2:'#8A9BF2',ic:'<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>',plan:[['📐','Плани поверхів і креслення','PDF та схеми по кожному будинку'],['📘','Технічні паспорти','Площі, приміщення, інженерні мережі'],['🗺','Карта території','Зони, комунікації, точки обліку']]},
+ {id:'arch',name:'Архітектура та інформація',sub:'Техпаспорти, поверхи, приміщення й площі',c1:'#5B6CD9',c2:'#8A9BF2',ic:'<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>',plan:[['📐','Плани поверхів і креслення','PDF та схеми по кожному будинку'],['📘','Технічні паспорти','Площі, приміщення, інженерні мережі'],['🗺','Карта території','Зони, комунікації, точки обліку']]},
  {id:'docs',name:'Документи УК',sub:'Договори, акти, накази, регламенти',c1:'#B0742A',c2:'#E2A75A',ic:'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h8"/>',plan:[['📄','Договори з резидентами та підрядниками','Строки дії й нагадування'],['🧾','Акти виконаних робіт','Підписані акти по місяцях'],['📌','Регламенти та накази','Внутрішні правила УК']]},
  {id:'clean',name:'Клінінг',sub:'Чек-листи, графік прибирання, контроль якості',c1:'#2E8B5E',c2:'#7BC47F',ic:'<path d="M14 3 9 14"/><path d="M5 14h9l1 7H4z"/><path d="M17 8l2-2M19 12h2M18 16l2 1"/>',plan:[['✅','Чек-листи прибирання','По зонах і будинках'],['📅','Графік прибирання','Щоденні та генеральні'],['⭐','Контроль якості','Фото до/після та оцінки']]},
  {id:'dev',name:'Dev-панель',sub:'Журнал дій, помилки, стан бази, експорт',c1:'#334155',c2:'#64748B',ic:'<path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/>',dev:true},
  {id:'res',name:'Резиденти',sub:'Орендарі, приміщення, контакти, звернення',c1:'#C2416B',c2:'#EA7E9E',ic:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.8c1.6.8 2.6 2.5 3 5.2"/>',plan:[['🏢','Картки резидентів','Приміщення, площа, контакти'],['📨','Звернення резидентів','Заявки й статус виконання'],['💳','Зв’язок з дебіторкою','Борги кожного резидента']]}];
 function fgHome(){const out=[el('section',{class:'uk-hero'},el('span',{class:'eyebrow',text:'Duck’s Lake'}),el('h2',{text:'Facility відділ'}),el('p',{text:'Облік, архітектура, документи, клінінг і резиденти — усе для керування територією.'}))];
-  out.push(el('div',{class:'uk-grid'},FG.filter(g=>!g.dev||isDev()).map(g=>{const st=g.id==='dev'?[String((S.log||[]).filter(x=>Date.now()-x.at<864e5).length)+' дій',(S.log||[]).filter(x=>x.kind==='err'&&Date.now()-x.at<864e5).length+' помилок за 24 год']:g.id==='obl'?[Object.keys(UKS).length+' блоків','вода, сміття, дебіторка…']:null;return el('button',{type:'button',class:'uk-tile'+(st?'':' soon-t'),style:'--c1:'+g.c1+';--c2:'+g.c2,onclick:()=>openFg(g.id)},
+  out.push(el('div',{class:'uk-grid'},FG.filter(g=>!g.dev||isDev()).map(g=>{const st=g.id==='dev'?[String((S.log||[]).filter(x=>Date.now()-x.at<864e5).length)+' дій',(S.log||[]).filter(x=>x.kind==='err'&&Date.now()-x.at<864e5).length+' помилок за 24 год']:g.id==='arch'?[ARCH.length+' будівель',Math.round(arTotalAll()).toLocaleString('uk-UA')+' м² за паспортами']:g.id==='obl'?[Object.keys(UKS).length+' блоків','вода, сміття, дебіторка…']:null;return el('button',{type:'button',class:'uk-tile'+(st?'':' soon-t'),style:'--c1:'+g.c1+';--c2:'+g.c2,onclick:()=>openFg(g.id)},
     el('div',{class:'uk-tt'},el('span',{class:'uk-ic'},svg(g.ic)),st?null:el('span',{class:'soon',text:'скоро'}),el('span',{class:'uk-go'},svg('<path d="m9 6 6 6-6 6"/>'))),
     el('span',{class:'uk-t'},el('b',{text:g.name}),el('small',{text:g.sub})),el('span',{class:'uk-st'},st?[el('b',{text:st[0]}),el('small',{text:st[1]})]:el('small',{text:'Розділ у розробці'})));})));return out;}
+const ARCH=[{"id":"b1","lt":"Б","gen":"№1","name":"Спортивно-офісний центр","full":"Спортивно-офісний центр (будинок №1 на генплані)","addr":"вул. Стрийська — вул. Наукова","doc":{"kind":"Технічний паспорт","reg":"TI01:1296-2306-6896-1107","no":"073/2025 від 18.06.2025","made":"18.06.2025","obj":"01.2401621.4980129.20240801.42.0000.57","client":"ТОВ «Дакс Лейк Офіс» (44486655)","permit":"ЛВ112193021330"},"tep":[["Площа забудови","953 м²"],["Загальна площа будівлі","4 517 м²"],["Загальна площа приміщень","4 382,4 м²"],["Корисна площа","4 173,3 м²"],["МЗК (загального користування)","546,2 м²"],["Поверхів","6 надземних"],["Будівельний об’єм","19 580 м³"],["Робочих місць","318"],["Електроенергія на рік","892,36 МВт·год"],["Теплова енергія на рік","694,5 Гкал"],["Вода на рік","2,665 тис. м³"],["Тривалість будівництва","15,5 міс"],["Строк експлуатації","100 років"]],"eng":[["Опалення","місцеве"],["Вентиляція",1],["Водопостачання",1],["Каналізація","центральна"],["Електропостачання",1],["Блискавкозахист",1],["Ліфт",1],["Слабкострумні мережі",0]],"land":[{"cad":"4610136900:09:009:0068","ha":1.117,"use":"07.02 — для будівництва та обслуговування об’єктів фізичної культури і спорту"},{"cad":"4610136900:09:009:0069","ha":1.3348,"use":"03.08 — для будівництва та обслуговування об’єктів туристичної інфраструктури та закладів громадського харчування"}],"floors":[{"f":"1","c":[["I","вестибюль",54.3],["II","тамбур шлюз",3.2],["III","сходова",17.4],["IV","ліфтова шахта",3.7],["V","ліфтова шахта",3.7],["VI","ліфтовий хол",9.9],["VII","приміщення укриття",16.7],["VIII","пожежний пост",15.4],["IX","сходова",17.4]],"u":[["100",[["1","нежитлове",104.2]]],["101",[["1","приміщення РУ",21.1],["2","трансформаторна",8.8],["3","трансформаторна",8.9],["4","приміщення РУ",17.7],["5","вузол вводу",15.7]]],["102",[["1","нежитлове",64.5]]],["103",[["1","нежитлове",90.3]]],["104",[["1","нежитлове",104.3]]],["105",[["1","нежитлове",135.3]]]]},{"f":"2","c":[["X","сходова",17.4],["XI","тамбур шлюз",3.1],["XII","коридор",13.9],["XIII","протиосколкове укриття",23.5],["XIV","тамбур",3.1],["XV","сходова",17.4],["XVI","підсобне приміщення",2.9],["XVII","електрощитова",0.6]],"u":[["201",[["1","нежитлове",655.2]]]]},{"f":"3","c":[["XVIII","сходова",17.5],["XIX","тамбур шлюз",3.1],["XX","коридор",13.9],["XXI","протиосколкове укриття",22.2],["XXII","тамбур",3.1],["XXIII","сходова",17.5],["XXIV","підсобне приміщення",2.9],["XXV","електрощитова",0.6]],"u":[["301",[["1","нежитлове",657.7],["2","лоджія",3.7]]]]},{"f":"4","c":[["XXVI","сходова",17.4],["XXVII","тамбур шлюз",3.1],["XXVIII","коридор",13.9],["XXIX","протиосколкове укриття",22.2],["XXX","тамбур",3.1],["XXXI","сходова",17.5],["XXXII","підсобне приміщення",3.0],["XXXIII","електрощитова",0.6]],"u":[["401",[["1","нежитлове",655.1],["2","лоджія",3.7]]]]},{"f":"5","c":[["XXXIV","сходова",17.4],["XXXV","тамбур шлюз",3.0],["XXXVI","коридор",13.8],["XXXVII","протиосколкове укриття",22.3],["XXXVIII","тамбур",3.1],["XXXIX","сходова",17.4],["XL","підсобне приміщення",3.0],["XLI","електрощитова",0.6]],"u":[["501",[["1","нежитлове",651.7],["2","лоджія",3.7]]]]},{"f":"6","c":[["XLII","сходова",17.4],["XLIII","тамбур шлюз",3.1],["XLIV","коридор",13.8],["XLV","протиосколкове укриття",22.1],["XLVI","тамбур",3.1],["XLVII","сходова",17.4],["XLVIII","підсобне приміщення",2.9],["XLIX","електрощитова",0.6]],"u":[["601",[["1","нежитлове",620.7],["2","лоджія",13.9]]]]}]},{"id":"b2","lt":"В","gen":"№2","name":"Офісна будівля з паркінгом","full":"Офісна будівля з вбудованим приміщенням громадського призначення та паркінгом (будинок №2 на генплані)","addr":"вул. Стрийська — вул. Наукова","doc":{"kind":"Технічний паспорт, редакція №2","reg":"TI01:6940-4683-7506-2110","no":"086/2025 від 30.06.2025","made":"30.06.2025","obj":"01.2401672.4980031.20231003.85.0000.51","client":"ТОВ «Агенція «Європростір» (34605971)","permit":"ЛВ012231120278"},"tep":[["Площа забудови","1 596 м²"],["Загальна площа","6 706,4 м²"],["Корисна площа","6 451,1 м²"],["МЗК (загального користування)","911,7 м²"],["Поверхів","6 надземних + підвал"],["Висота будівлі","23,83 м"],["Будівельний об’єм","30 845 м³"],["Машиномісць","16"],["Робочих місць","355"],["Електроенергія на рік","728,1 МВт·год"],["Теплова енергія на рік","682,7 Гкал"],["Вода на рік","2,658 тис. м³"],["Будівництво","2023–2025, 18 міс"]],"eng":[["Опалення","місцеве"],["Вентиляція",1],["Водопостачання",1],["Каналізація",1],["Електропостачання",1],["Слабкострумні мережі",1],["Блискавкозахист",1],["Домофон",1],["Автоматизація й диспетчеризація",1],["Газопостачання",0]],"land":[{"cad":"4610136900:09:009:0069","ha":1.3348,"use":"03.08 — для будівництва та обслуговування об’єктів туристичної інфраструктури та закладів громадського харчування"}],"floors":[{"f":"пд","c":[["XLII","ліфтовий хол",20.8],["XLIII","проїзд",326.4],["XLIV","сходова",12.7],["XLV","електрощитова",14.2],["XLVI","насосна",34.0]],"u":[["П101",[["1","нежитлове",40.5],["2","коридор",8.1],["3","санвузол",1.5],["4","санвузол",2.7],["5","санвузол",2.9],["6","нежитлове",16.2]]],["П102",[["1","нежитлове",179.6]]],["П103",[["1","нежитлове",172.2]]],["П104",[["1","трансформаторна",38.7],["2","трансформаторна",9.5],["3","трансформаторна",9.6],["4","приміщення РУ",30.0],["5","приміщення вводу кабелів",8.8]]],["П105",[["1","приміщення ССМ",12.4]]],["П/М-1",[["","машиномісце",13.5]]],["П/М-2",[["","машиномісце",13.1]]],["П/М-3",[["","машиномісце",13.4]]],["П/М-4",[["","машиномісце",18.5]]],["П/М-5",[["","машиномісце",22.4]]],["П/М-6",[["","машиномісце",22.7]]],["П/М-7",[["","машиномісце",22.1]]],["П/М-8",[["","машиномісце",20.6]]],["П/М-9",[["","машиномісце",16.0]]],["П/М-10",[["","машиномісце",20.7]]],["П/М-11",[["","машиномісце",20.3]]],["П/М-12",[["","машиномісце",20.1]]],["П/М-13",[["","машиномісце",16.0]]],["П/М-14",[["","машиномісце",19.0]]],["П/М-15",[["","машиномісце",23.7]]],["П/М-16",[["","машиномісце",21.9]]]]},{"f":"1","c":[["I","вестибюль",37.6],["II","ліфтовий хол",20.1],["III","ліфтова шахта",3.7],["IV","ліфтова шахта",3.7],["V","тамбур",8.6],["VI","сходова",18.8],["VII","коридор",16.4],["VIII","сходова",13.0]],"u":[["101",[["1","нежитлове",131.5]]],["102",[["1","нежитлове",111.4],["2","санвузол",4.2],["3","санвузол",4.2],["4","комора",3.8],["5","коридор",19.8],["6","роздягалка",4.2],["7","душова",3.0],["8","санвузол",3.4],["9","доготівельне приміщення",34.1],["10","побутова персоналу",17.7],["11","мийна",12.1],["12","комора",6.3],["13","тамбур",10.5]]],["103",[["1","нежитлове",235.7],["2","санвузол",3.6],["3","тамбур",8.8]]],["104",[["1","нежитлове",328.9],["2","санвузол",3.8],["3","тамбур",14.8]]]]},{"f":"2","c":[["IX","ліфтовий хол",10.7],["X","тамбур",2.6],["XI","сходова",19.0],["XII","коридор",25.8],["XIII","тамбур",3.1],["XIV","сходова",19.0],["XV","допоміжне",3.9],["XVI","тераса",64.4]],"u":[["201",[["1","нежитлове",212.2],["2","тераса",25.5],["3","санвузол",4.4],["4","санвузол",4.0]]],["202",[["1","нежитлове",691.9],["2","тераса",68.4],["3","санвузол",6.7],["4","санвузол",6.9]]]]},{"f":"3","c":[["XVII","ліфтовий хол",10.7],["XVIII","тамбур",2.6],["XIX","сходова",19.0],["XX","тамбур",3.2],["XXI","сходова",18.9],["XXII","допоміжне",4.0]],"u":[["301",[["1","нежитлове",291.1],["2","санвузол",4.4],["3","санвузол",4.5]]],["302",[["1","нежитлове",629.4],["2","лоджія",5.8],["3","сходова",14.3],["4","санвузол",6.3],["5","санвузол",5.8]]]]},{"f":"4","c":[["XXIII","ліфтовий хол",10.7],["XXIV","тамбур",2.6],["XXV","сходова",19.0],["XXVI","тамбур",3.2],["XXVII","сходова",18.9],["XXVIII","допоміжне",4.0]],"u":[["401",[["1","нежитлове",640.4],["2","лоджія",6.8],["3","санвузол",5.8],["4","санвузол",6.3],["5","тераса",39.0]]],["302",[["6","тераса",51.4]]]]},{"f":"5","c":[["XXIX","ліфтовий хол",10.7],["XXX","тамбур",2.6],["XXXI","сходова",19.0],["XXXII","тамбур",3.2],["XXXIII","сходова",18.9],["XXXIV","допоміжне",4.0]],"u":[["501",[["1","нежитлове",325.1],["2","санвузол",5.0],["3","санвузол",5.6]]],["502",[["1","нежитлове",304.3],["2","санвузол",5.3],["3","лоджія",7.0],["4","санвузол",5.6]]]]},{"f":"6","c":[["XXXV","ліфтовий хол",10.7],["XXXVI","тамбур",2.6],["XXXVII","сходова",18.5],["XXXIX","тамбур",3.3],["XL","сходова",18.9],["XLI","допоміжне",4.0]],"u":[["601",[["1","нежитлове",578.2],["2","тераса",19.0],["3","санвузол",4.7],["4","санвузол",5.1]]]]}]},{"id":"b3","lt":"Д","gen":"1-Е","name":"Спортивно-офісний центр 1-Е","full":"Спортивно-офісний центр","addr":"вул. Академіка Підстригача, 1-Е","doc":{"kind":"Технічний паспорт","reg":"TI01:9895-9621-6007-2294","no":"003/2026 від 28.01.2026","made":"28.01.2026","obj":"01.2401609.4980079.20240801.24.0000.12","client":"ТОВ «Агенція «Європростір» (34605971), ТОВ «Дакс Лейк Офіс» (44486655)","permit":"ЛВ112193013116"},"tep":[["Площа забудови","835 м²"],["Загальна площа","5 104 м²"],["Корисна площа","4 856,3 м²"],["МЗК (загального користування)","470,7 м²"],["Поверхів","7 надземних"],["Гранична висота","26,3 м"],["Будівельний об’єм","22 211 м³"],["Рік завершення","2026"]],"eng":[["Опалення","місцеве"],["Водопостачання",1],["Каналізація",1],["Електропостачання",1],["Ліфт",1],["Газопостачання",0],["Сміттєпровід",0]],"cons":[["Фундамент","з/б плита"],["Стіни","керамічні блоки, з/б колони"],["Перекриття","з/б моноліт"],["Покрівля","ПВХ мембрана"],["Підлога","цементна стяжка"],["Сходи","з/б"]],"land":[{"cad":"4610136900:09:009:0069","ha":1.3348,"use":"03.08 — для будівництва та обслуговування об’єктів туристичної інфраструктури та закладів громадського харчування"},{"cad":"4610136900:09:009:0068","ha":1.117,"use":"07.02 — для будівництва та обслуговування об’єктів фізичної культури і спорту"}],"floors":[{"f":"1","c":[["1","вестибюль",57.2],["2","вузол вводу",16.2],["3","сходова",13.5],["4","підсобне",24.0],["5","ліфтовий хол",10.3],["6","ліфтова шахта",5.4],["7","ліфтова шахта",3.7],["8","ліфтова шахта",3.7],["9","тамбур",3.9],["10","сходова",12.9]],"u":[["101",[["1","нежитлове",82.2],["2","санвузол",3.9]]],["102",[["1","нежитлове",147.5],["2","санвузол",4.3]]],["103",[["1","нежитлове",63.7],["2","санвузол",4.3]]],["104",[["1","нежитлове",54.5],["2","санвузол",3.0]]],["105",[["1","нежитлове",54.7],["2","санвузол",3.0]]],["106",[["1","нежитлове",25.8],["2","санвузол",3.1]]],["107",[["1","нежитлове",53.4],["2","санвузол",3.3]]],["108",[["1","нежитлове",53.6],["2","санвузол",3.4]]]]},{"f":"2","c":[["11","сходова",17.4],["12","тамбур",3.1],["13","коридор",7.5],["14","коридор",10.1],["15","коридор",13.1],["16","підсобне",4.2],["17","підсобне",0.6],["18","тамбур",3.1],["19","сходова",17.5]],"u":[["201",[["1","нежитлове",307.9],["2","санвузол",5.3],["3","санвузол",7.5]]],["202",[["1","нежитлове",319.1],["2","санвузол",7.2],["3","санвузол",6.4],["4","службове",14.1]]]]},{"f":"3","c":[["20","сходова",17.4],["21","тамбур",3.1],["22","тамбур",3.1],["23","сходова",17.5]],"u":[["301",[["1","коридор",4.6],["2","коридор",9.5],["3","підсобне",4.2],["4","підсобне",0.6],["5","службове",12.0],["6","нежитлове",641.3],["7","санвузол",5.2],["8","санвузол",5.8],["9","санвузол",4.3],["10","санвузол",3.3],["11","санвузол",4.5]]]]},{"f":"4","c":[["24","сходова",17.4],["25","тамбур",3.1],["26","коридор",11.0],["27","коридор",9.7],["28","коридор",12.9],["29","підсобне",4.2],["30","підсобне",0.6],["31","тамбур",3.1],["32","сходова",17.4]],"u":[["401",[["1","нежитлове",138.4],["2","санвузол",5.8]]],["402",[["1","нежитлове",163.3],["2","санвузол",4.3]]],["403",[["1","нежитлове",169.0],["2","санвузол",5.4]]],["404",[["1","нежитлове",137.3],["2","санвузол",4.9]]],["405",[["1","нежитлове",12.1]]]]},{"f":"5","c":[["33","сходова",17.4],["34","тамбур",3.2],["35","тамбур",3.1],["36","сходова",17.4]],"u":[["501",[["1","коридор",5.0],["2","коридор",10.3],["3","підсобне",4.3],["4","підсобне",0.6],["5","службове",12.1],["6","нежитлове",635.2],["7","санвузол",3.5],["8","санвузол",3.3],["9","санвузол",3.1],["10","санвузол",5.2],["11","санвузол",5.8]]]]},{"f":"6","c":[["37","сходова",17.2],["38","тамбур",3.2],["39","тамбур",3.2],["40","сходова",17.4]],"u":[["601",[["1","коридор",5.0],["2","коридор",10.5],["3","підсобне",4.3],["4","підсобне",0.6],["5","службове",12.2],["6","нежитлове",636.1],["7","санвузол",3.5],["8","санвузол",3.3],["9","санвузол",3.1],["10","санвузол",5.2],["11","санвузол",5.8]]]]},{"f":"7","c":[["41","сходова",17.1],["42","тамбур",3.0],["43","тамбур",3.2],["44","сходова",17.4]],"u":[["701",[["1","коридор",4.9],["2","коридор",10.1],["3","підсобне",4.3],["4","підсобне",0.6],["5","службове",12.1],["6","нежитлове",635.4],["7","санвузол",3.5],["8","санвузол",3.3],["9","санвузол",3.1],["10","санвузол",5.2],["11","санвузол",5.8]]]]}]},{"id":"b4","lt":"Г","gen":"","name":"Будівля Г-4 з паркінгом","full":"Будівля Г-4 (за експлікацією «А5-4»)","addr":"вул. Академіка Підстригача","doc":{"kind":"Поверхові плани та експлікація"},"tep":[["Загальна площа","10 450,5 м²"],["Основна площа","9 683,4 м²"],["Допоміжна площа","767,1 м²"],["Поверхів","4 + підвал"],["Паркінг у підвалі","2 264,1 м²"]],"floors":[{"f":"пд","c":[["1","сходова",18.9],["2","паркінг",2264.1],["3","ліфтовий хол",7.1],["4","ліфтова шахта",3.7],["5","ліфтова шахта",3.7],["6","зберігання води",24.9],["7","ліфтовий хол",7.1],["8","ліфтова шахта",3.7],["9","ліфтова шахта",3.7],["10","сходова",18.9],["11","електрощитова",20.9],["12","коридор",10.6],["13","ліфтова шахта",3.7],["14","тамбур",3.7],["15","санвузол",3.7],["16","санвузол",10.6],["17","санвузол",10.6]],"u":[]},{"f":"1","c":[["18","сходова",11.8],["19","тамбур",5.0],["20","вестибюль",175.8],["21","офісне приміщення",63.0],["22","санвузол",1.9],["23","зал кафетерію",124.4],["24","коридор",20.1],["25","офісне приміщення",31.7],["26","санвузол",2.3],["27","офісне приміщення",78.8],["28","санвузол",3.7],["29","офісне приміщення",80.9],["30","санвузол",3.9],["31","офісне приміщення",409.9],["32","санвузол",1.9],["33","офісне приміщення",384.2],["34","санвузол",5.2],["35","офісне приміщення",340.8],["36","санвузол",2.2],["37","офісне приміщення",142.2],["38","санвузол",2.2],["39","коридор",32.6],["40","сходова",9.9],["41","тамбур",5.0],["42","ліфтовий хол",12.9],["43","вестибюль",42.7],["44","тамбур",5.9],["45","офісне приміщення",93.1],["46","санвузол",3.0],["47","офісне приміщення",245.3],["48","санвузол",3.1]],"u":[]},{"f":"2","c":[["49","сходова",18.9],["50","тамбур",7.6],["51","ліфтовий хол",6.5],["52","нежитлове",1372.1],["53","тераса",33.5],["54","офісне приміщення",495.2],["55","тераса",53.2],["56","ліфтовий хол",6.5],["57","тамбур",7.7],["58","сходова",18.8]],"u":[]},{"f":"3","c":[["59","сходова",18.9],["60","тамбур",7.6],["61","ліфтовий хол",6.4],["62","нежитлове",1260.0],["63","нежитлове",501.4],["64","ліфтовий хол",6.5],["65","тамбур",7.6],["66","сходова",18.8]],"u":[]},{"f":"4","c":[["67","сходова",18.9],["68","тамбур",7.6],["69","ліфтовий хол",6.6],["70","нежитлове",1291.6],["71","тераса",9.7],["72","нежитлове",458.9],["73","тераса",12.1],["74","ліфтовий хол",6.5],["75","тамбур",7.6],["76","сходова",18.8]],"u":[]}]},{"id":"b5","lt":"Е","gen":"№3","name":"Спортивно-офісний центр №3","full":"Спортивно-офісний центр (будинок №3 на генплані)","addr":"вул. Стрийська — вул. Наукова","doc":{"kind":"Поверхові плани та експлікація"},"tep":[["Площа забудови","1 400 м²"],["Загальна площа","6 384,6 м²"],["Основна площа","5 334,5 м²"],["Допоміжна площа","481,9 м²"],["МЗК (загального користування)","568,2 м²"],["Поверхів","7"],["Висота","26,5 м"],["Корисний об’єм","26 342 м³"],["Рік спорудження","2026"]],"eng":[["Опалення","місцеве"],["Електрика",1],["Водопровід",1],["Каналізація",1],["Ліфт",1],["Газопровід",0],["Сміттєпровід",0]],"cons":[["Фундамент","плитний, залізобетон"],["Стіни","керамічна цегла"],["Перекриття","монолітний залізобетон"],["Покрівля","ПВХ мембрана"],["Підлога","цементна стяжка"],["Сходи","залізобетонні марші"]],"floors":[{"f":"1","c":[["I","хол",84.8],["II","сходова",17.4],["III","вузол вводу",19.4],["IV","службове",24.0],["V","ліфтова шахта",5.4],["VI","ліфтовий хол",10.2],["VII","ліфтова шахта",3.7],["VIII","ліфтова шахта",3.6],["IX","тамбур",3.9],["X","сходова",17.4]],"u":[["101",[["1","нежитлове",156.3],["2","санвузол",4.5],["3","санвузол",5.8]]],["102",[["1","нежитлове",117.5],["2","санвузол",5.9],["3","санвузол",4.6]]],["103",[["1","нежитлове",100.8],["2","санвузол",4.0]]],["104",[["1","нежитлове",103.1],["2","санвузол",4.2]]],["105",[["1","нежитлове",70.9],["2","санвузол",4.4]]],["106",[["1","нежитлове",102.4],["2","санвузол",4.2]]],["107",[["1","нежитлове",86.8],["2","санвузол",4.0]]],["108",[["1","нежитлове",58.4],["2","санвузол",3.5]]],["109",[["1","нежитлове",232.5],["2","санвузол",5.4],["3","санвузол",4.5],["4","санвузол",3.4],["5","санвузол",4.1]]]]},{"f":"2","c":[["XI","ліфтовий хол",10.3],["XII","вестибюль",34.0],["XIII","службове",3.5],["XIV","щитова",0.7],["XV","тамбур",3.2],["XVI","сходова",17.5],["XVII","коридор",9.1],["XVIII","тамбур",3.2],["XIX","сходова",17.2]],"u":[["201",[["1","нежитлове",131.8],["2","санвузол",5.8]]],["202",[["1","нежитлове",143.2],["2","санвузол",11.4]]],["203",[["1","нежитлове",215.6],["2","санвузол",4.7]]],["204",[["1","нежитлове",302.8],["2","санвузол",6.5]]],["205",[["1","нежитлове",169.9],["2","санвузол",7.7]]],["206",[["1","нежитлове",167.5],["2","санвузол",7.5]]],["207",[["1","нежитлове",14.1]]]]},{"f":"3","c":[["XX","ліфтовий хол",10.3],["XXI","службове",4.4],["XXII","тамбур",3.2],["XXIII","сходова",17.5],["XXIV","тамбур",3.2],["XXV","сходова",17.2]],"u":[["301",[["1","нежитлове",639.1],["2","санвузол",7.2],["3","санвузол",7.5],["4","експлуатована покрівля",71.9],["5","санвузол",6.6],["6","санвузол",8.8],["7","нежитлове",12.1]]],["302",[["1","нежитлове",0.6],["2","експлуатована покрівля",92.5]]]]},{"f":"4","c":[["XXVI","ліфтовий хол",10.3],["XXVII","службове",4.2],["XXVIII","щитова",0.6],["XXIX","тамбур",3.2],["XXX","сходова",17.5],["XXXI","тамбур",3.2],["XXXII","сходова",17.4]],"u":[["401",[["1","нежитлове",639.2],["2","санвузол",7.2],["3","санвузол",7.5],["4","санвузол",6.6],["5","санвузол",7.4],["6","нежитлове",12.1]]]]},{"f":"5","c":[["XXXIII","ліфтовий хол",10.3],["XXXIV","службове",4.0],["XXXV","щитова",0.5],["XXXVI","тамбур",2.9],["XXXVII","сходова",17.4],["XXXVIII","тамбур",2.8],["XXXIX","сходова",17.4]],"u":[["501",[["1","нежитлове",329.9],["2","санвузол",6.9],["3","нежитлове",11.5],["4","санвузол",7.1]]],["502",[["1","нежитлове",314.7],["2","санвузол",6.6],["3","санвузол",6.6]]]]},{"f":"6","c":[["XL","ліфтовий хол",10.3],["XLI","службове",4.2],["XLII","щитова",0.6],["XLIII","тамбур",3.2],["XLIV","сходова",17.4],["XLV","тамбур",3.0],["XLVI","сходова",17.4]],"u":[["601",[["1","нежитлове",313.9],["2","санвузол",6.0],["3","нежитлове",12.1],["4","санвузол",7.1],["5","балкон",3.9]]],["602",[["1","нежитлове",315.0],["2","санвузол",6.6],["3","санвузол",6.6]]]]},{"f":"7","c":[["XLVII","ліфтовий хол",10.3],["XLVIII","службове",4.2],["XLIX","щитова",0.6],["L","тамбур",3.2],["LI","сходова",17.4],["LII","тамбур",3.0],["LIII","сходова",17.4]],"u":[["701",[["1","нежитлове",315.5],["2","санвузол",5.7],["3","нежитлове",12.1],["4","санвузол",7.1]]],["702",[["1","нежитлове",293.0],["2","санвузол",6.3],["3","лоджія",9.6],["4","санвузол",6.6]]]]}]}];
+/* ---------- Архітектура: технічні паспорти будівель ---------- */
+const AR_COL={b1:['#1F6F78','#3aa7a0'],b2:['#5B6CD9','#8A9BF2'],b3:['#C2416B','#EA7E9E'],b4:['#B0742A','#E2A75A'],b5:['#2E8B5E','#7BC47F']};
+const AR_MAIN=new Set(['нежитлове','офісне приміщення','машиномісце','паркінг','зал кафетерію']);
+const AR_TECH=/трансформатор|РУ|ССМ|вузол вводу|вводу кабелів|насосна|щитова/;
+const AR_KIND={office:'Оренда',park:'Паркінг',tech:'Технічне',common:'МЗК'};
+(function arPrep(){ARCH.forEach(b=>b.floors.forEach(fl=>{if(fl.u.length)return;const keep=[];
+  fl.c.forEach(r=>{if(AR_MAIN.has(r[1]))fl.u.push([r[1]==='паркінг'?'Паркінг':'№'+r[0],[[r[0],r[1],r[2]]]]);else keep.push(r);});fl.c=keep;}));})();
+function arN(v){return (Math.round(v*10)/10).toLocaleString('uk-UA',{minimumFractionDigits:1,maximumFractionDigits:1});}
+function arM2(v){return arN(v)+' м²';}
+function arSum(a){return a.reduce((t,r)=>t+r[2],0);}
+function arKind(u){if(u[0].startsWith('П/М')||u[0]==='Паркінг')return 'park';if(u[1].every(r=>AR_TECH.test(r[1])))return 'tech';return 'office';}
+function arFName(f){return f==='пд'?'Підвал':f+' поверх';}
+function arFShort(f){return f==='пд'?'Пд':String(f);}
+function arUName(u){const k=arKind(u);if(u[0].startsWith('П/М'))return 'Машиномісце '+u[0];if(u[0]==='Паркінг')return 'Паркінг';if(u[0].startsWith('№'))return (u[1][0][1]==='зал кафетерію'?'Зал кафетерію ':'Приміщення ')+u[0];return (k==='tech'?'Технічне приміщення ':'Приміщення ')+u[0];}
+function arFStat(fl){const s={total:0,common:arSum(fl.c),office:0,park:0,tech:0,main:0,units:0,spots:0};
+  fl.u.forEach(u=>{const a=arSum(u[1]),k=arKind(u);s[k]+=a;if(k==='office')s.units++;if(u[0].startsWith('П/М'))s.spots++;u[1].forEach(r=>{if(AR_MAIN.has(r[1]))s.main+=r[2];});});
+  s.total=s.common+s.office+s.park+s.tech;return s;}
+function arBStat(b){const t={total:0,common:0,office:0,park:0,tech:0,main:0,units:0,spots:0};b.floors.forEach(fl=>{const s=arFStat(fl);for(const k in t)t[k]+=s[k];});return t;}
+function arTotalAll(){return ARCH.reduce((t,b)=>t+arBStat(b).total,0);}
+function arFloorsLbl(b){const n=b.floors.filter(f=>f.f!=='пд').length;return n+' пов.'+(b.floors.some(f=>f.f==='пд')?' + підвал':'');}
+function arTitle(){const b=ARCH.find(x=>x.id===S.arB);return b?b.lt+' · '+b.name:'Архітектура';}
+function arOpen(id,f,hi){S.hist.push(snap());S.arB=id;S.arF=f!=null?f:null;S.arT='fl';S.arHi=hi||null;SC().scrollTop=0;render();animIn(1);
+  if(hi)setTimeout(()=>{const n=document.querySelector('.ar-u.hi');if(n){n.open=true;n.scrollIntoView({behavior:'smooth',block:'center'});}},120);}
+function arBar(s,c1){const seg=[[s.office,c1],[s.park,'#5C8DF0'],[s.tech,'#E0A21A'],[s.common,'var(--duck-off)']];
+  return el('div',{class:'ar-bar','aria-hidden':'true'},seg.filter(x=>x[0]>0).map(([v,c])=>el('span',{style:'flex:'+v+';background:'+c})));}
+function arLegend(c1,s){return el('div',{class:'ar-leg'},[['Оренда',c1,s.office],['Паркінг','#5C8DF0',s.park],['Технічні','#E0A21A',s.tech],['МЗК','var(--duck-off)',s.common]].filter(x=>x[2]>0).map(([l,c,v])=>el('span',{},el('i',{style:'background:'+c}),l+' ',el('b',{text:arM2(v)}))));}
+function arBadge(b,big){const c=AR_COL[b.id];return el('span',{class:'ar-lt'+(big?' big':''),style:'--c1:'+c[0]+';--c2:'+c[1],text:b.lt});}
+function arSearch(q){q=q.trim().toLowerCase().replace(/\s+/g,' ');if(!q)return [];const out=[];
+  ARCH.forEach(b=>b.floors.forEach(fl=>{fl.u.forEach(u=>{const id=u[0].toLowerCase();if(id.includes(q)||(b.lt.toLowerCase()+id)===q.replace(/[\s·-]/g,'')||u[1].some(r=>r[1].includes(q)))out.push({b,fl,u});});
+    fl.c.forEach(r=>{if(r[1].includes(q))out.push({b,fl,r});});}));return out;}
+function arHome(){const out=[];const g=FG.find(x=>x.id==='arch');
+  out.push(el('section',{class:'uk-head',style:'--c1:'+g.c1+';--c2:'+g.c2},el('span',{class:'uk-ic big'},svg(g.ic)),el('div',{},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:'Архітектура та інформація'}),el('p',{text:'Будівлі Duck’s Lake за технічними паспортами: поверхи, приміщення, площі, інженерія.'}))));
+  const all=ARCH.map(arBStat);const sum=k=>all.reduce((t,s)=>t+s[k],0);
+  out.push(el('div',{class:'ar-kpi'},
+    el('div',{class:'card ar-k'},el('span',{text:'Будівель'}),el('b',{text:String(ARCH.length)}),el('small',{text:ARCH.map(b=>b.lt).join(' · ')})),
+    el('div',{class:'card ar-k'},el('span',{text:'Загальна площа'}),el('b',{text:Math.round(sum('total')).toLocaleString('uk-UA')}),el('small',{text:'м² за експлікаціями'})),
+    el('div',{class:'card ar-k'},el('span',{text:'Під оренду'}),el('b',{text:Math.round(sum('office')).toLocaleString('uk-UA')}),el('small',{text:sum('units')+' приміщень'})),
+    el('div',{class:'card ar-k'},el('span',{text:'Паркінг'}),el('b',{text:String(sum('spots'))}),el('small',{text:'машиномісць + паркінг Г'}))));
+  const q=S.arQ||'';
+  out.push(el('label',{class:'ar-search'},svg('<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>'),
+    el('input',{type:'search','data-k':'arQ',value:q,placeholder:'Пошук: 301, П/М-5, санвузол, тераса…','aria-label':'Пошук приміщення',oninput:e=>{S.arQ=e.target.value;render();}}),
+    q?el('button',{type:'button',class:'ar-clr','aria-label':'Очистити',onclick:()=>{S.arQ='';render();}},svg('<path d="M6 6l12 12M18 6 6 18"/>')):null));
+  if(q.trim()){const res=arSearch(q);const shown=res.slice(0,80);
+    out.push(el('div',{class:'row between'},el('h2',{text:'Знайдено'}),el('span',{class:'muted small',text:res.length+(res.length>shown.length?' · показано '+shown.length:'')})));
+    if(!res.length)out.push(el('div',{class:'card empty'},el('p',{class:'muted',text:'Нічого не знайдено. Спробуйте номер приміщення (301) або назву (тераса).'})));
+    else out.push(el('div',{class:'ar-res'},shown.map(x=>{const u=x.u;const a=u?arSum(u[1]):x.r[2];
+      return el('button',{type:'button',class:'card ar-ri',onclick:()=>arOpen(x.b.id,x.fl.f,u?u[0]:null)},arBadge(x.b),
+        el('span',{class:'ar-rt'},el('b',{text:u?arUName(u):(x.r[1][0].toUpperCase()+x.r[1].slice(1)+(x.r[0]?' · '+x.r[0]:''))}),el('small',{text:arFName(x.fl.f)+(u?'':' · МЗК')+' · '+x.b.name})),
+        el('b',{class:'ar-ra',text:arM2(a)}));})));
+    return out;}
+  out.push(el('div',{class:'row between'},el('h2',{text:'Будівлі'}),el('span',{class:'muted small',text:'натисніть, щоб відкрити'})));
+  out.push(el('div',{class:'ar-grid'},ARCH.map((b,i)=>{const s=all[i];const c=AR_COL[b.id];
+    return el('button',{type:'button',class:'card ar-b',style:'--c1:'+c[0]+';--c2:'+c[1],onclick:()=>arOpen(b.id)},
+      el('div',{class:'ar-bh'},arBadge(b,true),el('span',{class:'ar-bt'},el('b',{text:b.name}),el('small',{text:b.addr})),el('span',{class:'uk-go'},svg('<path d="m9 6 6 6-6 6"/>'))),
+      el('div',{class:'ar-bn'},el('b',{text:arN(s.total)}),el('span',{text:'м²'})),
+      arBar(s,c[0]),
+      el('div',{class:'ar-chips'},el('span',{text:arFloorsLbl(b)}),s.units?el('span',{text:s.units+' прим. в оренду'}):null,s.spots?el('span',{text:s.spots+' машиномісць'}):null,el('span',{class:'ar-doc'+(b.doc.reg?'':' plan'),text:b.doc.reg?'Техпаспорт':'Плани'})));})));
+  out.push(el('h2',{text:'Порівняння'}));
+  out.push(el('div',{class:'tbl ar-cmp'},el('table',{},el('thead',{},el('tr',{},['Будівля','Поверхи','Загальна','Оренда','МЗК','Приміщень'].map((t,i)=>el('th',{class:i?'':'nm',text:t})))),
+    el('tbody',{},ARCH.map((b,i)=>{const s=all[i];return el('tr',{onclick:()=>arOpen(b.id)},el('td',{class:'nm'},el('span',{class:'ar-tn'},arBadge(b),b.name)),el('td',{text:arFloorsLbl(b)}),el('td',{text:arN(s.total)}),el('td',{text:arN(s.office)}),el('td',{text:arN(s.common)}),el('td',{text:String(s.units)}));}),
+      el('tr',{class:'tot'},el('td',{class:'nm',text:'Разом'}),el('td',{}),el('td',{text:arN(sum('total'))}),el('td',{text:arN(sum('office'))}),el('td',{text:arN(sum('common'))}),el('td',{text:String(sum('units'))}))))));
+  return out;}
+function arBuilding(){const b=ARCH.find(x=>x.id===S.arB);if(!b){S.arB=null;return arHome();}const c=AR_COL[b.id];const bs=arBStat(b);const t=S.arT||'fl';
+  const out=[el('section',{class:'ar-head',style:'--c1:'+c[0]+';--c2:'+c[1]},arBadge(b,true),el('div',{class:'ar-ht'},el('span',{class:'eyebrow',text:'Літера '+b.lt+(b.gen?' · генплан '+b.gen:'')}),el('h2',{text:b.name}),el('p',{text:(b.name.startsWith(b.full)?'':b.full+' · ')+'м. Львів, '+b.addr})),
+    el('div',{class:'ar-hn'},el('b',{text:arN(bs.total)}),el('small',{text:'м² · '+arFloorsLbl(b)})))];
+  out.push(el('div',{class:'ar-seg',role:'tablist'},[['fl','Поверхи та приміщення'],['ps','Паспорт']].map(([k,l])=>el('button',{type:'button',role:'tab','aria-selected':String(t===k),onclick:()=>{S.arT=k;render();}},l))));
+  if(t==='ps')return out.concat(arPassport(b));
+  const fls=b.floors;if(S.arF==null||!fls.some(f=>String(f.f)===String(S.arF)))S.arF=(fls.find(f=>f.f!=='пд')||fls[0]).f;
+  const fl=fls.find(f=>String(f.f)===String(S.arF));const fs=arFStat(fl);const maxT=Math.max(...fls.map(f=>arFStat(f).total));
+  const stack=el('div',{class:'card ar-stack'},el('div',{class:'ar-sh'},el('b',{text:'Розріз будівлі'}),el('small',{class:'muted',text:'оберіть поверх'})),
+    el('div',{class:'ar-floors'},fls.slice().reverse().map(f=>{const s=arFStat(f);const on=String(f.f)===String(S.arF);
+      return el('button',{type:'button',class:'ar-fl'+(on?' on':'')+(f.f==='пд'?' ug':''),'aria-pressed':String(on),onclick:()=>{S.arF=f.f;S.arHi=null;render();if(!WIDE.matches){const d=document.querySelector('.ar-det');if(d)d.scrollIntoView({behavior:'smooth',block:'start'});}}},
+        el('span',{class:'ar-fn',text:arFShort(f.f)}),el('span',{class:'ar-fw'},el('span',{class:'ar-fb',style:'width:'+(s.total/maxT*100)+'%'},arBar(s,c[0]))),el('span',{class:'ar-fa',text:arN(s.total)}));})),
+    arLegend(c[0],bs));
+  const det=[el('div',{class:'ar-det'},el('div',{class:'ar-fh'},el('h2',{text:arFName(fl.f)}),el('span',{class:'ar-pill',text:arM2(fs.total)})),
+    el('div',{class:'ar-fk'},[['Оренда',fs.office,fs.units?fs.units+' прим.':''],['Паркінг',fs.park,fs.spots?fs.spots+' місць':''],['Технічні',fs.tech,''],['МЗК',fs.common,fl.c.length+' прим.']].filter(x=>x[1]>0).map(([l,v,n])=>el('div',{class:'ar-fkc'},el('small',{text:l}),el('b',{text:arN(v)}),n?el('small',{class:'muted',text:n}):null))))];
+  const offs=fl.u.filter(u=>arKind(u)!=='park'||u[0]==='Паркінг'),spots=fl.u.filter(u=>u[0].startsWith('П/М'));
+  if(offs.length){det.push(el('h3',{class:'ar-h3',text:'Приміщення'}));det.push(el('div',{class:'ar-units'},offs.map(u=>{const a=arSum(u[1]),k=arKind(u),m=u[1].filter(r=>AR_MAIN.has(r[1])).reduce((t,r)=>t+r[2],0);const hi=S.arHi===u[0];
+    return el('details',{class:'card ar-u k-'+k+(hi?' hi':''),open:hi?true:null,style:'--c1:'+c[0]},
+      el('summary',{},el('span',{class:'ar-uid',text:u[0].replace('№','')}),el('span',{class:'ar-ut'},el('b',{text:arUName(u)}),el('small',{text:(m&&m!==a?'основна '+arM2(m)+' · ':'')+u[1].length+' '+(u[1].length===1?'кімната':u[1].length<5?'кімнати':'кімнат')})),
+        el('span',{class:'ar-ua'},el('b',{text:arN(a)}),el('small',{text:'м²'}))),
+      el('div',{class:'ar-rooms'},u[1].map(r=>el('div',{class:'ar-room'+(AR_MAIN.has(r[1])?' main':'')},el('span',{class:'ar-rn',text:r[0]||'—'}),el('span',{text:r[1]}),el('b',{text:arN(r[2])})))));})));}
+  if(spots.length){det.push(el('h3',{class:'ar-h3',text:'Машиномісця'}));det.push(el('div',{class:'ar-spots'},spots.map(u=>{const hi=S.arHi===u[0];return el('div',{class:'ar-spot'+(hi?' hi ar-u':'')},el('b',{text:u[0].replace('П/М-','')}),el('small',{text:arN(arSum(u[1]))+' м²'}));})));}
+  if(fl.c.length){det.push(el('h3',{class:'ar-h3',text:'Місця загального користування'}));det.push(el('div',{class:'card ar-common'},fl.c.map(r=>el('div',{class:'ar-room'},el('span',{class:'ar-rn',text:r[0]||'—'}),el('span',{text:r[1]}),el('b',{text:arN(r[2])}))),
+    el('div',{class:'ar-room tot'},el('span',{}),el('span',{text:'Разом МЗК'}),el('b',{text:arN(fs.common)}))));}
+  out.push(el('div',{class:'ar-cols'},stack,el('div',{class:'stack ar-right'},det)));
+  return out;}
+function arPassport(b){const out=[];const d=b.doc;
+  out.push(el('div',{class:'card ar-docc'},el('div',{class:'ar-sh'},el('b',{text:d.kind}),d.reg?el('span',{class:'ar-ok',text:'Діючий'}):el('span',{class:'ar-doc plan',text:'Додаток'})),
+    d.reg?el('dl',{class:'ar-dl'},[['Реєстраційний номер',d.reg],['Документ',d.no],['Ідентифікатор об’єкта',d.obj],['Замовник',d.client],['Дозвіл на будівельні роботи',d.permit],['Виконавець','ФОП Потинський А. М. (серт. АЕ 005365)']].map(([k,v])=>[el('dt',{text:k}),el('dd',{},el('span',{text:v}),/^[A-ZА-Я]{2}\d|^TI01|^01\./.test(v)?el('button',{type:'button',class:'ar-cp','aria-label':'Скопіювати',onclick:()=>{try{navigator.clipboard.writeText(v);toast('Скопійовано');}catch(e){}}},svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>')):null)]).flat())
+      :el('p',{class:'muted',style:'margin:0',text:'Для цієї будівлі є поверхові плани та експлікація приміщень. Повний техпаспорт ще не додано.'})));
+  out.push(el('div',{class:'ar-pgrid'},
+    el('div',{class:'card'},el('div',{class:'ar-sh'},el('b',{text:'Техніко-економічні показники'})),el('dl',{class:'ar-tep'},b.tep.map(([k,v])=>[el('dt',{text:k}),el('dd',{text:v})]).flat())),
+    el('div',{class:'stack'},
+      b.eng?el('div',{class:'card'},el('div',{class:'ar-sh'},el('b',{text:'Інженерне забезпечення'})),el('div',{class:'ar-eng'},b.eng.map(([k,v])=>el('span',{class:'ar-e'+(v===0?' no':'')},v===0?svg('<path d="M6 6l12 12M18 6 6 18"/>'):svg('<path d="m5 12 5 5 9-10"/>'),k+(typeof v==='string'?': '+v:''))))):null,
+      b.cons?el('div',{class:'card'},el('div',{class:'ar-sh'},el('b',{text:'Конструкції'})),el('dl',{class:'ar-tep'},b.cons.map(([k,v])=>[el('dt',{text:k}),el('dd',{text:v})]).flat())):null)));
+  if(b.land&&b.land.length){out.push(el('h2',{text:'Земельні ділянки'}));out.push(el('div',{class:'ar-land'},b.land.map(l=>el('div',{class:'card ar-li'},el('div',{class:'ar-sh'},el('b',{class:'ar-mono',text:l.cad}),el('span',{class:'ar-pill',text:String(l.ha).replace('.',',')+' га'})),el('p',{class:'muted small',style:'margin:0',text:l.use})))));}
+  out.push(el('h2',{text:'Площі по поверхах'}));
+  out.push(el('div',{class:'tbl ar-cmp'},el('table',{},el('thead',{},el('tr',{},['Поверх','Загальна','Оренда','Паркінг','Технічні','МЗК'].map((t,i)=>el('th',{class:i?'':'nm',text:t})))),
+    el('tbody',{},b.floors.map(f=>{const s=arFStat(f);return el('tr',{onclick:()=>{S.arT='fl';S.arF=f.f;render();}},el('td',{class:'nm',text:arFName(f.f)}),[s.total,s.office,s.park,s.tech,s.common].map(v=>el('td',{text:v?arN(v):'—'})));}),
+      (()=>{const s=arBStat(b);return el('tr',{class:'tot'},el('td',{class:'nm',text:'Разом'}),[s.total,s.office,s.park,s.tech,s.common].map(v=>el('td',{text:v?arN(v):'—'})));})()))));
+  return out;}
 function fgSection(id){const g=FG.find(x=>x.id===id);if(!g)return [];
   return [el('section',{class:'uk-head',style:'--c1:'+g.c1+';--c2:'+g.c2},el('span',{class:'uk-ic big'},svg(g.ic)),el('div',{},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:g.name}),el('p',{text:g.sub}))),
     el('div',{class:'card uk-soon'},el('span',{class:'soon',text:'у розробці'}),el('p',{style:'margin:0',text:'Розділ наповнюємо поступово. Ось що тут буде:'})),
     el('div',{class:'uk-plan'},(g.plan||[]).map(([e,t,d])=>el('div',{class:'card uk-pi'},el('span',{class:'uk-pe',text:e}),el('div',{},el('b',{text:t}),el('small',{text:d})),el('span',{class:'soon',text:'скоро'}))))];}
-function openFg(id){S.hist.push(snap());S.fg=id;SC().scrollTop=0;render();animIn(1);}
+function openFg(id){S.hist.push(snap());S.fg=id;S.arB=null;S.arHi=null;SC().scrollTop=0;render();animIn(1);}
 function openUk(id){S.hist.push(snap());S.ukSec=id;S.fg='obl';SC().scrollTop=0;render();animIn(1);}
 function viewUK(){if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Цей розділ доступний лише для управлінської компанії.'}))];
   if(S.ukSec==='water')return S.wObjSel?waterObject(S.wObjSel):waterHome();
@@ -5596,6 +5841,7 @@ function viewUK(){if(!isUK())return [el('div',{class:'card empty'},el('p',{class
   if(S.ukSec&&UKS[S.ukSec])return ukSection(S.ukSec);
   if(!S.fg)return fgHome();
   if(S.fg==='dev')return devView();
+  if(S.fg==='arch')return S.arB?arBuilding():arHome();
   if(S.fg!=='obl')return fgSection(S.fg);
   const out=[el('section',{class:'uk-hero'},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:'Облік'}),el('p',{text:'Вода, сміття, дебіторка, паркінг, інвентар та електроенергія Duck’s Lake. Оберіть блок, щоб відкрити.'}))];
   out.push(el('div',{class:'uk-grid'},Object.entries(UKS).map(([id,u])=>{const st=ukStat(id);return el('button',{type:'button',class:'uk-tile'+(st?'':' soon-t'),style:'--c1:'+u.c1+';--c2:'+u.c2,onclick:()=>openUk(id)},
