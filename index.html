@@ -2678,6 +2678,59 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 @media (min-width:1200px){.ar-units{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ar-u.k-park .ar-uid{background:#1F2D52;color:#A9C1F5}}
 :root[data-theme="dark"] .ar-u.k-park .ar-uid{background:#1F2D52;color:#A9C1F5}
+/* ===== Новий дизайн (тест): вмикається класом html.v2 ===== */
+html.v2{--bg:#F4F5F3;--surface:#FFFFFF;--surface-2:#F1F2EF;--fg:#151C1D;--muted:#5D6866;--line:#E1E4E0;
+  --accent:#1B6B71;--accent-fg:#FFFFFF;--accent-soft:#E3EEEE;--accent-ink:#11494E;
+  --shadow:0 0 0 1px var(--line);--display:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --app-grad:none;--glass:var(--surface);--glass-brd:var(--line);--glass-hi:transparent;--glass-ind:var(--accent-soft)}
+@media (prefers-color-scheme: dark){html.v2:not([data-theme="light"]){--bg:#0F1213;--surface:#171B1C;--surface-2:#1E2324;--fg:#E7ECEB;--muted:#97A3A1;--line:#2A3032;
+  --accent:#5BB3B9;--accent-fg:#071E20;--accent-soft:#1A3335;--accent-ink:#B5E2E5;--app-grad:none;--glass:var(--surface);--glass-ind:var(--accent-soft)}}
+html.v2[data-theme="dark"]{--bg:#0F1213;--surface:#171B1C;--surface-2:#1E2324;--fg:#E7ECEB;--muted:#97A3A1;--line:#2A3032;
+  --accent:#5BB3B9;--accent-fg:#071E20;--accent-soft:#1A3335;--accent-ink:#B5E2E5;--app-grad:none;--glass:var(--surface);--glass-ind:var(--accent-soft)}
+html.v2 body,html.v2 #scroller{background:var(--bg)!important;background-image:none!important}
+html.v2 *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+/* типографіка: без важкого «декоративного» шрифту */
+html.v2 h1,html.v2 h2,html.v2 h3{font-family:var(--body);font-weight:800;letter-spacing:-.015em}
+html.v2 h1{font-size:22px}html.v2 h2{font-size:17px}
+html.v2 .eyebrow{font-size:11px;letter-spacing:.08em;color:var(--muted)}
+/* картки: рамка замість тіней і менші радіуси */
+html.v2 .card,html.v2 .person,html.v2 .stat,html.v2 .rolecard,html.v2 .tbl,html.v2 .seg,html.v2 .wk,html.v2 .bubble,html.v2 .ar-fkc,html.v2 .ar-spot{border-radius:12px!important;box-shadow:0 0 0 1px var(--line)!important}
+html.v2 .msg.mine .bubble{box-shadow:none!important}
+html.v2 .btn{border-radius:10px;box-shadow:none!important;background-image:none!important}
+html.v2 .btn.ghost{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)!important}
+/* шапка: суцільна, без «скла» і капсули */
+html.v2 header.top{background:var(--bg)!important;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;margin:-6px 0 14px!important;padding:10px 0!important}
+html.v2 .hbtn,html.v2 header.top .me,html.v2 .backbtn{background:var(--surface)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:10px!important}
+/* нижня навігація: прикріплена панель замість плаваючої скляної */
+html.v2 nav.tabs{left:0!important;right:0!important;bottom:0!important;border-radius:0!important;border:0!important;border-top:1px solid var(--line)!important;background:var(--surface)!important;box-shadow:none!important;padding:4px 8px calc(4px + var(--sab,0px))!important}
+html.v2 nav.tabs button{border-radius:10px!important}
+html.v2 nav.tabs button[aria-current="page"] svg{transform:none!important}
+html.v2 .tab-ind{border-radius:10px!important;box-shadow:none!important;background:var(--accent-soft)!important}
+html.v2 .composer{left:0!important;right:0!important;border-radius:0!important;border:0!important;border-top:1px solid var(--line)!important;background:var(--surface)!important;box-shadow:none!important;bottom:calc(66px + var(--sab,0px))!important}
+html.v2 .menu{border-radius:12px;box-shadow:0 0 0 1px var(--line),0 12px 32px -16px rgba(0,0,0,.35)}
+html.v2 .sheet{border-radius:16px 16px 0 0}
+@media (min-width:900px){
+  html.v2 nav.tabs{top:0!important;bottom:0!important;left:0!important;width:232px!important;border-top:0!important;border-right:1px solid var(--line)!important;padding:20px 12px!important}
+  html.v2 .composer{left:232px!important;bottom:0!important}
+  html.v2 header.top{margin:-14px 0 18px!important;padding:14px 0!important}
+  html.v2 .sheet{border-radius:14px}}
+@media (max-width:899px){html.v2 body.chatmode .composer{bottom:var(--sab,0px)!important}}
+/* героблоки й іконки розділів: без градієнтів і кольорових тіней */
+html.v2 .hero,html.v2 .uk-hero{background:var(--accent)!important;background-image:none!important;border-radius:14px!important;box-shadow:none!important}
+html.v2 .uk-head,html.v2 .ar-head,html.v2 .uk-tile,html.v2 .ar-b{background:var(--surface)!important;background-image:none!important;border-radius:12px!important;box-shadow:0 0 0 1px var(--line)!important}
+html.v2 .ar-b::before{display:none}
+html.v2 .uk-ic,html.v2 .ar-lt,html.v2 .w-drop{background:color-mix(in srgb,var(--c1,var(--accent)) 13%,var(--surface))!important;color:var(--c1,var(--accent))!important;box-shadow:none!important;border-radius:10px!important}
+html.v2 .uk-tile:hover{transform:none;box-shadow:0 0 0 1px var(--muted)!important}
+html.v2 .dz-k.hero{background:var(--surface)!important;color:var(--fg)!important;box-shadow:0 0 0 1px var(--line)!important}
+html.v2 .dz-k.hero *{color:inherit!important}
+html.v2 .notes-chip,html.v2 .nh-ic,html.v2 .acc-bar,html.v2 .rav{background:var(--surface-2)!important;box-shadow:none!important}
+html.v2 .pf-cover{background:var(--surface-2)!important}
+html.v2 .sh-hero.on{background:var(--accent)!important}
+/* метадані без «таблеток» */
+html.v2 .tktype,html.v2 .tkst,html.v2 .due,html.v2 .remind{border-radius:6px}
+html.v2 .soon{border-radius:4px}
+/* анімації спокійніші */
+html.v2 button:active,html.v2 .btn:active,html.v2 .person:active{transform:none!important}
 </style>
 
 <div id="scroller"><div class="wrap">
@@ -3112,6 +3165,7 @@ function openMenu(){
   const kids=[meCard('menu-me',()=>go('profile')),notesChip('nc-menu')];
   for(const [lbl,ids] of NAV_GROUPS){const v=ids.filter(tabVisible);if(!v.length)continue;
     kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),b?el('span',{class:'badge',text:b}):null);}));}
+  if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn());
   const m=el('div',{class:'menu',role:'menu'},kids.filter(Boolean));
   document.getElementById('menuRoot').replaceChildren(bg,m);document.getElementById('menuBtn').setAttribute('aria-expanded','true');
   document.addEventListener('keydown',menuEsc);m.querySelector('button').focus();
@@ -3122,7 +3176,11 @@ const I_SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4
 const I_MOON='<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>';
 const I_SUP='<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m5.6 5.6 3.6 3.6M14.8 14.8l3.6 3.6M14.8 9.2l3.6-3.6M5.6 18.4l3.6-3.6"/>';
 function isDarkNow(){const t=document.documentElement.getAttribute('data-theme');if(t)return t==='dark';return window.matchMedia('(prefers-color-scheme: dark)').matches;}
-function applyTheme(){let t=null;try{t=localStorage.getItem('dl.theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);}
+function applyTheme(){let t=null;try{t=localStorage.getItem('dl.theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);applyV2();}
+function v2On(){try{return localStorage.getItem('dl.v2')==='1';}catch(e){return false;}}
+function applyV2(){document.documentElement.classList.toggle('v2',v2On());}
+function toggleV2(){const on=!v2On();try{localStorage.setItem('dl.v2',on?'1':'0');}catch(e){}applyV2();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Новий дизайн увімкнено — бачите лише ви':'Повернуто поточний дизайн');}
+function v2Btn(){return el('button',{type:'button',role:'menuitem',onclick:toggleV2},svg('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/>'),el('span',{class:'grow',text:v2On()?'Повернути поточний дизайн':'Новий дизайн (тест)'}));}
 function toggleTheme(){const nt=isDarkNow()?'light':'dark';document.documentElement.setAttribute('data-theme',nt);try{localStorage.setItem('dl.theme',nt);}catch(e){}renderHeaderBtns();if(WIDE.matches)renderTabs();requestAnimationFrame(placeInd);}
 function renderHeaderBtns(){const tb=document.getElementById('themeBtn');const dark=isDarkNow();tb.replaceChildren(svg(dark?I_SUN:I_MOON));tb.setAttribute('aria-label',dark?'Світла тема':'Темна тема');tb.title=dark?'Світла тема':'Темна тема';tb.onclick=toggleTheme;
   const sb=document.getElementById('supBtn');const n=S.db?tkBadge():0;sb.replaceChildren(...[svg(I_SUP),n?el('span',{class:'badge',text:String(n)}):null].filter(Boolean));sb.title=isDev()?'Запити підтримки':'Підтримка';sb.onclick=()=>go('support');sb.classList.toggle('on',S.tab==='support'||S.tab==='ticket');}
@@ -4650,7 +4708,7 @@ function logErr(msg,src){const k=String(msg).slice(0,120);if(_errSeen[k]&&Date.n
 addEventListener('error',e=>{if(e&&e.message&&!/ResizeObserver/.test(e.message))logErr(e.message,(e.filename||'').split('/').pop()+':'+(e.lineno||''));});
 addEventListener('unhandledrejection',e=>{const r=e&&e.reason;logErr('Promise: '+(r&&(r.message||r.code)||r),r&&r.stack&&String(r.stack).split('\n')[1]);});
 function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ лише для ролі Dev.'}))];
-  const out=[];const L=S.log||[];const now=Date.now();const d1=L.filter(x=>now-x.at<864e5);const errs=L.filter(x=>x.kind==='err');const e1=d1.filter(x=>x.kind==='err');
+  const out=[el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Новий дизайн (тест)'}),el('span',{class:'muted small',text:'Вмикається лише у вашому браузері — інші бачать поточний дизайн.'})),el('button',{type:'button',class:'btn sm',onclick:toggleV2},v2On()?'Вимкнути':'Увімкнути'))];const L=S.log||[];const now=Date.now();const d1=L.filter(x=>now-x.at<864e5);const errs=L.filter(x=>x.kind==='err');const e1=d1.filter(x=>x.kind==='err');
   const ppl=[...new Set(d1.map(x=>x.name))];const onl=S.staff.filter(x=>x.userId&&isOnline(x.id));
   out.push(el('div',{class:'card',style:'padding:16px;margin-bottom:12px'},el('h3',{style:'margin:0 0 4px;font-size:16px',text:'👁 Перегляд як роль'}),el('p',{class:'muted small',style:'margin:0 0 12px',text:'Побачте застосунок очима іншої ролі: меню, розділи, «Що нового», доступи. Дії виконуються від вашого імені — для перевірки, не для роботи.'}),
     el('div',{class:'dv-as'},ROLES.filter(r=>r.id!=='dev').map(r=>el('button',{type:'button',class:'btn ghost sm',onclick:()=>setAsRole(r.id)},r.name)))));
