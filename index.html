@@ -2678,6 +2678,45 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 @media (min-width:1200px){.ar-units{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ar-u.k-park .ar-uid{background:#1F2D52;color:#A9C1F5}}
 :root[data-theme="dark"] .ar-u.k-park .ar-uid{background:#1F2D52;color:#A9C1F5}
+.w-top{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.w-kpi3{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.w-kpi3 .w-k.main{grid-column:1/-1}
+@media (min-width:900px){.w-top{grid-template-columns:minmax(0,1fr) minmax(0,1.55fr)}.w-kpi3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.wb{display:flex;flex-direction:column;gap:12px;padding:16px!important;min-width:0}
+.wb-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.wb-h b{font-size:16px}
+.wb-in{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.wb-in>span{flex:1 0 100%}
+.wb-f{flex:1 1 130px;flex-direction:row!important;align-items:center;gap:6px!important;color:var(--muted)}
+.wb-f .w-bill{flex:1;min-width:0}
+.wb-body{display:flex;align-items:center;gap:18px}
+.wb-dwrap{position:relative;width:136px;height:136px;flex:none}
+.wb-donut{width:100%;height:100%}
+.wb-donut circle{fill:none;stroke-width:16}
+.wb-track{stroke:var(--surface-2)}
+.wb-a{stroke:#2BB3C9;stroke-linecap:butt}
+.wb-l{stroke:#E8892C}
+.wb.bad .wb-l{stroke:#D9483B}
+@media (prefers-reduced-motion:no-preference){.wb-a,.wb-l{transition:stroke-dasharray .45s ease,stroke-dashoffset .45s ease}}
+.wb-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.wb-pct{font-family:var(--display);font-size:22px;font-variant-numeric:tabular-nums}
+.wb-cl{font-size:11px;color:var(--muted);font-weight:700}
+.wb-legend{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.wb-li{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:8px;align-items:start}
+.wb-sw{width:12px;height:12px;border-radius:3px;margin-top:3px}
+.wb-sw.a{background:#2BB3C9}.wb-sw.l{background:#E8892C}.wb-sw.l.bad{background:#D9483B}.wb-sw.o{background:#2E8B5E}
+.wb-ln{display:flex;flex-direction:column;gap:1px;font-weight:700;font-size:14px}
+.wb-ln small{font-weight:600;font-size:12px;color:var(--muted)}
+.wb-lv{display:flex;flex-direction:column;align-items:flex-end;font-variant-numeric:tabular-nums}
+.wb-lv b{font-size:15px;white-space:nowrap}
+.wb-lv small{font-size:12px;color:var(--muted);font-weight:700}
+.wb.bad .wb-li.l .wb-lv b,.wb.bad .wb-li.l .wb-lv small{color:#D9483B}
+.wb-split{display:flex;flex-direction:column;gap:2px;padding-top:8px;border-top:1px solid var(--line)}
+.wb-split .neg{color:var(--warn)}
+.wb-hint{margin:0;font-size:13px;color:var(--muted);font-weight:600}
+.wb.bad .wb-hint{color:#D9483B}
+.wb.wb-empty .wb-hint{color:var(--accent-ink);background:var(--accent-soft);border-radius:10px;padding:8px 10px}
+@media (max-width:420px){.wb-body{flex-direction:column;align-items:stretch}.wb-dwrap{align-self:center}}
 /* ===== Графік: швидке заповнення ===== */
 .sc-tools{display:flex;flex-direction:column;gap:10px;padding:12px}
 .sc-tools.on{box-shadow:0 0 0 2px var(--accent),var(--shadow)}
@@ -3823,6 +3862,40 @@ function wPerBar(per){const exists=!!S.wPerD[per];return el('div',{class:'w-per 
   el('button',{class:'iconbtn',type:'button','aria-label':'Попередній місяць',onclick:()=>{S.wPer=perShift(per,-1);render();}},svg('<path d="M15 5l-7 7 7 7"/>')),
   el('div',{class:'w-per-c'},el('b',{text:perLabel(per)}),el('span',{class:'muted small',text:exists?'звітний період':'ще не створено'})),
   el('button',{class:'iconbtn',type:'button','aria-label':'Наступний місяць',onclick:()=>{S.wPer=perShift(per,1);render();}},svg('<path d="m9 5 7 7-7 7"/>')));}
+/* Зведення та баланс: скільки води з рахунку Водоканалу перевиставлено резидентам, а скільки — нестача УК */
+function wBalance(per,actual,mains,billIn,uahIn){const P=S.wPerD[per]||{};const norm=P.tolPct!=null&&!isNaN(+P.tolPct)?+P.tolPct:5;
+  const R=54,C=2*Math.PI*R;const NS='http://www.w3.org/2000/svg';const mk=(t,a)=>{const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);return n;};
+  const svgEl=mk('svg',{viewBox:'0 0 140 140',class:'wb-donut',role:'img'});const track=mk('circle',{cx:70,cy:70,r:R,class:'wb-track'});
+  const arcA=mk('circle',{cx:70,cy:70,r:R,class:'wb-a','stroke-dasharray':'0 '+C,transform:'rotate(-90 70 70)'});const arcL=mk('circle',{cx:70,cy:70,r:R,class:'wb-l','stroke-dasharray':'0 '+C,transform:'rotate(-90 70 70)'});
+  svgEl.append(track,arcL,arcA);const cPct=el('b',{class:'wb-pct'}),cLbl=el('small',{class:'wb-cl'});
+  const donut=el('div',{class:'wb-dwrap'},svgEl,el('div',{class:'wb-center'},cPct,cLbl));
+  const rowA=el('div',{class:'wb-li a'}),rowL=el('div',{class:'wb-li l'}),hint=el('p',{class:'wb-hint'}),split=el('div',{class:'wb-split'});
+  const parse=inp=>{const t=String(inp.value||'').trim().replace(/\s/g,'').replace(',','.');if(t==='')return null;const v=parseFloat(t);return isNaN(v)?NaN:v;};
+  const pct=v=>(Math.round(v*10)/10).toLocaleString('uk-UA',{maximumFractionDigits:1})+'%';
+  const li=(row,cls,name,m3,p,extra)=>row.replaceChildren(el('i',{class:'wb-sw '+cls}),el('span',{class:'wb-ln'},el('span',{text:name}),extra?el('small',{text:extra}):null),el('span',{class:'wb-lv'},el('b',{text:m3}),el('small',{text:p})));
+  const card=el('div',{class:'card wb'});
+  const upd=()=>{const bill=parse(billIn),uah=parse(uahIn);const ok=bill!=null&&!isNaN(bill)&&bill>0;card.classList.toggle('wb-empty',!ok);
+    if(!ok){arcA.setAttribute('stroke-dasharray','0 '+C);arcL.setAttribute('stroke-dasharray','0 '+C);cPct.textContent='—';cLbl.textContent='немає рахунку';
+      li(rowA,'a','Зібрана вода (розподілено)',fm3(actual)+' м³','');rowL.replaceChildren();split.replaceChildren();
+      hint.textContent=bill!=null&&isNaN(bill)?'Введіть число в полі рахунку.':'Введіть дані рахунку Водоканалу (м³) — побачите, яку частку води перевиставлено резидентам, а яка є нестачею УК.';svgEl.setAttribute('aria-label','Баланс: немає даних рахунку');return;}
+    const got=Math.max(0,Math.min(actual,bill)),loss=bill-actual,lossP=Math.max(0,loss)/bill*100,gotP=got/bill*100;const over=loss<0;const bad=lossP>norm;
+    card.classList.toggle('bad',bad);card.classList.toggle('over',over);
+    const la=C*gotP/100,ll=C*lossP/100,gap=la&&ll?1.5:0;arcA.setAttribute('stroke-dasharray',Math.max(0,la-gap)+' '+C);arcL.setAttribute('stroke-dasharray',Math.max(0,ll-gap)+' '+C);arcL.setAttribute('stroke-dashoffset',String(-la));
+    cPct.textContent=pct(gotP);cLbl.textContent='зібрано';
+    const price=uah!=null&&!isNaN(uah)&&uah>0?uah/bill:null;const money=v=>price?'≈ '+Math.round(v*price).toLocaleString('uk-UA')+' грн':'';
+    li(rowA,'a','Зібрана вода (розподілено)',fm3(got)+' м³',pct(gotP),money(got));
+    if(over)li(rowL,'o','Перевиставлено понад рахунок',fm3(-loss)+' м³','+'+pct(-loss/bill*100),'резиденти показали більше, ніж у рахунку');
+    else li(rowL,'l'+(bad?' bad':''),'Нестача / втрати УК',fm3(loss)+' м³',pct(lossP),[money(loss),'норма ≤ '+pct(norm)].filter(Boolean).join(' · '));
+    hint.textContent=over?'Сума по резидентах більша за рахунок — перевірте показники або рахунок.':bad?'Втрати вище норми — варто перевірити об’єкти з найбільшим відхиленням.':'Втрати в межах норми.';
+    const net=bill-mains,inn=mains-actual;split.replaceChildren(el('span',{class:'muted small',text:'Звідки різниця:'}),
+      el('span',{class:'small'},'рахунок − загальнобудинкові ',el('b',{class:net>0?'neg':'',text:(net>0?'+':'')+fm3(net)+' м³'})),
+      el('span',{class:'small'},'загальнобудинкові − резиденти ',el('b',{class:inn>0?'neg':'',text:(inn>0?'+':'')+fm3(inn)+' м³'})));
+    svgEl.setAttribute('aria-label','Зібрано '+pct(gotP)+', '+(over?'перевиставлено понад рахунок':'нестача '+pct(lossP)));};
+  billIn.addEventListener('input',upd);uahIn.addEventListener('input',upd);
+  card.append(el('div',{class:'wb-h'},el('b',{text:'Зведення та баланс'}),el('span',{class:'muted small',text:perLabel(per)})),
+    el('div',{class:'wb-in'},el('span',{class:'muted small',text:'Рахунок Водоканалу'}),el('label',{class:'wb-f'},billIn,el('small',{text:'м³'})),el('label',{class:'wb-f'},uahIn,el('small',{text:'грн'}))),
+    el('div',{class:'wb-body'},donut,el('div',{class:'wb-legend'},rowA,rowL,split)),hint);
+  upd();return card;}
 function waterHome(){const per=wCurPer();const out=[wPerBar(per)];
   if(!S.wPerD[per]){out.push(el('div',{class:'card empty'},el('span',{class:'w-drop big'},svg(UKS.water.ic)),el('h2',{text:'Період ще не створено'}),
     el('p',{class:'muted',text:'Початкові показники візьмемо з кінцевих попереднього місяця — залишиться внести нові.'}),canW()?el('button',{class:'btn',type:'button',onclick:()=>wNewPeriod(per)},'Створити «'+perLabel(per)+'»'):null));
@@ -3833,11 +3906,10 @@ function waterHome(){const per=wCurPer();const out=[wPerBar(per)];
     const billUah=S.wPerD[per].billUah;const billUahIn=el('input',{type:'text',inputmode:'decimal',value:billUah==null?'':String(billUah),placeholder:'грн',class:'w-bill','aria-label':'Рахунок Водоканалу, грн',disabled:canW()?null:true});
     billUahIn.addEventListener('change',()=>{const t=billUahIn.value.trim().replace(/\s/g,'').replace(',','.');const v=t===''?null:parseFloat(t);if(t!==''&&isNaN(v)){toast('Введіть число');return;}write(()=>S.db.doc('wPeriods/'+per).update({billUah:v}),'Збережено');});
     billIn.addEventListener('change',()=>{const v=billIn.value.trim()===''?null:parseFloat(billIn.value.replace(',','.'));if(billIn.value.trim()!==''&&isNaN(v)){toast('Введіть число');return;}write(()=>S.db.doc('wPeriods/'+per).update({bill:v}),'Збережено');});
-    out.push(el('div',{class:'w-kpi'},
-      el('div',{class:'card w-k main'},el('span',{class:'muted small',text:'Фактичне споживання'}),el('b',{},fm3(actual),el('small',{text:' м³'})),el('span',{class:'muted small',text:'сума по резидентах і окремих лічильниках'})),
-      el('div',{class:'card w-k'},el('span',{class:'muted small',text:'По загальнобудинкових'}),el('b',{},fm3(mains),el('small',{text:' м³'}))),
-      el('div',{class:'card w-k'},el('span',{class:'muted small',text:'Рахунок Водоканалу'}),el('div',{class:'w-billrow'},billIn,el('small',{text:'м³'})),el('div',{class:'w-billrow'},billUahIn,el('small',{text:'грн'})),bill!=null?el('span',{class:'small '+(bill-mains>0?'neg':'pos'),text:'різниця з загальнобуд.: '+(bill-mains>0?'+':'')+fm3(bill-mains)}):null),
-      el('div',{class:'card w-k'},el('span',{class:'muted small',text:'Внесено показників'}),el('b',{},filled+' / '+total),el('div',{class:'w-prog'},el('i',{style:'width:'+(total?Math.round(filled/total*100):0)+'%'})))));}
+    const kMain=el('div',{class:'card w-k main'},el('span',{class:'muted small',text:'Фактичне споживання'}),el('b',{},fm3(actual),el('small',{text:' м³'})),el('span',{class:'muted small',text:'сума по резидентах і окремих лічильниках'}));
+    const kMains=el('div',{class:'card w-k'},el('span',{class:'muted small',text:'По загальнобудинкових'}),el('b',{},fm3(mains),el('small',{text:' м³'})));
+    const kFill=el('div',{class:'card w-k'},el('span',{class:'muted small',text:'Внесено показників'}),el('b',{},filled+' / '+total),el('div',{class:'w-prog'},el('i',{style:'width:'+(total?Math.round(filled/total*100):0)+'%'})));
+    out.push(el('div',{class:'w-top'},el('div',{class:'w-kpi3'},kMain,kMains,kFill),wBalance(per,actual,mains,billIn,billUahIn)));}
   out.push(el('div',{class:'row between'},el('h2',{text:'Об’єкти'}),el('div',{class:'row',style:'gap:6px'},canW()&&S.wPerD[per]?el('button',{class:'btn sm wp-btn',type:'button',onclick:()=>wPhotoImport(per)},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),' З фото'):null,...ioBtns(()=>wExportMenu(per),canW()?()=>wImport(per):null),canW()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>wObjSheet(null)},'+ Об’єкт'):null)));
   out.push(el('div',{class:'w-objs'},st.map(([o,x])=>el('button',{type:'button',class:'card w-obj',onclick:()=>{S.hist.push(snap());S.wObjSel=o.id;S.wQ='';SC().scrollTop=0;render();animIn(1);}},
     el('div',{class:'w-oh'},el('span',{class:'w-drop'},svg(UKS.water.ic)),el('b',{text:o.name}),x.bad?el('span',{class:'w-badge bad',text:'⚠ '+x.bad}):null,el('span',{class:'uk-go'},svg('<path d="m9 6 6 6-6 6"/>'))),
