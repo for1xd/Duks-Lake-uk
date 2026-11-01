@@ -2717,6 +2717,47 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 .wb.bad .wb-hint{color:#D9483B}
 .wb.wb-empty .wb-hint{color:var(--accent-ink);background:var(--accent-soft);border-radius:10px;padding:8px 10px}
 @media (max-width:420px){.wb-body{flex-direction:column;align-items:stretch}.wb-dwrap{align-self:center}}
+.ws-mas{display:block!important;columns:1;column-gap:12px}
+.ws-mas>.card{break-inside:avoid;margin:0 0 12px;width:100%}
+@media (min-width:900px){.ws-mas{columns:2}}
+.wst-bn{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 16px 12px;padding:10px 12px;border-radius:12px;background:var(--amber-soft);color:var(--amber-ink)}
+.wst-bn b{font-size:14px}
+.wst{padding:0!important;overflow:hidden}
+.wst-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px 10px}
+.wst-hd h2{margin:0}
+.wst-tools{flex:1 1 220px;max-width:360px}
+.wst-row{display:grid;grid-template-columns:56px 70px minmax(0,1fr) 120px;gap:10px;align-items:center;padding:6px 14px;border-top:1px solid var(--line);min-height:48px}
+.wst-h{min-height:0;padding-top:8px;padding-bottom:8px;background:var(--surface-2);font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.wst-h span:last-child{text-align:right}
+.wst-g{border-top:1px solid var(--line)}
+.wst-gh{display:flex;align-items:center;gap:10px;width:100%;border:0;background:var(--surface);color:inherit;font:inherit;padding:10px 14px;min-height:48px;text-align:left;cursor:pointer;position:sticky;top:0}
+.wst-gh:hover{background:var(--surface-2)}
+.wst-gh b{font-size:15px}
+.wst-dot{width:12px;height:12px;border-radius:4px;flex:none}
+.wst-sum{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums}
+.wst-chev{display:flex;color:var(--muted);transition:transform .2s}
+.wst-chev svg{width:18px;height:18px}
+.wst-g:not(.open) .wst-chev{transform:rotate(-90deg)}
+.wst-fl,.wst-rm{color:var(--muted);font-variant-numeric:tabular-nums;font-size:13.5px;text-align:center}
+.wst-tn{border:0;background:transparent;font:inherit;color:inherit;text-align:left;padding:0;min-width:0;display:flex;flex-direction:column;gap:2px}
+.wst-tn b{font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wst-tn.ed{cursor:pointer}
+.wst-tn.ed:hover b{text-decoration:underline;text-decoration-color:var(--line)}
+.wst-warn{font-size:11.5px;font-weight:700;color:var(--amber-ink)}
+.wst-f{background:var(--surface-2);font-weight:800}
+.wst-empty{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:16px;border-top:1px solid var(--line)}
+@media (max-width:520px){.wst-row{grid-template-columns:34px 46px minmax(0,1fr) 92px;gap:6px;padding:6px 10px}.wst-h{font-size:10px}}
+.wsp-list{display:flex;flex-direction:column;gap:12px;max-height:56vh;overflow-y:auto}
+.wsp-gh{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:2px 2px 6px}
+.wsp-gh i{width:10px;height:10px;border-radius:3px}
+.wsp-it{display:flex;align-items:center;gap:10px;width:100%;border:0;border-top:1px solid var(--line);background:transparent;color:inherit;font:inherit;text-align:left;padding:10px 4px;min-height:52px;cursor:pointer}
+.wsp-it:hover:not(:disabled){background:var(--surface-2)}
+.wsp-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.wsp-t b{font-size:15px}
+.wsp-t small{font-size:12.5px;color:var(--muted)}
+.wsp-st{font-size:13px;font-weight:800;color:var(--accent);white-space:nowrap}
+.wsp-it.added{opacity:.6;cursor:default}
+.wsp-it.added .wsp-st{color:var(--ok)}
 /* ===== Графік: швидке заповнення ===== */
 .sc-tools{display:flex;flex-direction:column;gap:10px;padding:12px}
 .sc-tools.on{box-shadow:0 0 0 2px var(--accent),var(--shadow)}
@@ -4169,11 +4210,11 @@ function wsSetVol(per,id,raw){const t=String(raw).trim().replace(/\s/g,'').repla
   write(()=>S.db.doc('waste/'+per).update({rows:{[id]:{vol:v,at:Date.now(),by:S.myId}}}),'Збережено');}
 function wasteView(){const per=wsCurPer();const out=[wsPerBar(per)];const can=canW();
   if(!S.ws[per]){out.push(el('div',{class:'card empty'},el('span',{class:'w-drop big',style:'background:linear-gradient(135deg,#2E8B5E,#7BC47F)'},svg(UKS.waste.ic)),el('h2',{text:'Період ще не створено'}),
-    el('p',{class:'muted',text:'Список резидентів перенесемо з попереднього місяця — залишиться внести обсяги.'}),can?el('button',{class:'btn',type:'button',onclick:()=>wsNewPeriod(per)},'Створити «'+perLabel(per)+'»'):null));return out;}
+    el('p',{class:'muted',text:'Перенесемо резидентів, які користуються вивозом, з попереднього місяця — залишиться внести обсяги. Нових додасте з еталонної бази.'}),can?el('button',{class:'btn',type:'button',onclick:()=>wsNewPeriod(per)},'Створити «'+perLabel(per)+'»'):null));return out;}
   const rows=wsRows(per);const blds=wsBlds(rows);const tot=rows.reduce((a,r)=>a+(+r.vol||0),0);const inB=rows.filter(r=>r.bld!==WS_LOC).reduce((a,r)=>a+(+r.vol||0),0);
   const filled=rows.filter(r=>r.vol!=null).length;const ps=wsPers();const prev=ps.filter(p=>p<per).pop();const pt=prev?wsRows(prev).reduce((a,r)=>a+(+r.vol||0),0):null;const ch=pt?((tot-pt)/pt*100):null;
   const withV=rows.filter(r=>+r.vol>0);const avg=withV.length?tot/withV.length:0;
-  out.push(el('div',{class:'dz-filters'},el('div',{class:'dz-acts'},...ioBtns(()=>wsExport(per),can?()=>wsImport(per):null),can?el('button',{class:'btn ghost sm',type:'button',onclick:()=>wsEdit(per,null)},'+ Резидент'):null)));
+  out.push(el('div',{class:'dz-filters'},el('div',{class:'dz-acts'},...ioBtns(()=>wsExport(per),can?()=>wsImport(per):null),can?el('button',{class:'btn sm',type:'button',onclick:()=>wsPick(per)},'+ Додати резидента'):null)));
   out.push(el('div',{class:'ws-kpi'},
     el('div',{class:'card dz-k hero'},el('span',{text:'Вивезено сміття за місяць'}),el('b',{},fl(tot),el('small',{text:' л'})),ch!=null?el('span',{class:'ws-trend',text:(ch>0?'▲ +':ch<0?'▼ ':'')+ch.toFixed(1).replace('.',',')+'% до '+perLabel(prev).split(' ')[0].toLowerCase()}):el('small',{text:'≈ '+(tot/1000).toLocaleString('uk-UA',{maximumFractionDigits:1})+' м³'})),
     (()=>{const bb=blds.map(b=>[b,rows.filter(r=>r.bld===b).reduce((a,r)=>a+(+r.vol||0),0)]).sort((a,b)=>b[1]-a[1])[0]||['—',0];return el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'Найбільше сміття — будинок'}),el('b',{text:bb[0]===WS_LOC?'Локація':'Буд. '+bb[0]}),el('small',{class:'muted',text:fl(bb[1])+' л · '+(tot?Math.round(bb[1]/tot*100):0)+'% усього вивозу'}));})(),
@@ -4194,53 +4235,104 @@ function wasteView(){const per=wsCurPer();const out=[wsPerBar(per)];const can=ca
   const mCard=el('div',{class:'card dz-card'},el('div',{class:'dz-ch'},el('b',{text:'Частка будинків'}),el('span',{class:'muted small',text:perLabel(per)})),
     el('div',{class:'ws-pie'},donut,el('div',{class:'ws-pl'},segs.sort((a,b)=>b.v-a.v).map(x=>el('div',{class:'ws-pli'},el('i',{style:'background:'+wsCol(x.b)}),el('span',{text:x.b===WS_LOC?'Окремо на локації':'Будинок '+x.b}),el('b',{text:Math.round(x.v/(tot||1)*100)+'%'}),el('small',{text:fl(x.v)+' л'}))))),
     mv.length>1?el('div',{class:'ws-hist'},mv.map(x=>el('button',{type:'button',class:'ws-hm'+(x.p===per?' cur':''),onclick:()=>{S.wsPer=x.p;render();}},el('small',{text:perLabel(x.p).split(' ')[0].slice(0,3)}),el('b',{text:Math.round(x.t/1000)+' м³'})))):el('p',{class:'muted small',style:'margin:0',text:'Порівняння по місяцях з’явиться з наступного місяця.'}));
-  out.push(el('div',{class:'dz-grid'},bCard,tCard,mCard,(()=>{const nil=rows.filter(r=>r.vol==null);return el('div',{class:'card dz-card'},el('div',{class:'dz-ch'},el('b',{text:'Без даних за місяць'}),el('span',{class:'muted small',text:nil.length+' резид.'})),
+  out.push(el('div',{class:'dz-grid ws-mas'},bCard,tCard,mCard,(()=>{const nil=rows.filter(r=>r.vol==null);return el('div',{class:'card dz-card'},el('div',{class:'dz-ch'},el('b',{text:'Без даних за місяць'}),el('span',{class:'muted small',text:nil.length+' резид.'})),
     nil.length?el('div',{class:'dz-resp'},nil.map(r=>el('span',{class:'dz-rc'},el('b',{text:r.tenant}),el('small',{text:wsName(r.bld)})))):el('p',{class:'muted',style:'margin:0',text:'Усі обсяги внесено ✓'}),
     el('p',{class:'muted small',style:'margin:0',text:'«—» означає, що вивозу не було або дані ще не внесені.'}));})()));
-  // blocks
-  const q=(S.wsQ||'').toLowerCase();const qi=el('input',{type:'search',placeholder:'Пошук резидента…',value:S.wsQ||'','aria-label':'Пошук резидента'});qi.addEventListener('input',()=>{S.wsQ=qi.value;const p=qi.selectionStart;render();const n=document.querySelector('.ws-tools input[type=search]');if(n){n.focus();n.setSelectionRange(p,p);}});
-  out.push(el('div',{class:'dz-tbl-wrap'},el('div',{class:'row between'},el('h2',{text:'Резиденти'}),el('span',{class:'muted small',text:rows.length+' резидентів'})),el('div',{class:'dz-tools ws-tools'},qi),
-    el('div',{class:'ws-blocks'},blds.map(b=>{const rs=rows.filter(r=>r.bld===b&&(!q||[r.tenant,r.floor].join(' ').toLowerCase().includes(q)));if(!rs.length)return null;const sm=rows.filter(r=>r.bld===b).reduce((a,r)=>a+(+r.vol||0),0);
-      return el('div',{class:'ws-blk'},el('div',{class:'ws-bh'},el('i',{style:'background:'+wsCol(b)}),el('b',{text:wsName(b)}),el('span',{class:'sum',text:fl(sm)+' л'})),
-        el('div',{class:'ws-r h'},el('span',{text:b===WS_LOC?'':'Пов.'}),el('span',{text:'Орендар'}),el('span',{text:'Сміття, л'})),
-        rs.map(r=>el('div',{class:'ws-r'},el('span',{class:'ws-fl',text:r.floor||''}),el('button',{type:'button',class:'ws-tn'+(can?' ed':''),onclick:()=>can?wsEdit(per,r):null},el('b',{text:r.tenant||'—'}),sm&&+r.vol>0?el('div',{class:'ws-share'},el('span',{style:'width:'+(r.vol/sm*100)+'%;background:'+wsCol(b)})):null),
-          can?(()=>{const i=el('input',{type:'text',inputmode:'decimal',class:'w-in ws-in','data-k':'ws.'+r.id,'aria-label':'Обсяг сміття '+r.tenant,value:r.vol==null?'':String(r.vol).replace('.',','),placeholder:'—'});
-            i.addEventListener('focus',()=>i.select());i.addEventListener('change',()=>wsSetVol(per,r.id,i.value));i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const all=[...document.querySelectorAll('.ws-in')];const k=all.indexOf(i);if(all[k+1])all[k+1].focus();else i.blur();}});return i;})()
-          :el('span',{class:'ws-v'+(r.vol==null?' nil':''),text:r.vol==null?'—':fl(r.vol)}))),
-        el('div',{class:'ws-r f'},el('span'),el('span',{text:'Разом'}),el('span',{class:'ws-v',text:fl(sm)})));}))));
+  out.push(wsTable(per,rows,blds,can));
   return out;}
+/* Еталон резидентів — ДЗ OPEX за останній місяць */
+function wsRef(){const ks=Object.keys(S.dz||{}).filter(k=>k.endsWith('_opex')).sort();const d=ks.length?S.dz[ks[ks.length-1]]:null;if(!d||!d.rows)return [];
+  const seen=new Set();return Object.entries(d.rows).filter(([,r])=>r&&!r.deleted&&String(r.tenant||'').trim()).map(([id,r])=>{const bld=/інші|окремо/i.test(r.bld||'')?WS_LOC:(dzBld(r.bld)||WS_LOC);
+    const room=String(r.room||'').trim();const m=room.match(/^\D{0,2}(\d{3,})/);const floor=m?String(Math.floor(+m[1]/100)):'';
+    return {rid:'opex:'+id,tenant:String(r.tenant).trim(),bld,room,floor,order:r.order||0};}).filter(x=>{const k=x.bld+'|'+x.tenant.toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});}
+const wsKey=r=>r.rid||((r.bld||'')+'|'+String(r.tenant||'').trim().toLowerCase());
+/* «Додати резидента»: пошук по еталону, назва/приміщення/поверх підтягуються автоматично */
+function wsPick(per,relink){const ref=wsRef();if(!ref.length){toast('Немає еталонних резидентів — спершу заповніть ДЗ OPEX');return;}
+  const list=el('div',{class:'wsp-list',role:'listbox'});const inp=el('input',{type:'search',placeholder:'Назва резидента або приміщення…','aria-label':'Пошук резидента',autocomplete:'off'});
+  const draw=()=>{const have=new Set(wsRows(per).map(wsKey));const q=inp.value.trim().toLowerCase();
+    const items=ref.filter(x=>!q||(x.tenant+' '+x.room+' '+x.bld).toLowerCase().includes(q));const blds=wsBlds(items);
+    list.replaceChildren(...(items.length?blds.map(b=>el('div',{class:'wsp-g'},el('div',{class:'wsp-gh'},el('i',{style:'background:'+wsCol(b)}),wsName(b)),
+      items.filter(x=>x.bld===b).sort((a,c)=>a.order-c.order).map(x=>{const added=have.has(x.rid)||have.has(x.bld+'|'+x.tenant.toLowerCase());
+        return el('button',{type:'button',class:'wsp-it'+(added?' added':''),disabled:added&&!relink?true:null,onclick:()=>wsAddRef(per,x,relink).then(()=>{if(relink)closeSheet();else{draw();inp.focus();}})},
+          el('span',{class:'wsp-t'},el('b',{text:x.tenant}),el('small',{text:[x.room?'прим. '+x.room:'',x.floor?'поверх '+x.floor:''].filter(Boolean).join(' · ')||wsName(x.bld)})),
+          el('span',{class:'wsp-st',text:added?'✓ у списку':'+ Додати'}));}))):[el('p',{class:'muted',style:'margin:8px 0',text:'Нічого не знайдено в еталонній базі OPEX.'})]));};
+  inp.addEventListener('input',draw);
+  openSheet(el('h2',{text:relink?'Прив’язати до еталону':'Додати резидента'}),el('p',{class:'muted small',style:'margin:0',text:relink?'«'+relink.tenant+'» → оберіть резидента з еталонної бази OPEX. Обсяг збережеться.':'Лише резиденти, які користуються вивозом. Назва, приміщення й поверх беруться з еталонної бази OPEX.'}),inp,list,
+    el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Готово'));draw();if(!IS_TOUCH)inp.focus();}
+async function wsAddRef(per,x,relink){const rows=wsRows(per);
+  const d={tenant:x.tenant,bld:x.bld,room:x.room,floor:x.floor,rid:x.rid,at:Date.now(),by:S.myId};
+  if(relink){await write(()=>S.db.doc('waste/'+per).update({rows:{[relink.id]:d}}),'Прив’язано до еталону');return;}
+  d.vol=null;d.order=rows.reduce((a,r)=>Math.max(a,r.order||0),0)+1;
+  await write(()=>S.db.doc('waste/'+per).update({rows:{['w'+Date.now().toString(36)]:d}}),'Додано: '+x.tenant);}
+/* Резиденти: одна таблиця, згрупована по будинках (акордеон), без порожніх зон */
+function wsTable(per,rows,blds,can){const q=(S.wsQ||'').toLowerCase();S.wsOpen=S.wsOpen||{};
+  const qi=el('input',{type:'search',placeholder:'Пошук резидента…',value:S.wsQ||'','aria-label':'Пошук резидента'});qi.addEventListener('input',()=>{S.wsQ=qi.value;const p=qi.selectionStart;render();const n=document.querySelector('.wst-tools input[type=search]');if(n){n.focus();n.setSelectionRange(p,p);}});
+  const fltr=r=>!q||[r.tenant,r.floor,r.room].join(' ').toLowerCase().includes(q);
+  const card=el('div',{class:'card wst'},el('div',{class:'wst-hd'},el('div',{},el('h2',{text:'Резиденти з вивозом'}),el('span',{class:'muted small',text:rows.length+' резидентів · '+blds.length+' об’єктів'})),el('div',{class:'wst-tools'},qi)),
+    el('div',{class:'wst-row wst-h',role:'row'},el('span',{text:'Пов.'}),el('span',{text:'Прим.'}),el('span',{text:'Орендар'}),el('span',{text:'Обсяг, л'})));
+  const leg=rows.filter(r=>!r.rid);if(can&&leg.length){const nm=s=>String(s||'').toLowerCase().replace(/[’'"«»`ʼ.,]/g,'').replace(/\s+/g,' ').trim();const ref=wsRef();
+    const hits=leg.map(r=>[r,ref.filter(x=>x.bld===r.bld&&nm(x.tenant)===nm(r.tenant))]).filter(([,m])=>m.length===1);
+    card.insertBefore(el('div',{class:'wst-bn'},el('span',{},el('b',{text:leg.length+' '+plural(leg.length,'резидент','резиденти','резидентів')+' не прив’язано до еталону OPEX.'}),el('small',{class:'muted',text:hits.length?' Точних збігів назв: '+hits.length+'. Інших — натисніть на назву й оберіть з еталону.':' Натисніть на назву й оберіть з еталону.'})),
+      hits.length?el('button',{class:'btn sm',type:'button',onclick:async()=>{const ch={};hits.forEach(([r,[x]])=>{ch[r.id]={tenant:x.tenant,bld:x.bld,room:x.room,floor:r.floor||x.floor,rid:x.rid};});await write(()=>S.db.doc('waste/'+per).update({rows:ch}),'Прив’язано: '+hits.length);}},'Прив’язати збіги ('+hits.length+')'):null),card.children[1]);}
+  if(!rows.length)card.append(el('div',{class:'wst-empty'},el('p',{class:'muted',style:'margin:0',text:'Ще нікого не додано. Додайте резидентів, які користуються вивозом сміття від УК.'}),can?el('button',{class:'btn sm',type:'button',onclick:()=>wsPick(per)},'+ Додати резидента'):null));
+  blds.forEach(b=>{const all=rows.filter(r=>r.bld===b);const rs=all.filter(fltr);if(!rs.length)return;const sm=all.reduce((a,r)=>a+(+r.vol||0),0);const nf=all.filter(r=>r.vol!=null).length;
+    const open=q?true:S.wsOpen[b]!==false;const sec=el('section',{class:'wst-g'+(open?' open':'')});
+    const head=el('button',{type:'button',class:'wst-gh','aria-expanded':String(open),onclick:()=>{S.wsOpen[b]=!open;render();}},
+      el('i',{class:'wst-dot',style:'background:'+wsCol(b)}),el('b',{text:wsName(b)}),el('span',{class:'muted small',text:all.length+' · внесено '+nf+'/'+all.length}),el('span',{class:'wst-sum',text:fl(sm)+' л'}),el('span',{class:'wst-chev'},svg('<path d="m6 9 6 6 6-6"/>')));
+    sec.append(head);
+    if(open)rs.forEach(r=>{const legacy=!r.rid;
+      sec.append(el('div',{class:'wst-row',role:'row'},el('span',{class:'wst-fl',text:r.floor||'—'}),el('span',{class:'wst-rm',text:r.room||'—'}),
+        el('button',{type:'button',class:'wst-tn'+(can?' ed':''),onclick:()=>can?wsEdit(per,r):null},el('b',{text:r.tenant||'—'}),legacy?el('small',{class:'wst-warn',text:'не прив’язано до еталону'}):(sm&&+r.vol>0?el('span',{class:'ws-share'},el('span',{style:'width:'+(r.vol/sm*100)+'%;background:'+wsCol(b)})):null)),
+        can?(()=>{const i=el('input',{type:'text',inputmode:'decimal',class:'w-in ws-in','data-k':'ws.'+r.id,'aria-label':'Обсяг сміття '+r.tenant,value:r.vol==null?'':String(r.vol).replace('.',','),placeholder:'—'});
+          i.addEventListener('focus',()=>i.select());i.addEventListener('change',()=>wsSetVol(per,r.id,i.value));i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const all=[...document.querySelectorAll('.ws-in')];const k=all.indexOf(i);if(all[k+1])all[k+1].focus();else i.blur();}});return i;})()
+        :el('span',{class:'ws-v'+(r.vol==null?' nil':''),text:r.vol==null?'—':fl(r.vol)})));});
+    card.append(sec);});
+  const tot=rows.reduce((a,r)=>a+(+r.vol||0),0);if(rows.length)card.append(el('div',{class:'wst-row wst-f'},el('span'),el('span'),el('span',{text:'Разом'}),el('span',{class:'ws-v',text:fl(tot)+' л'})));
+  return card;}
 function wsEdit(per,r){const isNew=!r;r=r||{};const blds=wsAllBlds();
   const mk=(id,lbl,val,o)=>{const i=el('input',{id,value:val==null?'':String(val),...(o||{})});return [i,el('label',{for:id},lbl,i)];};
   const [tn,tnL]=mk('wsT','Орендар / резидент',r.tenant);const [bl,blL]=mk('wsB','Будинок',r.bld||(blds[0]||''),{list:'wsBl'});const [fl_,flL]=mk('wsF','Поверх',r.floor);const [vo,voL]=mk('wsV','Сміття за місяць, л',r.vol==null?'':String(r.vol).replace('.',','),{inputmode:'decimal',placeholder:'—'});
-  openSheet(el('h2',{text:isNew?'Новий резидент':'Редагувати резидента'}),el('datalist',{id:'wsBl'},[...new Set([...WS_ORD,...blds,WS_LOC])].map(x=>el('option',{value:x}))),tnL,el('div',{class:'grid2'},blL,flL),voL,
+  if(r.rid){tn.disabled=true;bl.disabled=true;}
+  openSheet(el('h2',{text:isNew?'Новий резидент':'Редагувати резидента'}),r.rid?el('p',{class:'muted small',style:'margin:0',text:'Назва й будинок — з еталонної бази OPEX'+(r.room?' · приміщення '+r.room:'')}):(!isNew?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{closeSheet();wsPick(per,r);}},'Прив’язати до еталону OPEX'):null),el('datalist',{id:'wsBl'},[...new Set([...WS_ORD,...blds,WS_LOC])].map(x=>el('option',{value:x}))),tnL,el('div',{class:'grid2'},blL,flL),voL,
     el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:()=>{const t=vo.value.trim().replace(/\s/g,'').replace(',','.');const v=t===''||t==='-'?null:Math.round(parseFloat(t)*10)/10;if(t!==''&&t!=='-'&&isNaN(v)){toast('Обсяг: введіть число');return;}
-      const d={tenant:tn.value.trim(),bld:dzBld(bl.value)||WS_LOC,floor:fl_.value.trim(),vol:v,at:Date.now(),by:S.myId};if(!d.tenant){toast('Вкажіть резидента');return;}closeSheet();
+      const d={tenant:tn.value.trim(),bld:r.rid?r.bld:(dzBld(bl.value)||WS_LOC),floor:fl_.value.trim(),vol:v,at:Date.now(),by:S.myId};if(r.rid)d.tenant=r.tenant;if(!d.tenant){toast('Вкажіть резидента');return;}closeSheet();
       if(isNew){d.order=wsRows(per).reduce((a,x)=>Math.max(a,x.order||0),0)+1;write(()=>S.db.doc('waste/'+per).update({rows:{['w'+Date.now().toString(36)]:d}}),'Додано');}
       else write(()=>S.db.doc('waste/'+per).update({rows:{[r.id]:d}}),'Збережено');}},isNew?'Додати':'Зберегти'),
       !isNew?el('button',{class:'btn danger',type:'button',onclick:()=>confirmSheet('Прибрати «'+r.tenant+'» з цього місяця?','Прибрати',()=>write(()=>S.db.doc('waste/'+per).update({rows:{[r.id]:null}}),'Видалено'))},'Видалити'):null),
     el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
-function wsNewPeriod(per){const prev=wsPers().filter(p=>p<per).pop();const rows={};if(prev)wsRows(prev).forEach(r=>{rows[r.id]={bld:r.bld,floor:r.floor||'',tenant:r.tenant,vol:null,order:r.order||0};});
+function wsNewPeriod(per){const prev=wsPers().filter(p=>p<per).pop();const rows={};if(prev)wsRows(prev).forEach(r=>{rows[r.id]={bld:r.bld,floor:r.floor||'',room:r.room||'',rid:r.rid||null,tenant:r.tenant,vol:null,order:r.order||0};});
   write(()=>S.db.doc('waste/'+per).set({per,rows,at:Date.now(),by:S.myId}),'Місяць «'+perLabel(per)+'» створено');}
-async function wsExport(per){toast('Готую файл…');let X;try{X=await loadXlsx();}catch(e){toast('Не вдалося завантажити модуль Excel');return;}
-  const rows=wsRows(per);const blds=wsBlds(rows).filter(b=>b!==WS_LOC);const wb=X.utils.book_new();const L=c=>{let s='';c++;while(c){const m=(c-1)%26;s=String.fromCharCode(65+m)+s;c=Math.floor((c-1)/26);}return s;};
-  // layout like the original: 1.3 + 1.2 stacked in A, 2 in E, 4 in I, others next
-  const groups=[];const g0=blds.filter(b=>b==='1.3'||b==='1.2');if(g0.length)groups.push(g0);blds.filter(b=>!g0.includes(b)).forEach(b=>groups.push([b]));
-  const cells={};const merges=[];const refs=[];let maxR=0;const num=v=>/^\d+$/.test(String(v))?+v:v;
-  groups.forEach((g,gi)=>{const c0=gi*4;let r=0;g.forEach(b=>{cells[L(c0)+(r+1)]={v:'Буд.'+b};merges.push({s:{r,c:c0},e:{r,c:c0+2}});r++;
-    ['Поверх','Орендар','Сума сміття загально за місяць'].forEach((h,k)=>cells[L(c0+k)+(r+1)]={v:h});r++;const st=r+1;
-    rows.filter(x=>x.bld===b).forEach(x=>{cells[L(c0)+(r+1)]={v:x.floor===''||x.floor==null?'':num(x.floor)};cells[L(c0+1)+(r+1)]={v:x.tenant};cells[L(c0+2)+(r+1)]={v:x.vol==null?'-':x.vol};r++;});
-    if(r>=st)refs.push(L(c0+2)+st+':'+L(c0+2)+r);r++;});maxR=Math.max(maxR,r);});
-  const loc=rows.filter(x=>x.bld===WS_LOC);const tr=maxR+2;
-  cells['A'+tr]={v:'Сума л'};cells['B'+tr]={f:refs.length?'SUM('+refs.join(',')+')':'0'};
-  cells['A'+(tr+1)]={v:'Окремо на локації, л'};cells['B'+(tr+1)]={f:"'Окремо на локації'!B"+(loc.length+2)};
-  cells['A'+(tr+2)]={v:'Разом, л'};cells['B'+(tr+2)]={f:'B'+tr+'+B'+(tr+1)};
-  const toWs=(cells,w)=>{const ws={};let mr=1,mc=0;for(const k in cells){const c=cells[k];const m=k.match(/^([A-Z]+)(\d+)$/);mr=Math.max(mr,+m[2]);mc=Math.max(mc,X.utils.decode_col(m[1]));
-      ws[k]=c.f?{t:'n',f:c.f}:typeof c.v==='number'?{t:'n',v:c.v,z:'#,##0'}:{t:'s',v:String(c.v)};}ws['!ref']='A1:'+L(mc)+mr;ws['!cols']=w;return ws;};
-  const w1=[];groups.forEach(()=>w1.push({wch:8},{wch:24},{wch:16},{wch:3}));const ws1=toWs(cells,w1);ws1['!merges']=merges;
-  const c2={A1:{v:'Резидент'},B1:{v:'Сміття загально за місяць'}};loc.forEach((x,i)=>{c2['A'+(i+2)]={v:x.tenant};c2['B'+(i+2)]={v:x.vol==null?'-':x.vol};});c2['A'+(loc.length+2)]={v:'Сума л'};c2['B'+(loc.length+2)]={f:loc.length?'SUM(B2:B'+(loc.length+1)+')':'0'};
-  X.utils.book_append_sheet(wb,toWs(c2,[{wch:26},{wch:16}]),WS_LOC);X.utils.book_append_sheet(wb,ws1,'Будівлі');
-  const buf=X.write(wb,{bookType:'xlsx',type:'array'});const dl=await claude.use('downloads').catch(()=>null);if(!dl){toast('Завантаження файлів тут недоступне');return;}
-  try{await dl.save({filename:'Облік сміття '+perLabel(per)+'.xlsx',data:new Blob([buf])});}catch(e){if(e&&e.code!=='declined')toast('Не вдалося зберегти файл');}}
+/* Excel для бухгалтерії: одна вертикальна таблиця + підсумок по будинках */
+function wsXlsx(ExcelJS,per,rows){const wb=new ExcelJS.Workbook();wb.creator='Duck’s Lake';wb.created=new Date();
+  const NAVY='FF1A365D',LINE='FFB8C4D2',B=()=>{const s={style:'thin',color:{argb:LINE}};return {top:s,left:s,bottom:s,right:s};};
+  const ws=wb.addWorksheet('Облік сміття',{views:[{state:'frozen',ySplit:1,showGridLines:false}],properties:{tabColor:{argb:'FF2E8B5E'}}});
+  ws.columns=[{header:'Об’єкт (Будинок)',key:'b',width:22},{header:'Поверх',key:'f',width:9},{header:'Номер приміщення',key:'r',width:16},{header:'Орендар',key:'t',width:40},{header:'Обсяг сміття за місяць (л)',key:'v',width:18}];
+  const h=ws.getRow(1);h.height=32;h.eachCell(c=>{c.font={name:'Calibri',size:11,bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};c.alignment={vertical:'middle',horizontal:'center',wrapText:true};c.border=B();});
+  const order=wsBlds(rows);const nk=v=>{const n=parseFloat(String(v||'').replace(',','.'));return isNaN(n)?1e9:n;};
+  const sorted=[...rows].sort((a,b)=>order.indexOf(a.bld)-order.indexOf(b.bld)||nk(a.floor)-nk(b.floor)||nk(a.room)-nk(b.room)||(a.order||0)-(b.order||0));
+  const num=v=>v===''||v==null?null:(/^\d+$/.test(String(v))?+v:String(v));let zebra=false,prev=null;
+  sorted.forEach(r=>{if(r.bld!==prev){zebra=!zebra;prev=r.bld;}const row=ws.addRow({b:r.bld===WS_LOC?WS_LOC:'Будинок '+r.bld,f:num(r.floor),r:num(r.room),t:r.tenant||'',v:r.vol==null||r.vol===''?null:+r.vol});
+    row.eachCell({includeEmpty:true},(c,i)=>{c.border=B();c.font={name:'Calibri',size:11};c.alignment={vertical:'middle',horizontal:i===4||i===1?'left':i===5?'right':'center',wrapText:i===4};if(zebra)c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF5F8FC'}};});
+    row.getCell(5).numFmt='#,##0';});
+  const last=ws.rowCount;const tr=ws.addRow({b:'РАЗОМ',v:{formula:'SUM(E2:E'+Math.max(2,last)+')',result:rows.reduce((a,r)=>a+(+r.vol||0),0)}});
+  ws.mergeCells(tr.number,1,tr.number,4);tr.height=22;
+  for(let i=1;i<=5;i++){const c=tr.getCell(i);c.border={...B(),top:{style:'medium',color:{argb:NAVY}}};c.font={name:'Calibri',size:12,bold:true};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFDCE6F1'}};c.alignment={vertical:'middle',horizontal:i===5?'right':'left',indent:i===1?1:0};}
+  tr.getCell(5).numFmt='#,##0';
+  ws.autoFilter={from:{row:1,column:1},to:{row:Math.max(1,last),column:5}};
+  ws.pageSetup={paperSize:9,orientation:'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,printTitlesRow:'1:1',margins:{left:0.4,right:0.4,top:0.5,bottom:0.6,header:0.3,footer:0.3}};
+  ws.headerFooter={oddHeader:'&L&B Облік сміття · '+perLabel(per),oddFooter:'&LDuck’s Lake&RСторінка &P з &N'};
+  /* Підсумок по будинках — формули SUMIF по основній таблиці */
+  const s2=wb.addWorksheet('Підсумок по будинках',{views:[{state:'frozen',ySplit:1,showGridLines:false}]});
+  s2.columns=[{header:'Об’єкт (Будинок)',key:'b',width:24},{header:'Резидентів',key:'n',width:12},{header:'Обсяг за місяць (л)',key:'v',width:20}];
+  s2.getRow(1).eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border=B();});s2.getRow(1).height=28;
+  const R="'Облік сміття'!";order.forEach(b=>{const name=b===WS_LOC?WS_LOC:'Будинок '+b;const rs=rows.filter(r=>r.bld===b);const row=s2.addRow({b:name,n:{formula:'COUNTIF('+R+'$A$2:$A$'+last+',A'+(s2.rowCount+1)+')',result:rs.length},v:{formula:'SUMIF('+R+'$A$2:$A$'+last+',A'+(s2.rowCount+1)+','+R+'$E$2:$E$'+last+')',result:rs.reduce((a,r)=>a+(+r.vol||0),0)}});
+    row.eachCell(c=>{c.border=B();});row.getCell(3).numFmt='#,##0';row.getCell(2).alignment={horizontal:'center'};});
+  const l2=s2.rowCount;const t2=s2.addRow({b:'РАЗОМ',n:{formula:'SUM(B2:B'+l2+')',result:rows.length},v:{formula:'SUM(C2:C'+l2+')',result:rows.reduce((a,r)=>a+(+r.vol||0),0)}});
+  t2.eachCell(c=>{c.border={...B(),top:{style:'medium',color:{argb:NAVY}}};c.font={bold:true};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFDCE6F1'}};});t2.getCell(3).numFmt='#,##0';t2.getCell(2).alignment={horizontal:'center'};
+  return wb;}
+async function wsExport(per){toast('Готую файл…');let EJ;try{EJ=await loadExcelJS();}catch(e){toast('Не вдалося завантажити модуль Excel — перевірте інтернет');return;}
+  try{const buf=await wsXlsx(EJ,per,wsRows(per)).xlsx.writeBuffer();await saveFile('Облік сміття — '+perLabel(per)+'.xlsx',new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));}
+  catch(e){console.error(e);toast('Не вдалося сформувати файл');}}
 
 /* ---------- Excel: завантаження й оновлення (спільне) ---------- */
 const IC_DL='<path d="M12 4v11m0 0-4-4m4 4 4-4"/><path d="M5 19h14"/>',IC_UP='<path d="M12 15V4m0 0-4 4m4-4 4 4"/><path d="M5 19h14"/>';
