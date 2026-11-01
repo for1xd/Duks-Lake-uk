@@ -2678,6 +2678,23 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 @media (min-width:1200px){.ar-units{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ar-u.k-park .ar-uid{background:#1F2D52;color:#A9C1F5}}
 :root[data-theme="dark"] .ar-u.k-park .ar-uid{background:#1F2D52;color:#A9C1F5}
+/* ===== Графік: швидке заповнення ===== */
+.sc-tools{display:flex;flex-direction:column;gap:10px;padding:12px}
+.sc-tools.on{box-shadow:0 0 0 2px var(--accent),var(--shadow)}
+.sc-tools .btn svg{width:16px;height:16px;vertical-align:-3px}
+.sc-brushes{display:flex;flex-wrap:wrap;gap:6px}
+.sc-br{flex:none;border:1.5px solid var(--line);background:var(--surface-2);color:var(--fg);border-radius:10px;min-height:40px;padding:6px 12px;font-weight:700;font-size:14px;white-space:nowrap}
+.sc-br.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.sc-br.add{border-style:dashed;color:var(--muted)}
+.paint{cursor:pointer}
+.sc-n.paint:hover,.scg-n.paint:hover{background:var(--accent-soft)}
+.scp-wrap{overflow-x:auto}
+.scp-grid{display:grid;grid-template-columns:minmax(120px,1.4fr) repeat(7,minmax(74px,1fr));gap:4px;min-width:680px;align-items:center}
+.scp-h{font-size:12px;font-weight:800;color:var(--muted);text-align:center}
+.scp-n{display:flex;flex-direction:column;gap:2px}
+.scp-sel{min-height:36px!important;padding:4px 8px!important;font-size:13px!important}
+.scp-c{min-height:36px!important;padding:4px 6px!important;font-size:12px!important;text-align:center}
+.scp-c.ch{border-color:var(--amber)!important;background:var(--amber-soft)!important}
 /* ===== Новий дизайн (тест): вмикається класом html.v2 ===== */
 html.v2{--bg:#F4F5F3;--surface:#FFFFFF;--surface-2:#F1F2EF;--fg:#151C1D;--muted:#5D6866;--line:#E1E4E0;
   --accent:#1B6B71;--accent-fg:#FFFFFF;--accent-soft:#E3EEEE;--accent-ink:#11494E;
@@ -2910,7 +2927,7 @@ async function boot(){
   render();
 }
 function watchWeek(){if(unWeek)unWeek();S.week=null;S.weekExists=false;S.weekLoaded=false;
-  unWeek=S.db.doc('weeks/'+S.weekStart).onSnapshot(d=>{S.weekExists=d.exists;S.week=d.exists?d.data():null;S.weekLoaded=true;render();},e=>fail(e));}
+  unWeek=S.db.doc('weeks/'+S.weekStart).onSnapshot(d=>{S.weekExists=d.exists;S.week=d.exists?d.data():null;if(S.week&&S.scQ&&S.scQWs===S.weekStart){S.week.days=S.week.days||{};Object.assign(S.week.days,S.scQ);}S.weekLoaded=true;render();},e=>fail(e));}
 function fail(e){if(e&&e.code==='revoked')return;console.warn(e);toast('Немає зв’язку з базою. Спробуйте оновити сторінку.');}
 async function write(fn,okMsg){try{await fn();if(okMsg){toast(okMsg);devLog(okMsg);}}catch(e){logErr('Запис: '+((e&&(e.code||e.message))||e),okMsg||'');
   if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,600+Math.random()*600));try{await fn();if(okMsg)toast(okMsg);return;}catch(e2){}}
@@ -6112,6 +6129,7 @@ function viewSchedule(){
     out.push(el('div',{class:'card empty'},el('h2',{text:'Графіка на цей тиждень ще немає'}),
       canPlan()?el('div',{class:'row',style:'justify-content:center'},
         el('button',{class:'btn',type:'button',onclick:copyPrevWeek},'Скопіювати попередній тиждень'),
+        el('button',{class:'btn ghost',type:'button',onclick:scPhoto},'З фото таблиці'),
         el('button',{class:'btn ghost',type:'button',onclick:()=>write(()=>S.db.doc('weeks/'+ws).set({start:ws,days:{}}),'Порожній графік створено')},'Почати з нуля'))
       :el('p',{class:'muted',text:'Керівник додасть його найближчим часом.'})));
     return out;
@@ -6123,6 +6141,7 @@ function viewSchedule(){
       el('button',{type:'button','aria-pressed':String(S.schedView!=='week'),onclick:()=>{S.schedView='day';render();}},svg(IC_D),'По днях'),
       el('button',{type:'button','aria-pressed':String(S.schedView==='week'),onclick:()=>{S.schedView='week';render();}},svg(IC_W),'Весь тиждень')),
     !isThisWeek()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.weekStart=mondayOf(new Date());S.day=todayIdx();watchWeek();render();}},'Сьогодні'):null));
+  if(edit)out.push(scToolbar());
   if(S.schedView!=='week'){
     out.push(el('div',{class:'sc-days'},DS.map((d,i)=>{const n=cnt(i);return el('button',{type:'button',class:'sc-day'+(i>=5?' we':'')+(i===tIdx?' now':''),'aria-pressed':String(S.day===i),onclick:()=>{S.day=i;render();}},
       el('small',{text:d}),el('b',{text:String(+dm(addDays(ws,i)).slice(0,2))}),el('span',{class:'sc-dots'},n?Array.from({length:Math.min(n,5)},()=>el('i')):el('em',{text:'—'})));})));
@@ -6136,7 +6155,7 @@ function viewSchedule(){
       const H0=7,H1=21;const g=el('div',{class:'scg'});
       g.append(...DS.map((d,i)=>el('span',{class:'scg-h'+(i>=5?' we':'')+(i===tIdx?' now':'')},el('small',{text:d}),el('b',{text:String(+dm(addDays(ws,i)).slice(0,2))}))));
       list.forEach(st=>{let tot=0;
-        g.append(el('div',{class:'scg-n'},avatar(st,'scg-av'),el('b',{text:st.name}),el('small',{class:'scg-t'})));const nEl=g.lastChild.querySelector('.scg-t');
+        g.append(el('div',{class:'scg-n'+(S.brush!=null?' paint':''),onclick:S.brush!=null?()=>scPaint(st,[0,1,2,3,4,5,6]):null},avatar(st,'scg-av'),el('b',{text:st.name}),el('small',{class:'scg-t'})));const nEl=g.lastChild.querySelector('.scg-t');
         DS.forEach((_,i)=>{const parts=shiftParts(dayValue(st.id,i));parts.forEach(p=>tot+=hrs(p));const lbl=st.name+', '+DAYS[i]+': '+(parts.length?parts.map(p=>p==='Д'?'8:30–17:30':p).join(', '):'вихідний');
           const kids=[];if(parts.length){const tr=el('span',{class:'scg-tr'});parts.forEach(p=>{const q=pr(p);if(!q)return;tr.append(el('i',{class:'t-'+typ(p),style:'left:'+((q.a-H0)/(H1-H0)*100)+'%;width:'+((q.b-q.a)/(H1-H0)*100)+'%'}));});kids.push(tr);
             kids.push(el('span',{class:'scg-tx'},parts.map(p=>{const q=pr(p);if(!q)return el('span',{class:'t-'+typ(p),text:p});const one=(q.ta+q.tb).length<=4;return el('span',{class:'t-'+typ(p)+(one?'':' two')},one?q.ta+'–'+q.tb:[el('b',{text:q.ta}),el('b',{text:q.tb})]);})));}
@@ -6150,7 +6169,7 @@ function viewSchedule(){
     DS.forEach((d,i)=>tb.append(el('div',{class:'sc-h'+(i>=5?' we':'')+(i===tIdx?' now':''),role:'columnheader'},el('small',{text:d}),el('b',{text:dm(addDays(ws,i)).slice(0,2)}),el('span',{text:cnt(i)+' на зміні'}))));
     tb.append(el('div',{class:'sc-h sc-sum',role:'columnheader'},el('small',{text:'За тиждень'})));
     list.forEach((st,r)=>{let tot=0;
-      tb.append(el('div',{class:'sc-n sc-row',role:'rowheader',title:st.name},avatar(st,'sc-av'),el('span',{class:'sc-nm'},el('b',{text:st.name.split(' ')[0]}),el('small',{text:roleName(st.role)||''}))));
+      tb.append(el('div',{class:'sc-n sc-row'+(S.brush!=null?' paint':''),role:'rowheader',title:st.name,onclick:S.brush!=null?()=>scPaint(st,[0,1,2,3,4,5,6]):null},avatar(st,'sc-av'),el('span',{class:'sc-nm'},el('b',{text:st.name.split(' ')[0]}),el('small',{text:roleName(st.role)||''}))));
       DS.forEach((_,i)=>{const v=dayValue(st.id,i);const parts=shiftParts(v);parts.forEach(p=>tot+=hrs(p));
         const lbl=st.name+', '+DAYS[i]+': '+(parts.length?parts.map(p=>p==='Д'?'8:30–17:30':p).join(', '):'вихідний');
         const SIC={am:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',pm:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',full:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',mg:'<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>'};
@@ -6171,12 +6190,61 @@ function viewSchedule(){
   if(resp)out.push(el('div',{class:'card row'},avatar(resp),el('div',{style:'flex:1;min-width:0'},el('div',{class:'muted small',style:'font-weight:700',text:'Відповідальний за об’єкт'}),el('b',{text:resp.name})),el('span',{class:'pill am',text:S.week.responsibleHours||'8:00–20:00'})));
   return out;
 }
+/* ---------- Графік: швидке заповнення (пензлик, фото, копія тижня) ---------- */
+const SC_BRUSH=[['','Вихідний'],['Д','Менеджер'],['8:00–13:00','8–13'],['17:00–20:00','17–20'],['8:00–13:00|17:00–20:00','8–13 + 17–20'],['13:30–20:00','13:30–20'],['15:00–20:00','15–20'],['8:00–12:00|16:00–20:00','8–12 + 16–20'],['8:00–11:00|15:00–17:00','8–11 + 15–17']];
+function scBrushes(){const extra=(S.scCustom||[]).filter(v=>!SC_BRUSH.some(b=>b[0]===v)).map(v=>[v,v.replace(/:00/g,'').replace('|',' + ')]);return SC_BRUSH.concat(extra);}
+function scToolbar(){const on=S.brush!=null;const cur=on?scBrushes().find(b=>b[0]===S.brush):null;
+  return el('div',{class:'card sc-tools'+(on?' on':'')},
+    el('div',{class:'row between',style:'gap:8px'},
+      el('button',{type:'button',class:'btn sm'+(on?'':' ghost'),'aria-pressed':String(on),onclick:()=>{if(on){S.brush=null;scFlush();}else{S.brush='8:00–13:00';S.schedView='week';}render();}},svg('<path d="M18 2l4 4-11 11H7v-4z"/><path d="M7 17c-2 0-4 1-4 4 2 0 4-1 4-4z"/>'),on?' Готово':' Пензлик'),
+      el('div',{class:'row',style:'gap:6px'},
+        el('button',{type:'button',class:'btn ghost sm',onclick:scPhoto},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),' З фото'),
+        el('button',{type:'button',class:'btn ghost sm',onclick:()=>confirmSheet('Замінити графік цього тижня копією попереднього?','Скопіювати',copyPrevWeek)},'Як минулого тижня'))),
+    on?el('div',{class:'sc-brushes'},scBrushes().map(([v,l])=>el('button',{type:'button',class:'sc-br'+(S.brush===v?' on':''),'aria-pressed':String(S.brush===v),onclick:()=>{S.brush=v;render();}},l)),
+      el('button',{type:'button',class:'sc-br add',onclick:()=>{const t=prompt('Свій час, напр. 9:00–18:00 або 8–13, 17–20');if(t==null)return;const v=normShift(t);if(!v){toast('Не вдалося розібрати час');return;}S.scCustom=[...(S.scCustom||[]),v];S.brush=v;render();}},'+ Свій')):null,
+    on?el('p',{class:'muted small',style:'margin:0',text:'Обрано: '+(cur?cur[1]:S.brush)+' — торкайтеся клітинок, щоб заповнити. Торкання імені заповнить увесь тиждень працівника.'}):null);}
+/* Застосувати пензлик: локально одразу, запис у базу — пакетом */
+function scPaint(st,idx){const ws=S.weekStart;S.week.days=S.week.days||{};const days=(S.week.days[st.id]?[...S.week.days[st.id]]:['','','','','','','']);
+  (Array.isArray(idx)?idx:[idx]).forEach(i=>days[i]=S.brush);S.week.days[st.id]=days;S.scQ=S.scQ||{};S.scQ[st.id]=days;S.scQWs=ws;render();clearTimeout(S.scQT);S.scQT=setTimeout(scFlush,700);}
+function scFlush(){clearTimeout(S.scQT);const q=S.scQ;const ws=S.scQWs;S.scQ=null;if(!q||!ws||!Object.keys(q).length)return;write(()=>S.db.doc('weeks/'+ws).update({days:q}));}
+/* Розпізнати графік із фото таблиці */
+async function scPhoto(){const sample=await claude.use('sample').catch(()=>null);const caps=sample?await sample.limits().catch(()=>null):null;
+  if(!sample||!caps||!caps.images){toast('Розпізнавання фото тут недоступне');return;}
+  const inp=el('input',{type:'file',accept:(caps.images.mediaTypes||['image/jpeg','image/png']).join(',')+',image/*'});
+  inp.addEventListener('change',()=>{if(inp.files[0])scPhotoRun(inp.files[0],sample,caps);});inp.click();}
+async function scPhotoRun(file,sample,caps){const ws=S.weekStart;const staff=schedStaff();const all=sortedStaff();
+  const box=el('div',{class:'stack'},el('div',{class:'wp-prog'},el('b',{text:'Розпізнаю таблицю…'}),el('div',{class:'w-prog'},el('i',{style:'width:35%'}))));
+  openSheet(el('h2',{text:'Графік із фото'}),el('p',{class:'muted',style:'margin:0',text:'Тиждень '+dm(ws)+' – '+dm(addDays(ws,6))+'. Перевірте розпізнане перед збереженням.'}),box,el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));
+  let blob;try{const img=await loadImg(file);const maxB=(caps.images.maxBytes||5e6)*0.9;let mx=2000;blob=await wImgBlob(img,mx,.9);while(blob&&blob.size>maxB&&mx>800){mx=Math.round(mx*.8);blob=await wImgBlob(img,mx,.85);}}catch(e){box.replaceChildren(el('p',{class:'muted',text:'Не вдалося відкрити фото'}));return;}
+  const list=all.map(s=>s.id+' | '+s.name+(s.role?' | '+(ROLE_NAME[s.role]||s.role):'')).join('\n');
+  const prompt='На фото — тижневий графік змін працівників (таблиця: рядки — працівники, колонки — дні з понеділка по неділю). Дати в шапці ігноруй — колонки бери по порядку: понеділок=0 … неділя=6.\n'+
+    'Значення клітинки: "Д" — менеджер повний день; "-" або порожньо — вихідний; час на кшталт "8:00-13:00"; дві зміни в клітинці (два рядки) — через "|", напр. "8:00-13:00|17:00-20:00".\n'+
+    'Зістав імена з таблиці з працівниками (прізвище може бути скорочене до літери: «К. Богдан» = «Богдан К.»):\n'+list+'\n'+
+    'Також, якщо є рядок «Відповідальний за об’єкт» — визнач, хто це, і години.\n'+
+    'Відповідь — ТІЛЬКИ JSON: {"rows":[{"staff_id":"…","name_on_photo":"…","days":["Д","","8:00-13:00|17:00-20:00","","","",""]}],"responsible":{"staff_id":"…або null","hours":"8:00-20:00"}}';
+  let r;try{r=await sample.json(prompt,{images:[blob],modelTier:'default'});}catch(e){box.replaceChildren(el('p',{class:'muted',text:'Не вдалося розпізнати: '+(e&&e.message||'помилка')}));return;}
+  const rows=((r&&r.rows)||[]).map(x=>({sid:all.some(s=>s.id===x.staff_id)?x.staff_id:'',name:x.name_on_photo||'',days:Array.from({length:7},(_,i)=>normShift(String(((x.days||[])[i])||'').replace(/^[-–—]$/,'')))}));
+  if(!rows.length){box.replaceChildren(el('p',{class:'muted',text:'Таблицю не розпізнано. Спробуйте чіткіше фото.'}));return;}
+  const resp=r.responsible&&all.some(s=>s.id===r.responsible.staff_id)?{id:r.responsible.staff_id,h:normShift(r.responsible.hours||'')||'8:00–20:00'}:null;
+  const draw=()=>{const g=el('div',{class:'scp-grid'});g.append(el('span',{class:'scp-h'},'Працівник'),...DS.map(d=>el('span',{class:'scp-h',text:d})));
+    rows.forEach((x,ri)=>{const sel=el('select',{class:'scp-sel','aria-label':'Працівник для «'+x.name+'»',onchange:e=>{x.sid=e.target.value;draw();}},el('option',{value:'',text:'— пропустити —'}),all.map(s=>el('option',{value:s.id,selected:x.sid===s.id?true:null,text:s.name})));
+      g.append(el('span',{class:'scp-n'},el('small',{class:'muted',text:x.name}),sel));
+      x.days.forEach((v,i)=>{const cur=x.sid?dayValue(x.sid,i):'';const ch=x.sid&&S.week&&cur!==v;
+        const inp=el('input',{class:'scp-c'+(ch?' ch':''),value:v.replace(/\|/g,', '),'aria-label':(x.name||'')+', '+DAYS[i],onchange:e=>{x.days[i]=normShift(e.target.value);draw();}});g.append(inp);});});
+    const n=rows.filter(x=>x.sid).length;const dup=rows.filter(x=>x.sid).map(x=>x.sid).filter((v,i,a)=>a.indexOf(v)!==i);
+    box.replaceChildren(el('div',{class:'scp-wrap'},g),resp?el('p',{class:'small',style:'margin:0'},'Відповідальний: ',el('b',{text:(staffById(resp.id)||{}).name||''}),' · '+resp.h):null,
+      dup.length?el('p',{class:'small',style:'margin:0;color:var(--warn)',text:'Один працівник обраний двічі — виправте.'}):null,
+      el('p',{class:'muted small',style:'margin:0',text:'Підсвічені клітинки відрізняються від поточного графіка. Клітинки можна виправити вручну.'}),
+      el('button',{class:'btn',type:'button',disabled:n&&!dup.length?null:true,onclick:async()=>{const days={};rows.filter(x=>x.sid).forEach(x=>days[x.sid]=x.days);closeSheet();
+        const extra=resp?{responsibleId:resp.id,responsibleHours:resp.h}:{};
+        if(S.weekExists)await write(()=>S.db.doc('weeks/'+ws).update({days,...extra}),'Графік оновлено з фото');else await write(()=>S.db.doc('weeks/'+ws).set({start:ws,days,...extra}),'Графік створено з фото');}},'Зберегти графік ('+n+' прац.)'));};
+  draw();}
 async function copyPrevWeek(){
   const ws=S.weekStart;const prev=await S.db.doc('weeks/'+addDays(ws,-7)).get().catch(()=>null);
   const base=prev&&prev.exists?prev.data():{days:{}};
   write(()=>S.db.doc('weeks/'+ws).set({start:ws,days:base.days||{},responsibleId:base.responsibleId||null,responsibleHours:base.responsibleHours||null}),prev&&prev.exists?'Графік скопійовано':'Попереднього графіка немає, створено порожній');
 }
-function editShift(s,i){
+function editShift(s,i){if(S.brush!=null){scPaint(s,i);return;}
   const cur=dayValue(s.id,i);
   const inp=el('input',{id:'shiftInput',value:cur==='Д'?'':shiftParts(cur).join(', '),placeholder:'8:00–13:00, 17:00–20:00',autocomplete:'off'});
   const save=v=>{const days=(S.week.days&&S.week.days[s.id])?[...S.week.days[s.id]]:['','','','','','',''];days[i]=normShift(v);
