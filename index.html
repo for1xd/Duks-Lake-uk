@@ -5402,7 +5402,7 @@ function logErr(msg,src){const k=String(msg).slice(0,120);if(_errSeen[k]&&Date.n
 addEventListener('error',e=>{if(e&&e.message&&!/ResizeObserver/.test(e.message))logErr(e.message,(e.filename||'').split('/').pop()+':'+(e.lineno||''));});
 addEventListener('unhandledrejection',e=>{const r=e&&e.reason;logErr('Promise: '+(r&&(r.message||r.code)||r),r&&r.stack&&String(r.stack).split('\n')[1]);});
 function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ лише для ролі Dev.'}))];
-  const out=[el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'ПІБ директора УК'}),el('span',{class:'muted small',text:dirName()+' · у шапці й підписах звіту для інвестора'})),el('button',{class:'btn sm ghost',type:'button',onclick:dirEdit},'Змінити')),el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Новий дизайн (тест)'}),el('span',{class:'muted small',text:'Вмикається лише у вашому браузері — інші бачать поточний дизайн.'})),el('button',{type:'button',class:'btn sm',onclick:toggleV2},v2On()?'Вимкнути':'Увімкнути'))];const L=S.log||[];const now=Date.now();const d1=L.filter(x=>now-x.at<864e5);const errs=L.filter(x=>x.kind==='err');const e1=d1.filter(x=>x.kind==='err');
+  const out=[el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'ПІБ керівника УК'}),el('span',{class:'muted small',text:dirName()+' · у шапці й підписах звіту для інвестора'})),el('button',{class:'btn sm ghost',type:'button',onclick:dirEdit},'Змінити')),el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Новий дизайн (тест)'}),el('span',{class:'muted small',text:'Вмикається лише у вашому браузері — інші бачать поточний дизайн.'})),el('button',{type:'button',class:'btn sm',onclick:toggleV2},v2On()?'Вимкнути':'Увімкнути'))];const L=S.log||[];const now=Date.now();const d1=L.filter(x=>now-x.at<864e5);const errs=L.filter(x=>x.kind==='err');const e1=d1.filter(x=>x.kind==='err');
   const ppl=[...new Set(d1.map(x=>x.name))];const onl=S.staff.filter(x=>x.userId&&isOnline(x.id));
   out.push(el('div',{class:'card',style:'padding:16px;margin-bottom:12px'},el('h3',{style:'margin:0 0 4px;font-size:16px',text:'👁 Перегляд як роль'}),el('p',{class:'muted small',style:'margin:0 0 12px',text:'Побачте застосунок очима іншої ролі: меню, розділи, «Що нового», доступи. Дії виконуються від вашого імені — для перевірки, не для роботи.'}),
     el('div',{class:'dv-as'},ROLES.filter(r=>r.id!=='dev').map(r=>el('button',{type:'button',class:'btn ghost sm',onclick:()=>setAsRole(r.id)},r.name)))));
@@ -5568,19 +5568,20 @@ function sosMailLog(x){const L=x.mail||[];if(!x.resp&&!L.length)return null;
       el('button',{class:'btn ghost sm',type:'button',onclick:()=>{const m=sosMail(x,'new');openSheet(el('h2',{text:'Перегляд листа'}),el('p',{class:'muted small',style:'margin:0',text:'Кому: '+(m.to||'— email не вказано —')}),el('p',{style:'margin:0;font-weight:800',text:m.subject}),el('div',{class:'sos-mprev',html:''},(()=>{const d=el('div');d.innerHTML=m.htmlBody;return d;})()),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Закрити'));}},'Переглянути лист')));}
 
 /* ---------- Нарада з інвестором ---------- */
-/* Офіційне оформлення звіту: ПІБ директора УК зберігається в settings/main */
-const DIR_DEFAULT='Головньов В.І.';
+/* Офіційне оформлення звіту: посада й ПІБ керівника УК (settings/main: directorTitle, directorName) */
+const DIR_DEFAULT='Головньов В.І.';const DIR_TITLE_DEFAULT='Керівник УК';
+function dirTitle(){const v=S.cfg&&S.cfg.directorTitle;return (v&&String(v).trim())||DIR_TITLE_DEFAULT;}
 function dirName(){const v=S.cfg&&S.cfg.directorName;return (v&&String(v).trim())||DIR_DEFAULT;}
 function dmy(d){d=d||new Date();return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear();}
 function dirEdit(){const i=el('input',{id:'dirN',value:dirName(),maxlength:'60',placeholder:DIR_DEFAULT});
-  openSheet(el('h2',{text:'ПІБ директора УК'}),el('p',{class:'muted small',style:'margin:0',text:'Підставляється в шапку та блок підписів звіту для наради з інвестором.'}),el('label',{for:'dirN'},'ПІБ директора УК',i),
+  openSheet(el('h2',{text:'ПІБ керівника УК'}),el('p',{class:'muted small',style:'margin:0',text:'Підставляється в шапку та блок підписів звіту для наради з інвестором.'}),el('label',{for:'dirN'},'ПІБ керівника УК',i),
     el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:()=>{const v=i.value.trim();if(!v){toast('Вкажіть ПІБ');i.focus();return;}closeSheet();S.cfg={...(S.cfg||{}),directorName:v};render();
-      write(()=>S.db.doc('settings/main').set({...(S.cfg||{}),directorName:v,updatedAt:Date.now(),updatedBy:S.myId||''}),'Збережено: директор УК — '+v);}},'Зберегти'),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));if(!IS_TOUCH)i.focus();}
+      write(()=>S.db.doc('settings/main').set({...(S.cfg||{}),directorName:v,updatedAt:Date.now(),updatedBy:S.myId||''}),'Збережено: '+dirTitle().toLowerCase()+' — '+v);}},'Зберегти'),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));if(!IS_TOUCH)i.focus();}
 /* Блок підписів (екран і PDF) */
 function rpSign(per,pdf){return el('div',{class:'rp-sign'+(pdf?'':' scr')},el('div',{class:'rp-sg-h',text:'Підписи'}),
-  el('div',{class:'rp-sg-r'},el('span',{class:'rp-sg-l',text:'Директор УК'}),el('span',{class:'rp-sg-line'},el('small',{text:'(підпис)'})),el('span',{class:'rp-sg-n',text:dirName()})),
+  el('div',{class:'rp-sg-r'},el('span',{class:'rp-sg-l',text:dirTitle()}),el('span',{class:'rp-sg-line'},el('small',{text:'(підпис)'})),el('span',{class:'rp-sg-n',text:dirName()})),
   el('div',{class:'rp-sg-r'},el('span',{class:'rp-sg-l',text:'Дата'}),el('span',{class:'rp-sg-line'},el('small',{text:'(дата підписання)'})),el('span',{class:'rp-sg-mp',text:'М.П.'})));}
-function rpMeta(per){return el('dl',{class:'rp-meta'},el('dt',{text:'Звітний період'}),el('dd',{text:perLabel(per)}),el('dt',{text:'Дата формування'}),el('dd',{text:dmy()}),el('dt',{text:'Директор УК'}),el('dd',{text:dirName()}));}
+function rpMeta(per){return el('dl',{class:'rp-meta'},el('dt',{text:'Звітний період'}),el('dd',{text:perLabel(per)}),el('dt',{text:'Дата формування'}),el('dd',{text:dmy()}),el('dt',{text:dirTitle()}),el('dd',{text:dirName()}));}
 function canMeet(){return hasAny(['director','dev','manager']);}
 function mtPick(list,per){const ks=list.filter(k=>k<=per).sort();return ks.length?ks[ks.length-1]:null;}
 function mtMonLow(p){return perLabel(p).split(' ')[0].toLowerCase();}
@@ -5671,7 +5672,7 @@ function viewMeet(){if(!canMeet())return [el('div',{class:'card empty'},el('p',{
         el('b',{text:perLabel(per)}),el('button',{type:'button','aria-label':'Наступний місяць',disabled:per>=ymd(new Date()).slice(0,7)?true:null,onclick:()=>{S.mtPer=perShift(per,1);render();}},svg('<path d="m9 6 6 6-6 6"/>'))),
       el('button',{type:'button',class:'btn mt-own',onclick:()=>mtBuilder(per)},svg('<path d="M4 6h10M4 12h16M4 18h7"/><path d="m15 16 2 2 4-4"/>'),' Скласти звіт'),
       el('button',{type:'button',class:'btn mt-pdf',onclick:e=>mtPdf(per,e.currentTarget)},svg('<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>'),' Повний PDF'))));
-  out.push(el('div',{class:'card mt-doc'},rpMeta(per),canAdmin()?el('button',{type:'button',class:'btn ghost sm',onclick:dirEdit},'Змінити директора'):null));
+  out.push(el('div',{class:'card mt-doc'},rpMeta(per),canAdmin()?el('button',{type:'button',class:'btn ghost sm',onclick:dirEdit},'Змінити керівника'):null));
   out.push(el('div',{class:'seg mt-seg'},[['sum','Огляд'],['obl','Облік'],['sos','Екстрені ситуації'],...(D.pm?[['pm','Планове ТО']]:[])].map(([k,l])=>el('button',{type:'button','aria-pressed':String(tab===k),onclick:()=>{S.mtTab=k;render();}},l))));
   if(tab==='sum'){out.push(el('div',{class:'mt-kg'},mtKpis(D)));
     out.push(el('div',{class:'card mt-card'},el('h3',{text:'Головне за '+mtMonLow(per)}),el('ul',{class:'mt-hi'},mtHighlights(D).map(([e,t])=>el('li',{},el('span',{class:'mt-he',text:e}),el('span',{text:t}))))));
