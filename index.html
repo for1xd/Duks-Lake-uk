@@ -2124,9 +2124,9 @@ nav.tabs button.nb{text-align:left}
 .rp-logo{display:flex;align-items:center;gap:6px;font-family:var(--display);letter-spacing:.12em;color:#1F6F78;font-size:12px}.rp-logo svg{width:16px;height:16px}
 .rp-body{padding-top:18px}
 .rp-foot{position:absolute;left:48px;right:48px;bottom:20px;display:flex;justify-content:space-between;font-size:10.5px;color:#7A8C91;border-top:1px solid #DCE6E4;padding-top:8px}
-.rp-cover{border-radius:18px;padding:24px 26px;color:#fff;background:linear-gradient(135deg,#123E45,#1F6F78 60%,#2F8C86);margin-bottom:14px}
-.rp-cover h1{font-family:var(--display);font-size:28px;margin:6px 0 4px;color:#fff}.rp-cover p{margin:0;font-weight:700;color:rgba(255,255,255,.85);font-size:14px}
-.rp-eb{font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.rp-cover{padding:6px 0 16px;color:#10262D;background:none;border-bottom:1.5px solid #10262D;margin-bottom:16px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+.rp-cover h1{font-family:var(--display);font-size:24px;margin:6px 0 4px;color:#10262D}.rp-cover p{margin:0;font-weight:700;color:#3C5157;font-size:13.5px}
+.rp-eb{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#5A6E74}
 .rp-h2{font-family:var(--display);font-size:18px;margin:6px 0 12px;color:#10262D;padding-top:4px}
 .rp-kg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.rp-kg.four{grid-template-columns:repeat(4,1fr)}
 .rp-page .mt-k{background:#F1F6F5;box-shadow:none;border-radius:12px;padding:11px 13px}.rp-page .mt-k b{font-size:17px}.rp-page .mt-k .mt-kl,.rp-page .mt-k small{font-size:10.5px}
@@ -2916,6 +2916,28 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 .sos-mprev{background:#fff;color:#0F2A33;border-radius:12px;padding:12px;overflow-x:auto}
 .sos-mprev table{min-width:0!important;width:100%}
 .sos-mprev td{text-align:left!important;position:static!important;background:transparent!important;white-space:normal!important}
+.rp-meta{display:grid;grid-template-columns:auto auto;gap:3px 12px;margin:0;font-size:12px;flex:none}
+.rp-meta dt{color:#5A6E74;font-weight:600;text-align:right}
+.rp-meta dd{margin:0;font-weight:800;color:#10262D}
+.rp-sign{break-inside:avoid;page-break-inside:avoid;margin-top:26px;padding-top:14px;border-top:1.5px solid #10262D;color:#10262D;display:flex;flex-direction:column;gap:26px}
+.rp-sg-h{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#5A6E74}
+.rp-sg-r{display:grid;grid-template-columns:110px minmax(220px,1fr) auto;align-items:end;gap:14px;font-size:13px}
+.rp-sg-l{font-weight:700}
+.rp-sg-line{border-bottom:1px solid #10262D;height:30px;position:relative;min-width:220px}
+.rp-sg-line small{position:absolute;left:0;right:0;top:100%;text-align:center;font-size:9.5px;color:#7A8C91;padding-top:2px}
+.rp-sg-n{font-weight:800;white-space:nowrap}
+.rp-sg-mp{font-weight:800;color:#5A6E74;width:120px;text-align:center}
+.mt-doc{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px!important}
+.mt-doc .rp-meta{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:13px}
+.mt-doc .rp-meta dt{color:var(--muted);text-align:left}
+.mt-doc .rp-meta dt::after{content:":"}
+.mt-doc .rp-meta dd{color:var(--fg);margin-left:-12px}
+.mt-signc{padding:16px 18px!important}
+.rp-sign.scr{margin-top:0;border-top:0;padding-top:0;color:var(--fg);gap:22px}
+.rp-sign.scr .rp-sg-line{border-color:var(--fg)}
+.rp-sign.scr .rp-sg-h,.rp-sign.scr .rp-sg-mp,.rp-sign.scr .rp-sg-line small{color:var(--muted)}
+@media (max-width:560px){.rp-sign.scr .rp-sg-r{grid-template-columns:1fr;gap:6px}.rp-sign.scr .rp-sg-line{min-width:0;width:100%;margin-bottom:16px}.rp-sign.scr .rp-sg-mp{text-align:left;width:auto}}
+@media print{.mt-signc,.rp-sign{break-inside:avoid;page-break-inside:avoid}}
 /* ===== Графік: швидке заповнення ===== */
 .sc-tools{display:flex;flex-direction:column;gap:10px;padding:12px}
 .sc-tools.on{box-shadow:0 0 0 2px var(--accent),var(--shadow)}
@@ -3131,6 +3153,7 @@ async function boot(){
   db.collection('log').orderBy('at','desc').limit(400).onSnapshot(q=>{S.log=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='uk'&&S.fg==='dev')render();},()=>{});
   db.collection('maint').onSnapshot(q=>{S.pm=q.docs.map(d=>({id:d.id,...d.data()}));const first=!S._pmLoaded;S._pmLoaded=true;if(S.tab==='pm'||S.tab==='today')render();renderTabs();if(first){setTimeout(pmCheck,4000);setInterval(pmCheck,36e5);}},()=>{});
   db.collection('incidents').onSnapshot(q=>{S.sos=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='sos'||S.tab==='meet')render();if(S.db)renderTabs();},()=>{});
+  db.doc('settings/main').onSnapshot(d=>{S.cfg=d.exists?(d.data()||{}):{};if(S.tab==='meet'||(S.tab==='uk'&&S.fg==='dev'))render();},()=>{});
   db.collection('consItems').onSnapshot(q=>{S.consI=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='uk')render();},()=>{});
   db.collection('consLog').onSnapshot(q=>{S.consL=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='uk')render();},()=>{});
   db.collection('inv').onSnapshot(q=>{S.inv={};q.docs.forEach(d=>{S.inv[d.id]=d.data()||{};});if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
@@ -5336,7 +5359,7 @@ function logErr(msg,src){const k=String(msg).slice(0,120);if(_errSeen[k]&&Date.n
 addEventListener('error',e=>{if(e&&e.message&&!/ResizeObserver/.test(e.message))logErr(e.message,(e.filename||'').split('/').pop()+':'+(e.lineno||''));});
 addEventListener('unhandledrejection',e=>{const r=e&&e.reason;logErr('Promise: '+(r&&(r.message||r.code)||r),r&&r.stack&&String(r.stack).split('\n')[1]);});
 function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ лише для ролі Dev.'}))];
-  const out=[el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Новий дизайн (тест)'}),el('span',{class:'muted small',text:'Вмикається лише у вашому браузері — інші бачать поточний дизайн.'})),el('button',{type:'button',class:'btn sm',onclick:toggleV2},v2On()?'Вимкнути':'Увімкнути'))];const L=S.log||[];const now=Date.now();const d1=L.filter(x=>now-x.at<864e5);const errs=L.filter(x=>x.kind==='err');const e1=d1.filter(x=>x.kind==='err');
+  const out=[el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'ПІБ директора УК'}),el('span',{class:'muted small',text:dirName()+' · у шапці й підписах звіту для інвестора'})),el('button',{class:'btn sm ghost',type:'button',onclick:dirEdit},'Змінити')),el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Новий дизайн (тест)'}),el('span',{class:'muted small',text:'Вмикається лише у вашому браузері — інші бачать поточний дизайн.'})),el('button',{type:'button',class:'btn sm',onclick:toggleV2},v2On()?'Вимкнути':'Увімкнути'))];const L=S.log||[];const now=Date.now();const d1=L.filter(x=>now-x.at<864e5);const errs=L.filter(x=>x.kind==='err');const e1=d1.filter(x=>x.kind==='err');
   const ppl=[...new Set(d1.map(x=>x.name))];const onl=S.staff.filter(x=>x.userId&&isOnline(x.id));
   out.push(el('div',{class:'card',style:'padding:16px;margin-bottom:12px'},el('h3',{style:'margin:0 0 4px;font-size:16px',text:'👁 Перегляд як роль'}),el('p',{class:'muted small',style:'margin:0 0 12px',text:'Побачте застосунок очима іншої ролі: меню, розділи, «Що нового», доступи. Дії виконуються від вашого імені — для перевірки, не для роботи.'}),
     el('div',{class:'dv-as'},ROLES.filter(r=>r.id!=='dev').map(r=>el('button',{type:'button',class:'btn ghost sm',onclick:()=>setAsRole(r.id)},r.name)))));
@@ -5502,6 +5525,19 @@ function sosMailLog(x){const L=x.mail||[];if(!x.resp&&!L.length)return null;
       el('button',{class:'btn ghost sm',type:'button',onclick:()=>{const m=sosMail(x,'new');openSheet(el('h2',{text:'Перегляд листа'}),el('p',{class:'muted small',style:'margin:0',text:'Кому: '+(m.to||'— email не вказано —')}),el('p',{style:'margin:0;font-weight:800',text:m.subject}),el('div',{class:'sos-mprev',html:''},(()=>{const d=el('div');d.innerHTML=m.htmlBody;return d;})()),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Закрити'));}},'Переглянути лист')));}
 
 /* ---------- Нарада з інвестором ---------- */
+/* Офіційне оформлення звіту: ПІБ директора УК зберігається в settings/main */
+const DIR_DEFAULT='Головньов В.І.';
+function dirName(){const v=S.cfg&&S.cfg.directorName;return (v&&String(v).trim())||DIR_DEFAULT;}
+function dmy(d){d=d||new Date();return pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear();}
+function dirEdit(){const i=el('input',{id:'dirN',value:dirName(),maxlength:'60',placeholder:DIR_DEFAULT});
+  openSheet(el('h2',{text:'ПІБ директора УК'}),el('p',{class:'muted small',style:'margin:0',text:'Підставляється в шапку та блок підписів звіту для наради з інвестором.'}),el('label',{for:'dirN'},'ПІБ директора УК',i),
+    el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:()=>{const v=i.value.trim();if(!v){toast('Вкажіть ПІБ');i.focus();return;}closeSheet();S.cfg={...(S.cfg||{}),directorName:v};render();
+      write(()=>S.db.doc('settings/main').set({...(S.cfg||{}),directorName:v,updatedAt:Date.now(),updatedBy:S.myId||''}),'Збережено: директор УК — '+v);}},'Зберегти'),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));if(!IS_TOUCH)i.focus();}
+/* Блок підписів (екран і PDF) */
+function rpSign(per,pdf){return el('div',{class:'rp-sign'+(pdf?'':' scr')},el('div',{class:'rp-sg-h',text:'Підписи'}),
+  el('div',{class:'rp-sg-r'},el('span',{class:'rp-sg-l',text:'Директор УК'}),el('span',{class:'rp-sg-line'},el('small',{text:'(підпис)'})),el('span',{class:'rp-sg-n',text:dirName()})),
+  el('div',{class:'rp-sg-r'},el('span',{class:'rp-sg-l',text:'Дата'}),el('span',{class:'rp-sg-line'},el('small',{text:'(дата підписання)'})),el('span',{class:'rp-sg-mp',text:'М.П.'})));}
+function rpMeta(per){return el('dl',{class:'rp-meta'},el('dt',{text:'Звітний період'}),el('dd',{text:perLabel(per)}),el('dt',{text:'Дата формування'}),el('dd',{text:dmy()}),el('dt',{text:'Директор УК'}),el('dd',{text:dirName()}));}
 function canMeet(){return hasAny(['director','dev','manager']);}
 function mtPick(list,per){const ks=list.filter(k=>k<=per).sort();return ks.length?ks[ks.length-1]:null;}
 function mtMonLow(p){return perLabel(p).split(' ')[0].toLowerCase();}
@@ -5592,6 +5628,7 @@ function viewMeet(){if(!canMeet())return [el('div',{class:'card empty'},el('p',{
         el('b',{text:perLabel(per)}),el('button',{type:'button','aria-label':'Наступний місяць',disabled:per>=ymd(new Date()).slice(0,7)?true:null,onclick:()=>{S.mtPer=perShift(per,1);render();}},svg('<path d="m9 6 6 6-6 6"/>'))),
       el('button',{type:'button',class:'btn mt-own',onclick:()=>mtBuilder(per)},svg('<path d="M4 6h10M4 12h16M4 18h7"/><path d="m15 16 2 2 4-4"/>'),' Скласти звіт'),
       el('button',{type:'button',class:'btn mt-pdf',onclick:e=>mtPdf(per,e.currentTarget)},svg('<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>'),' Повний PDF'))));
+  out.push(el('div',{class:'card mt-doc'},rpMeta(per),canAdmin()?el('button',{type:'button',class:'btn ghost sm',onclick:dirEdit},'Змінити директора'):null));
   out.push(el('div',{class:'seg mt-seg'},[['sum','Огляд'],['obl','Облік'],['sos','Екстрені ситуації'],...(D.pm?[['pm','Планове ТО']]:[])].map(([k,l])=>el('button',{type:'button','aria-pressed':String(tab===k),onclick:()=>{S.mtTab=k;render();}},l))));
   if(tab==='sum'){out.push(el('div',{class:'mt-kg'},mtKpis(D)));
     out.push(el('div',{class:'card mt-card'},el('h3',{text:'Головне за '+mtMonLow(per)}),el('ul',{class:'mt-hi'},mtHighlights(D).map(([e,t])=>el('li',{},el('span',{class:'mt-he',text:e}),el('span',{text:t}))))));
@@ -5601,6 +5638,7 @@ function viewMeet(){if(!canMeet())return [el('div',{class:'card empty'},el('p',{
   if(tab==='obl')out.push(...mtOblScreen(D));
   if(tab==='sos')out.push(...mtSosScreen(D));
   if(tab==='pm')out.push(...mtPmScreen(D));
+  out.push(el('div',{class:'card mt-signc'},rpSign(per,false)));
   return out;}
 function mtSecHead(id,note){const u=UKS[id];return el('div',{class:'mt-sh'},el('span',{class:'uk-ic',style:'--c1:'+u.c1+';--c2:'+u.c2},svg(u.ic)),el('div',{},el('h3',{text:u.name}),note?el('small',{class:'muted',text:note}):null));}
 function mtDataNote(p,per){return p?(p===per?'дані за '+perLabel(p).toLowerCase():'останні дані: '+perLabel(p).toLowerCase()):'немає даних';}
@@ -5675,7 +5713,7 @@ function mtBuilder(per){let O;try{O=JSON.parse(localStorage.getItem('dl.mtOpt')|
     el('div',{class:'rb-foot'},el('span',{class:'muted small'},'У звіті: ',cnt),go),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));upd();}
 function mtRpBlocks(D,O){O=O||MT_ALL();const B=[];const per=D.per;const sec=(id,note)=>{const u=UKS[id];return el('div',{class:'rp-sh'},el('span',{class:'rp-ic',style:'background:linear-gradient(135deg,'+u.c1+','+u.c2+')'},svg(u.ic)),el('div',{},el('h3',{text:u.name}),note?el('small',{text:note}):null));};
   const kp=list=>el('div',{class:'rp-ks'},list.filter(Boolean));
-  B.push(el('div',{class:'rp-cover'},el('span',{class:'rp-eb',text:'Звіт для інвестора'}),el('h1',{text:O.title||'Нарада з інвестором'}),el('p',{text:perLabel(per)+' · '+mtScope(O)})));
+  B.push(el('div',{class:'rp-cover'},el('div',{class:'rp-cv-t'},el('span',{class:'rp-eb',text:'Звіт для інвестора'}),el('h1',{text:O.title||'Нарада з інвестором'}),el('p',{text:perLabel(per)+' · '+mtScope(O)})),rpMeta(per)));
   if(O.note)B.push(el('div',{class:'rp-card rp-note'},el('h3',{text:'Коментар'}),el('p',{text:O.note})));
   if(O.kpi)B.push(el('div',{class:'rp-kg'},mtKpis(D)));
   if(O.hi)B.push(el('div',{class:'rp-card'},el('h3',{text:'Головне за '+mtMonLow(per)}),el('ul',{class:'rp-hi'},mtHighlights(D).map(([e,t])=>el('li',{},el('span',{class:'mt-he',text:e}),el('span',{text:t}))))));
@@ -5695,6 +5733,7 @@ function mtRpBlocks(D,O){O=O||MT_ALL();const B=[];const per=D.per;const sec=(id,
   if(O.cons&&D.cons)B.push(el('div',{class:'rp-card'},...mtConsBody(D.cons,true)));
   if(O.park&&D.park){const p=D.park;B.push(el('div',{class:'rp-card'},sec('park','поточний стан'),kp([mtKpi('Заповненість',Math.round(p.occ)+'%'),mtKpi('Усього місць',String(p.n)),mtKpi('Вільні',String(p.c.free))]),mtStack([{n:'Зайнято',v:p.c.busy,c:'#2a78d6'},{n:'Службові (УК)',v:p.c.uk,c:'#1baf7a'},{n:'Бронь',v:p.c.res,c:'#eda100'},{n:'Вільні',v:p.c.free,c:'#b7c4c6'}])));}
   if(O.inv&&D.inv){const v=D.inv;B.push(el('div',{class:'rp-card'},sec('res',v.date?'інвентаризація від '+dm(v.date):'поточний стан'),kp([mtKpi('Позицій',String(v.n)),mtKpi('В експлуатації',String(v.use)),mtKpi('На зберіганні',String(v.store)),mtKpi('Потребують ремонту',String(v.fix.length))]),mtBars(v.cats.slice(0,6),x=>String(x)),v.fix.length?el('p',{class:'rp-mut',text:'На ремонт: '+v.fix.join(', ')}):null));}
+  B.push(rpSign(per,true));
   return B;}
 function mtRpPage(per,who,hdr){const pg=el('div',{class:'rp-page'},el('div',{class:'rp-top'},el('span',{class:'rp-logo'},svg('<path d="M5 5l14 14M19 9v10H9"/>'),'DUCK’S LAKE'),el('span',{text:hdr||('Звіт для інвестора · '+perLabel(per))})),el('div',{class:'rp-body'}),
   el('div',{class:'rp-foot'},el('span',{text:'Сформовано '+dm(ymd(new Date()))+'.'+new Date().getFullYear()+(who?' · '+who:'')}),el('span',{class:'rp-pn'})));return pg;}
