@@ -2941,6 +2941,8 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 .rp-sign.scr .rp-sg-h,.rp-sign.scr .rp-sg-mp,.rp-sign.scr .rp-sg-line small{color:var(--muted)}
 @media (max-width:560px){.rp-sign.scr .rp-sg-r{grid-template-columns:1fr;gap:6px}.rp-sign.scr .rp-sg-line{min-width:0;width:100%;margin-bottom:16px}.rp-sign.scr .rp-sg-mp{text-align:left;width:auto}}
 @media print{.mt-signc,.rp-sign{break-inside:avoid;page-break-inside:avoid}}
+.te-late{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--warn-soft);color:var(--warn);font-weight:700;font-size:14px}
+.te-late svg{width:18px;height:18px;flex:none}
 /* ===== Графік: швидке заповнення ===== */
 .sc-tools{display:flex;flex-direction:column;gap:10px;padding:12px}
 .sc-tools.on{box-shadow:0 0 0 2px var(--accent),var(--shadow)}
@@ -7107,6 +7109,7 @@ function taskCard(t){
       el('button',{class:'check'+(ck&&!done?' half':''),type:'button','aria-pressed':String(ck),'aria-label':amIn?(myDone?'Зняти свою відмітку':'Позначити свою частину виконаною'):(done?'Повернути в роботу':(dev?'Позначити виконаною за всіх':'Виконання позначають виконавці')),disabled:canTick?null:true,onclick:tick},ck?svg('<path d="m5 12 5 5 9-10"/>'):null),
       el('div',{class:'t-titlebox'},el('b',{class:'t-title',text:t.title}),
         el('div',{class:'t-meta'},t.reworkActive?el('span',{class:'rwchip',text:'Доопрацювати'}):null,!done&&!t.reworkActive?accTag(t,ids):null,dueTag(t),remindTag(t)),by?el('div',{class:'t-by'},svg('<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>'),el('span',{class:'t-bylbl',text:'Призначив'}),plink(by,[el('span',{text:by.name})],'inl')):null),
+      canEditTask(t)&&!done?el('button',{class:'iconbtn sm',type:'button','aria-label':'Редагувати задачу',title:'Редагувати / перенести',onclick:()=>editTask(t)},svg('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>')):null,
       canTask()?el('button',{class:'iconbtn sm',type:'button','aria-label':'Видалити задачу',onclick:()=>confirmSheet('Видалити задачу «'+t.title+'»?','Видалити',()=>write(async()=>{await S.db.doc('tasks/'+t.id).delete();for(const p of [...(t.photos||[]),...(t.refPhotos||[])])await S.db.doc('photos/'+p.id).delete();},'Задачу видалено'))},svg('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>')):null),
     ...secs);
 }
@@ -7330,6 +7333,30 @@ function newTask(pre){pre=pre||{};const zq=pre.zone&&mzById(pre.zone);
       el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));
   if(!IS_TOUCH)t.focus();
 }
+
+/* Редагування задачі: автор задачі або Dev */
+function canEditTask(t){return !!t&&(isDev()||(!!S.myId&&t.createdBy===S.myId));}
+function editTask(t){if(!canEditTask(t)){toast('Редагувати може лише автор задачі або Dev');return;}
+  const ti=el('input',{id:'tTitle',value:t.title||'',maxlength:'140'});
+  const was=asg(t);const picked=new Set(was);const who=assignPicker(picked);
+  const today=ymd(new Date());const late=t.due&&t.due<today;
+  const d=el('input',{id:'tDue',type:'date',value:t.due||''});const tm=el('input',{id:'tTime',type:'time',step:'300',value:t.dueTime||''});
+  const rm=el('select',{id:'tRem'},el('option',{value:'',text:'Без нагадування'}),Object.entries(REMIND).map(([k,v])=>el('option',{value:k,text:'Нагадати '+v,selected:t.remind===k?true:null})));
+  const n=el('textarea',{id:'tNote',maxlength:'1000',placeholder:'Деталі (необов’язково)'});n.value=t.note||'';
+  openSheet(el('h2',{text:'Редагувати задачу'}),late?el('div',{class:'te-late'},svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),el('span',{text:'Прострочено: термін був '+dm(t.due)+'. Оберіть нову дату нижче.'})):null,
+    el('label',{for:'tTitle'},'Що зробити',ti),el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Кому (можна кількох)'}),who),whenPicker(d,tm,rm),el('label',{for:'tNote'},'Коментар',n),
+    el('p',{class:'muted small',style:'margin:0',text:'Фото, відмітки виконавців і хід задачі збережуться.'}),
+    el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:async()=>{const title=ti.value.trim();if(!title){toast('Напишіть, що треба зробити');ti.focus();return;}
+      if(!picked.size){toast('Оберіть, кому призначити');return;}
+      const ids=sortedStaff().map(x=>x.id).filter(id=>picked.has(id));const added=ids.filter(id=>!was.includes(id));
+      const dm0=t.doneMap||{};const doneMap=Object.fromEntries(Object.entries(dm0).filter(([k])=>ids.includes(k)));
+      const upd={title,note:n.value.trim(),assignees:ids,assignee:ids[0],doneMap,due:d.value||null,dueTime:tm.value||null,remind:rm.value||null,editedAt:Date.now(),editedBy:S.myId||''};
+      const moved=(t.due||'')!==(d.value||'')||(t.dueTime||'')!==(tm.value||'');
+      if(moved)upd.dueLog=[...(t.dueLog||[]),{from:t.due||null,fromTime:t.dueTime||null,to:d.value||null,toTime:tm.value||null,at:Date.now(),by:S.myId||''}].slice(-20);
+      closeSheet();await write(()=>S.db.doc('tasks/'+t.id).update(upd),moved?'Задачу перенесено на '+(d.value?dm(d.value):'без дати')+(tm.value?' · '+tm.value:''):'Задачу збережено');
+      if(added.length)notifyTask({title,note:upd.note,due:upd.due,photos:(t.refPhotos||[]).length},added);}},'Зберегти'),
+      el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));
+  if(!IS_TOUCH)ti.focus();}
 
 /* ---------- team ---------- */
 function viewTeam(){
