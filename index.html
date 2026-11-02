@@ -1948,7 +1948,7 @@ body.pk3d-on #hwBats,body.pk3d-on #hwDeco{display:none}
 .pk-3d .pk-pad{z-index:3}
 @media (max-width:620px){.pk-mm{width:38%;bottom:auto;top:56px}}
 
-.fx-hidden{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important;overflow:hidden}
+.fx-hidden{position:absolute!important;left:0!important;top:0!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important;overflow:hidden}
 .fx-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--fg);font:inherit;font-weight:700;font-size:15px;text-align:left;cursor:pointer;transition:border-color .15s,box-shadow .15s}
 .fx-btn span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fx-btn svg{width:18px;height:18px;flex:none;color:var(--muted);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 .fx-btn.open{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}.fx-btn.open svg{transform:rotate(180deg)}
@@ -2943,6 +2943,28 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 @media print{.mt-signc,.rp-sign{break-inside:avoid;page-break-inside:avoid}}
 .te-late{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--warn-soft);color:var(--warn);font-weight:700;font-size:14px}
 .te-late svg{width:18px;height:18px;flex:none}
+.dzq{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"r r" "a b" "c d"}
+.dzq-op{display:none}
+.dzq-c{display:grid;grid-template-rows:auto auto 1fr;gap:6px;padding:14px!important;min-width:0}
+.dzq-t{font-size:12.5px;font-weight:700;color:var(--muted);line-height:1.3}
+.dzq-c:not(.res) .dzq-t{min-height:3.9em}
+.dzq-c b{font-family:var(--display);font-size:19px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
+.dzq-s{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--muted);align-self:end}
+.dzq-s small{font-size:12px;font-weight:600}
+.dzq-c .dz-rate{display:flex;flex-direction:column;gap:4px}
+.dzq-c.res{background:linear-gradient(135deg,#8E1F2B,#A82634 55%,#B5402F)!important;color:#fff;box-shadow:0 18px 36px -20px rgba(142,31,43,.8)!important}
+.dzq-c.res .dzq-t,.dzq-c.res .dzq-s{color:#fff}
+.dzq-c.res b{font-size:26px}
+.dzq-sk{display:block;height:1.2em;width:70%;border-radius:8px;background:linear-gradient(90deg,var(--surface-2),color-mix(in srgb,var(--surface-2) 60%,var(--line)),var(--surface-2));background-size:200% 100%}
+@media (prefers-reduced-motion:no-preference){.dzq-sk{animation:dzqSk 1.2s linear infinite}}
+@keyframes dzqSk{to{background-position:-200% 0}}
+.dzq-c.res .dzq-sk{background:rgba(255,255,255,.25)}
+@media (min-width:768px){.dzq{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"a b c" "d r r"}.dzq-t{min-height:3.9em}.dzq-c b{font-size:21px}}
+@media (min-width:1280px){.dzq{grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1.25fr);grid-template-areas:"a o1 b o2 c o3 d o4 r";column-gap:4px}
+  .dzq-op{display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:var(--muted);opacity:.75;user-select:none}
+  @supports (grid-template-rows:subgrid){.dzq{grid-template-areas:none;grid-template-rows:auto auto 1fr;row-gap:0}.dzq>*{grid-area:auto!important;grid-row:1/4!important}
+    .dzq-c{grid-template-rows:subgrid;row-gap:6px}.dzq-t{min-height:0}}
+  .dzq-c b{font-size:20px}.dzq-c.res b{font-size:24px}}
 /* ===== Графік: швидке заповнення ===== */
 .sc-tools{display:flex;flex-direction:column;gap:10px;padding:12px}
 .sc-tools.on{box-shadow:0 0 0 2px var(--accent),var(--shadow)}
@@ -3164,7 +3186,7 @@ async function boot(){
   db.collection('inv').onSnapshot(q=>{S.inv={};q.docs.forEach(d=>{S.inv[d.id]=d.data()||{};});if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
   db.collection('parking').onSnapshot(q=>{S.pk={};q.docs.forEach(d=>{S.pk[d.id]=d.data()||{};});if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
   db.collection('waste').onSnapshot(q=>{S.ws={};q.docs.forEach(d=>{S.ws[d.id]=d.data()||{};});if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
-  db.collection('dz').onSnapshot(q=>{S.dz={};q.docs.forEach(d=>{S.dz[d.id]=d.data()||{};});if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
+  db.collection('dz').onSnapshot(q=>{S.dz={};S.dzLoaded=true;q.docs.forEach(d=>{S.dz[d.id]=d.data()||{};});if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
   db.collection('wObjects').onSnapshot(q=>{S.wObj=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
   db.collection('wMeters').onSnapshot(q=>{S.wMet=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
   db.collection('wPeriods').onSnapshot(q=>{S.wPerD={};q.docs.forEach(d=>{S.wPerD[d.id]=d.data()||{};});if(S.tab==='uk'||S.tab==='meet')render();},e=>fail(e));
@@ -4243,6 +4265,26 @@ function dzTipOff(){clearTimeout(dzTipOff.t);const t=document.getElementById('dz
 function hov(node,fn){node.addEventListener('pointermove',e=>{if(e.pointerType==='mouse')dzTip(e,fn());});node.addEventListener('pointerleave',dzTipOff);node.addEventListener('pointercancel',dzTipOff);
   node.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'){e.stopPropagation();dzTip(e,fn());clearTimeout(dzTipOff.t);dzTipOff.t=setTimeout(dzTipOff,2500);}});return node;}
 addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')dzTipOff();},true);addEventListener('scroll',()=>dzTipOff(),true);addEventListener('blur',()=>dzTipOff());
+/* Верхній ряд дебіторки як рівняння: на початок + за місяць = всього − сплачено → борг на кінець */
+function dzEquation(per,rows){const loading=!S.dzLoaded;const sum=f=>rows.reduce((a,r)=>a+(f(r)||0),0);
+  const hasStart=rows.some(r=>r.start!=null&&r.start!=='');const prevPer=perShift(per,-1);const prevRows=dzPers().includes(prevPer)?dzAll(prevPer).map(r=>({...r,...dzCalc(r)})):null;
+  let start=null,startSub='',startN=0;
+  if(hasStart){start=sum(r=>+r.start||0);startN=rows.filter(r=>(+r.start||0)>0.004).length;startSub='станом на 01.'+per.slice(5,7)+' · '+startN+' '+plural(startN,'боржник','боржники','боржників');}
+  else if(prevRows&&prevRows.length){start=prevRows.reduce((a,r)=>a+(r.debt||0),0);startN=prevRows.filter(r=>r.debt>0.004).length;startSub='станом на 01.'+per.slice(5,7)+' · з '+mtMonLow(prevPer)+' · '+startN+' '+plural(startN,'боржник','боржники','боржників');}
+  else startSub='немає даних за попередній місяць';
+  const month=sum(r=>+r.charge||0),charged=sum(r=>r.total),paid=sum(r=>+r.paid||0),debt=sum(r=>r.debt>0?r.debt:0),over=sum(r=>r.debt<0?-r.debt:0);
+  const debtors=rows.filter(r=>r.debt>0.004).length;const overdue=sum(r=>r.b&&r.b!=='ok'?r.debt:0);const rate=charged?paid/charged:0;
+  if(!loading&&(isDev()||S.isOwner)){if(start!=null&&Math.abs(start+month-charged)>1)console.warn('[ДЗ] на початок + за місяць ≠ нараховано всього',{per,start,month,charged,diff:start+month-charged});
+    if(Math.abs(charged-paid-(debt-over))>1)console.warn('[ДЗ] нараховано всього − сплачено ≠ борг на кінець',{per,charged,paid,debt,over,diff:charged-paid-(debt-over)});}
+  const full=v=>uah(v)+' гривень';const val=(v,txt)=>loading?el('b',{class:'dzq-sk','aria-hidden':'true'},' '):el('b',{text:txt!=null?txt:uah(v,true)+' ₴'});
+  const card=(cls,area,title,v,txt,aria,...subs)=>el('div',{class:'card dzq-c '+cls,style:'grid-area:'+area,role:'group','aria-label':loading?title+': завантаження':aria},el('span',{class:'dzq-t',text:title}),val(v,txt),el('div',{class:'dzq-s'},subs.filter(Boolean)));
+  const op=(sym,area)=>el('span',{class:'dzq-op',style:'grid-area:'+area,'aria-hidden':'true',text:sym});const mon=perLabel(per).toLowerCase();
+  return el('div',{class:'dzq'},
+    card('','a','Дебіторська заборгованість на початок періоду',start,start==null?'—':null,'Дебіторська заборгованість на початок періоду: '+(start==null?'немає даних':full(start)),el('small',{text:startSub})),op('+','o1'),
+    card('','b','Нараховано поточного місяця',month,null,'Нараховано поточного місяця: '+full(month),el('small',{text:'за '+mon})),op('=','o2'),
+    card('','c','Нараховано всього',charged,null,'Нараховано всього: '+full(charged),el('small',{text:'початок періоду + місяць'})),op('−','o3'),
+    card('','d','Сплачено',paid,null,'Сплачено: '+full(paid)+', зібрано '+Math.round(rate*100)+'%',el('div',{class:'dz-rate'},el('div',{class:'w-prog'},el('i',{style:'width:'+Math.round(Math.min(1,rate)*100)+'%;background:linear-gradient(90deg,#1baf7a,#0ca30c)'})),el('small',{text:Math.round(rate*100)+'% зібрано'}))),op('→','o4'),
+    card('res','r','Дебіторська заборгованість',debt,null,'Дебіторська заборгованість на кінець: '+full(debt)+', боржників '+debtors+(over?', переплата '+full(over):''),el('small',{text:debtors+' '+plural(debtors,'боржник','боржники','боржників')+' · прострочено '+uah(overdue,true)+' ₴'}),over?el('small',{text:'переплата: '+uah(over,true)+' ₴'}):null));}
 function debtView(){const per=dzCurPer();const ps=dzPers();const out=[];const dev=canDz();
   out.push(el('div',{class:'w-per card'},el('button',{class:'iconbtn',type:'button','aria-label':'Попередній місяць',disabled:ps.indexOf(per)<=0?true:null,onclick:()=>{S.dzPer=ps[ps.indexOf(per)-1];render();}},svg('<path d="M15 5l-7 7 7 7"/>')),
     el('div',{class:'w-per-c'},el('b',{text:perLabel(per)}),el('span',{class:'muted small',text:'станом на '+dm(ymd(new Date()))})),
@@ -4260,11 +4302,7 @@ function debtView(){const per=dzCurPer();const ps=dzPers();const out=[];const de
   const rows=dzAll(per).map(r=>({...r,...dzCalc(r)}));
   const sum=f=>rows.reduce((a,r)=>a+(f(r)||0),0);const charged=sum(r=>r.total),paid=sum(r=>+r.paid||0),debt=sum(r=>r.debt>0?r.debt:0),over=sum(r=>r.debt<0?-r.debt:0),newCh=sum(r=>+r.charge||0);
   const debtors=rows.filter(r=>r.debt>0.004);const rate=charged?paid/charged:0;const overdue=sum(r=>r.b&&r.b!=='ok'?r.debt:0);const crit=sum(r=>r.b==='b3'?r.debt:0);
-  out.push(el('div',{class:'dz-kpi'},
-    el('div',{class:'card dz-k hero'},el('span',{text:'Дебіторська заборгованість'}),el('b',{text:uah(debt,true)+' ₴'}),el('small',{text:debtors.length+' боржників · прострочено '+uah(overdue,true)+' ₴'})),
-    el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'Нараховано всього'}),el('b',{text:uah(charged,true)+' ₴'}),el('small',{class:'muted',text:'з них за місяць '+uah(newCh,true)+' ₴'})),
-    el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'Фактично сплачено'}),el('b',{text:uah(paid,true)+' ₴'}),el('div',{class:'dz-rate'},el('div',{class:'w-prog'},el('i',{style:'width:'+Math.round(Math.min(1,rate)*100)+'%;background:linear-gradient(90deg,#1baf7a,#0ca30c)'})),el('small',{text:Math.round(rate*100)+'% зібрано'}))),
-    el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'Критичний борг (>30 днів)'}),el('b',{class:crit?'crit':'',text:uah(crit,true)+' ₴'}),el('small',{class:'muted',text:over?'переплата: '+uah(over,true)+' ₴':'переплат немає'}))));
+  out.push(dzEquation(per,rows));
   // aging
   const ag=DZ_B.map(b=>({...b,v:sum(r=>r.b===b.k?r.debt:0),n:rows.filter(r=>r.b===b.k).length}));const agT=ag.reduce((a,x)=>a+x.v,0)||1;
   const agBar=el('div',{class:'dz-stack',role:'img','aria-label':'Структура боргу за строками'},ag.filter(x=>x.v>0).map(x=>hov(el('span',{style:'flex:'+x.v+';background:'+x.c}),()=>[el('b',{text:x.name}),el('div',{text:uah(x.v)+' ₴ · '+x.n+' резид.'}),el('div',{class:'muted',text:Math.round(x.v/agT*100)+'% боргу'})])));
