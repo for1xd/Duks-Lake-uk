@@ -2762,6 +2762,19 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 .wsp-st{font-size:13px;font-weight:800;color:var(--accent);white-space:nowrap}
 .wsp-it.added{opacity:.6;cursor:default}
 .wsp-it.added .wsp-st{color:var(--ok)}
+.osv-types{display:flex;flex-direction:column;gap:8px}
+.osv-ty{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--surface-2);color:var(--fg);font:inherit;border-radius:14px;padding:10px 14px;min-height:56px;cursor:pointer}
+.osv-ty i{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);flex:none;position:relative}
+.osv-ty[aria-checked="true"]{border-color:var(--tc);background:color-mix(in srgb,var(--tc) 12%,var(--surface))}
+.osv-ty[aria-checked="true"] i{border-color:var(--tc)}
+.osv-ty[aria-checked="true"] i::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--tc)}
+.osv-tyn{display:flex;flex-direction:column;min-width:0}
+.osv-tyn b{font-size:15px}
+.osv-tyn small{font-size:12.5px;color:var(--muted);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.osv-target{display:flex;flex-wrap:wrap;gap:6px 14px;padding:10px 12px;border-radius:12px;background:var(--accent-soft);color:var(--accent-ink);font-size:14px}
+.osv-done{display:flex;align-items:center;gap:12px}
+.osv-dic{width:44px;height:44px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:flex;align-items:center;justify-content:center;flex:none}
+.osv-dic svg{width:24px;height:24px}
 .osv-sum{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
 .osv-c{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 4px;border-radius:12px;background:var(--surface-2);font-size:11.5px;font-weight:700;color:var(--muted);text-align:center}
 .osv-c b{font-size:18px;color:var(--fg)}
@@ -4543,16 +4556,39 @@ function osvParse(a){const txt=c=>c==null?'':String(c instanceof Date?ymd(c):c).
     cur={name,row:i+1,...v,contracts:[]};items.push(cur);}
   items.forEach(x=>{x.start=Math.round((x.sD-x.sC)*100)/100;x.end=Math.round((x.eD-x.eC)*100)/100;x.charge=x.tD;x.paid=x.tC;
     x.check=Math.abs(x.start+x.charge-x.paid-x.end)<0.02;});
-  return {cols:C,period,items};}
+  return {cols:C,period,items,head};}
 /* --- Правило дедлайну --- */
 function osvDue(per,row,x){if(x.end<=0.004)return null;if(row&&row.dueManual&&row.due)return row.due;const base=per+'-10';
   if(x.start>0.004){const prevDue=perShift(per,-1)+'-10';return row&&row.due&&row.due<=base?row.due:prevDue;}return base;}
 /* --- Імпорт: вибір файлу → розбір → зіставлення → перевірка → запис --- */
-async function osvImport(per){const f=await xlsxPick();if(!f)return;const {wb,X}=f;let P=null,err='';
-  for(const nm of wb.SheetNames){try{const r=osvParse(sheetAoa(X,wb.Sheets[nm]));if(r.items.length){P=r;break;}}catch(e){err=e.message;}}
-  if(!P){toast(err||'У файлі не знайдено даних ОСВ');return;}
-  let al={};try{const sn=await S.db.doc('resolve/osv').get();al=sn.exists?(sn.data().map||{}):{};}catch(e){}
-  S.osv={per,file:f.name,P,al,sheet:S.osvSheet||'opex',pick:{}};osvSheetUi();}
+/* Тип рахунку в ОСВ: за назвою аркуша або текстом шапки */
+const OSV_TYPE={opex:/opex|опекс|експлуатаці/i,util:/комунал|електроенерг|водопостач|теплопостач/i,park:/паркомісц|паркінг|машино-?місц/i,mkt:/маркетинг|рекламн/i};
+function osvDetect(t){t=String(t||'');for(const k in OSV_TYPE)if(OSV_TYPE[k].test(t))return k;return null;}
+function osvShName(id){return (DZ_SHEETS.find(s=>s.id===id)||{}).name||id;}
+const OSV_PO={opex:'OPEX',util:'Комунальних',park:'Паркомісцях',mkt:'Маркетингу'};
+/* Крок 1: вибір типу рахунку та місяця — до вибору файлу */
+function osvImport(per){let sel=S.dzCat&&S.dzCat!=='all'&&DZ_SHEETS.some(s=>s.id===S.dzCat)?S.dzCat:null;
+  const opts=el('div',{class:'osv-types',role:'radiogroup','aria-label':'Тип рахунку'});
+  const go=el('button',{class:'btn',type:'button',style:'flex:1',disabled:sel?null:true,onclick:()=>{closeSheet();osvPickFile(per,sel);}},svg(IC_UP),' Вибрати файл');
+  const draw=()=>{opts.replaceChildren(...DZ_SHEETS.map(s=>{const rs=dzRows(per,s.id);const debt=rs.reduce((a,r)=>{const c=dzCalc(r);return a+(c.debt>0?c.debt:0);},0);
+    return el('button',{type:'button',class:'osv-ty',role:'radio','aria-checked':String(sel===s.id),style:'--tc:'+s.c[dzDark()?1:0],onclick:()=>{sel=s.id;go.disabled=false;draw();}},
+      el('i'),el('span',{class:'osv-tyn'},el('b',{text:s.name}),el('small',{text:rs.length?rs.length+' рядків · борг '+uah(debt,true)+' ₴':'ще немає даних за місяць'})));}));};
+  draw();
+  openSheet(el('h2',{text:'Імпорт ОСВ'}),el('p',{class:'muted',style:'margin:0'},'Місяць: ',el('b',{text:perLabel(per)})),
+    el('span',{class:'flabel',text:'Який тип рахунку оновлюємо?'}),opts,
+    el('p',{class:'muted small',style:'margin:0',text:'Буде змінено лише вибраний тип за цей місяць. Інші типи дебіторки не зміняться.'}),
+    el('div',{class:'row'},go,el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));}
+/* Крок 2: файл → дані лише для вибраного типу */
+async function osvPickFile(per,sheet){const f=await xlsxPick();if(!f)return;const {wb,X}=f;const parsed=[];let err='';
+  for(const nm of wb.SheetNames){try{const r=osvParse(sheetAoa(X,wb.Sheets[nm]));if(r.items.length)parsed.push({nm,r,type:osvDetect(nm)||osvDetect(r.head)});}catch(e){err=e.message;}}
+  if(!parsed.length){toast(err||'У файлі не знайдено даних ОСВ — нічого не змінено');return;}
+  let hit=parsed.find(x=>x.type===sheet);let untyped=false;
+  if(!hit){if(parsed.some(x=>x.type)){const has=[...new Set(parsed.map(x=>x.type).filter(Boolean))].map(osvShName).join(', ');
+      openSheet(el('h2',{text:'Немає даних по '+(OSV_PO[sheet]||osvShName(sheet))}),el('p',{style:'margin:0',text:'У файлі «'+f.name+'» немає даних по '+(OSV_PO[sheet]||osvShName(sheet))+' — нічого не змінено.'}),
+        el('p',{class:'muted small',style:'margin:0',text:'Знайдено дані по: '+has+'. Оберіть відповідний тип або інший файл.'}),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Зрозуміло'));return;}
+    hit=parsed[0];untyped=true;}
+  let al={};try{const sn=await S.db.doc('resolve/osv').get();const m=sn.exists?(sn.data().map||{}):{};Object.keys(m).forEach(k=>{const i=k.indexOf(':');if(k.slice(0,i)===sheet)al[k.slice(i+1)]=m[k];});}catch(e){}
+  S.osv={per,file:f.name,sheetName:hit.nm,P:hit.r,al,sheet,untyped,pick:{}};osvSheetUi();}
 function osvTargets(){const o=S.osv;return dzRows(o.per,o.sheet).filter(r=>r.tenant);}
 function osvMatch(x){const o=S.osv;const rows=osvTargets();const k=NM.key(x.name);const pk=o.pick[x.row];
   if(pk==='__skip')return {st:'skip'};if(pk==='__new')return {st:'new'};
@@ -4576,16 +4612,17 @@ function osvSheetUi(){const o=S.osv;const P=o.P;const rows=osvTargets();const ms
       x.check?null:el('small',{class:'osv-warn',text:'Сальдо не сходиться: поч. + нарах. − опл. ≠ кін.'}),
       st==='review'&&m.r?el('div',{class:'row',style:'gap:6px'},sel,el('button',{class:'btn sm',type:'button',onclick:()=>{o.pick[x.row]=m.r.id;osvSheetUi();}},'Підтвердити')):sel);}));
   const go=el('button',{class:'btn',type:'button',disabled:cnt.ok+cnt.new?null:true,onclick:()=>osvApply()},'Рознести ('+(cnt.ok+cnt.new)+')');
-  openSheet(el('h2',{text:'Імпорт ОСВ · '+perLabel(o.per)}),el('p',{class:'muted small',style:'margin:0',text:'Файл: '+o.file+' · контрагентів: '+P.items.length}),
+  openSheet(el('h2',{text:'Імпорт ОСВ · '+osvShName(o.sheet)}),el('p',{class:'muted small',style:'margin:0',text:'Файл: '+o.file+' · контрагентів: '+P.items.length}),
     wrongPer?el('p',{class:'osv-warn',style:'margin:0',text:'Увага: ОСВ за '+perLabel(P.period)+', а відкрито '+perLabel(o.per)+'.'}):null,
-    el('label',{},'Куди розносити',el('select',{onchange:e=>{o.sheet=S.osvSheet=e.target.value;o.pick={};osvSheetUi();}},DZ_SHEETS.filter(s=>!s.park).map(s=>el('option',{value:s.id,selected:o.sheet===s.id?true:null,text:s.name})))),
+    el('div',{class:'osv-target'},el('span',{},'Тип: ',el('b',{text:osvShName(o.sheet)})),el('span',{},'Місяць: ',el('b',{text:perLabel(o.per)})),el('span',{class:'muted',text:'аркуш «'+o.sheetName+'»'})),
+    o.untyped?el('p',{class:'osv-warn',style:'margin:0',text:'У файлі не вказано тип рахунку — дані буде записано як «'+osvShName(o.sheet)+'». Переконайтесь, що це правильна ОСВ.'}):null,
     el('div',{class:'osv-sum'},[['ok','Зіставлено'],['review','Перевірити'],['none','Не знайдено'],['new','Нові'],['skip','Пропущено']].map(([k,l])=>el('span',{class:'osv-c osv-'+k},el('b',{text:String(cnt[k])}),l))),
     el('p',{class:'muted small',style:'margin:0',text:'Сальдо = Дебет − Кредит (передоплата зменшує борг). Дедлайн: 10-те число місяця; зі старим боргом — дата не відсувається; ручні дати менеджера не перезаписуються.'}),
     list,el('div',{class:'row'},go,el('button',{class:'btn ghost',type:'button',onclick:()=>{S.osv=null;closeSheet();}},'Скасувати')));}
 async function osvApply(){const o=S.osv;if(!o)return;const P=o.P;const rows=osvTargets();const acc={};const neu={};const al={...o.al};const now=Date.now();
   P.items.forEach(x=>{const m=osvMatch(x);const pk=o.pick[x.row];
     if(m.st==='ok'){const a=acc[m.r.id]=acc[m.r.id]||{r:m.r,start:0,charge:0,paid:0,end:0,names:[],contracts:[]};['start','charge','paid','end'].forEach(k=>a[k]+=x[k]);a.names.push(x.name);a.contracts.push(...x.contracts.map(c=>c.name));
-      if(pk&&pk!=='__new'&&pk!=='__skip')al[NM.key(x.name)]={id:m.r.id,tk:NM.key(m.r.tenant),bld:dzBld(m.r.bld),name:x.name,at:now};}
+      if(pk&&pk!=='__new'&&pk!=='__skip')al[NM.key(x.name)]={id:m.r.id,tk:NM.key(m.r.tenant),bld:dzBld(m.r.bld),name:x.name,at:now,sheet:o.sheet};}
     else if(m.st==='new')neu['r'+now.toString(36)+'_'+x.row]={x};});
   const upd={};const r2=v=>Math.round(v*100)/100;
   Object.entries(acc).forEach(([id,a])=>{const x={start:r2(a.start),charge:r2(a.charge),paid:r2(a.paid),end:r2(a.end)};const due=osvDue(o.per,a.r,x);
@@ -4593,9 +4630,19 @@ async function osvApply(){const o=S.osv;if(!o)return;const P=o.P;const rows=osvT
       status:x.end<=0.004?'Сплачено':(a.r.status==='Сплачено'?'':a.r.status||''),updatedAt:now,updatedBy:S.myId};});
   let ord=rows.reduce((m,r)=>Math.max(m,r.order||0),0);
   Object.entries(neu).forEach(([id,{x}])=>{upd[id]={bld:'',room:'',tenant:x.name,start:x.start,charge:x.charge,paid:x.paid,due:osvDue(o.per,null,x),osvEnd:x.end,osvName:x.name,osvContracts:x.contracts.map(c=>c.name).slice(0,10),osvAt:now,status:x.end<=0.004?'Сплачено':'',order:++ord,updatedAt:now,updatedBy:S.myId};});
-  const n=Object.keys(upd).length;if(!n){toast('Немає що розносити');return;}closeSheet();
-  const docId=o.per+'_'+o.sheet;await write(()=>S.dz[docId]?S.db.doc('dz/'+docId).update({rows:upd}):S.db.doc('dz/'+docId).set({per:o.per,sheet:o.sheet,rows:upd}),'ОСВ рознесено: '+n+' резидентів');
-  try{await S.db.doc('resolve/osv').set({map:al,at:now});}catch(e){}S.osv=null;}
+  const n=Object.keys(upd).length;if(!n){toast('Немає що розносити — нічого не змінено');return;}closeSheet();
+  const docId=o.per+'_'+o.sheet;const before=dzRows(o.per,o.sheet).reduce((a,r)=>{const c=dzCalc(r);return a+(c.debt>0?c.debt:0);},0);
+  const merged={};Object.entries(((S.dz[docId]||{}).rows)||{}).forEach(([id,r])=>{if(r&&!r.deleted)merged[id]={...r};});Object.entries(upd).forEach(([id,r])=>{merged[id]={...(merged[id]||{}),...r};});
+  const after=Object.values(merged).filter(r=>!(o.sheet==='park'&&(DZ_NOREC.includes(r.status)||!r.tenant))).reduce((a,r)=>{const c=dzCalc(r);return a+(c.debt>0?c.debt:0);},0);
+  const nNew=Object.keys(upd).filter(id=>!(((S.dz[docId]||{}).rows||{})[id])).length;const name=osvShName(o.sheet);
+  let ok=true;try{await (S.dz[docId]?S.db.doc('dz/'+docId).update({rows:upd}):S.db.doc('dz/'+docId).set({per:o.per,sheet:o.sheet,rows:upd}));}catch(e){ok=false;logErr&&logErr('ОСВ '+name+': '+((e&&(e.code||e.message))||e));}
+  if(!ok){toast('Не вдалося записати — нічого не змінено');S.osv=null;return;}
+  devLog('ОСВ → '+name+' · '+perLabel(o.per)+': оновлено '+(n-nNew)+', нових '+nNew+'; борг '+uah(before,true)+' → '+uah(after,true)+' ₴',null,'файл: '+o.file+' · аркуш: '+o.sheetName);
+  try{const sn=await S.db.doc('resolve/osv').get();const all=sn.exists?(sn.data().map||{}):{};Object.entries(al).forEach(([k,v])=>{if(v&&v.at===now)all[o.sheet+':'+k]=v;});await S.db.doc('resolve/osv').set({map:all,at:now});}catch(e){}
+  S.osv=null;
+  openSheet(el('div',{class:'osv-done'},el('span',{class:'osv-dic'},svg('<path d="m5 12 5 5 9-10"/>')),el('div',{},el('h2',{style:'margin:0',text:'ОСВ імпортовано'}),el('span',{class:'muted small',text:o.file}))),
+    el('div',{class:'dz-info'},[['Тип рахунку',name],['Місяць',perLabel(o.per)],['Оновлено рядків',String(n-nNew)+(nNew?' + '+nNew+' нових':'')],['Борг по «'+name+'»',uah(after)+' ₴'],['Було до імпорту',uah(before)+' ₴']].map(([a,b])=>el('div',{},el('small',{text:a}),el('b',{text:b})))),
+    el('p',{class:'muted small',style:'margin:0',text:'Інші типи дебіторки не змінювались.'}),el('button',{class:'btn',type:'button',onclick:()=>{closeSheet();S.dzCat=o.sheet;render();}},'Показати «'+name+'»'));}
 /* OSV:END */
 async function dzImport(per){const f=await xlsxPick();if(!f)return;const {wb,X}=f;const res={};const warn=[];const lines=[];
   const pat={opex:/opex/i,util:/комун/i,park:/парко/i,mkt:/маркет/i};
