@@ -4344,7 +4344,7 @@ async function dzExport(per){toast('Готую файл…');let X;try{X=await l
         {f:'IF(AND($Q$2-$'+M+n+'>=0,$Q$2-$'+M+n+'<=5,'+Hh+n+'>0),'+Hh+n+',0)'},{f:'IF(AND($Q$2-$'+M+n+'>=6,$Q$2-$'+M+n+'<=15,'+Hh+n+'>0),'+Hh+n+',0)'},{f:'IF(AND($Q$2-$'+M+n+'>=16,$Q$2-$'+M+n+'<=30,'+Hh+n+'>0),'+Hh+n+',0)'},{f:'IF(AND($Q$2-$'+M+n+'>30,'+Hh+n+'>0),'+Hh+n+',0)'},
         r.due?parseYmd(r.due):null,[r.status,r.act].filter(Boolean).join(' / '),r.resp||'');if(!P)row.push('');if(i===0)row.push({f:'TODAY()'});aoa.push(row);});
     const N=rs.length+1;const tot=P?['ВСЬОГО','','','']:['ВСЬОГО','',''];for(let c=3+o;c<=11+o;c++){const col=L(c);tot.push(c===7+o?{f:'SUMIF('+col+'2:'+col+N+',">0")'}:c===5+o-0&&false?null:{f:'SUM('+col+'2:'+col+N+')'});}aoa.push(tot);
-    const ws=X.utils.aoa_to_sheet(aoa,{cellDates:true,dateNF:'dd.mm.yyyy'});const M=L(12+o);for(let n=2;n<=N;n++){const c=ws[M+n];if(c&&c.t==='d')c.z='dd.mm.yyyy';}if(ws['Q2'])ws['Q2'].z='dd.mm.yyyy';
+    const ws=X.utils.aoa_to_sheet(aoa,{cellDates:true,dateNF:'dd\\.mm\\.yyyy'});const M=L(12+o);for(let n=2;n<=N;n++){const c=ws[M+n];if(c&&c.t==='d')c.z='dd\\.mm\\.yyyy';}if(ws['Q2'])ws['Q2'].z='dd\\.mm\\.yyyy';
     ws['!cols']=(P?[10,22,16,26]:[10,12,32]).map(w=>({wch:w})).concat(Array(9).fill({wch:15}),[{wch:13},{wch:34},{wch:18},{wch:4},{wch:12}]);
     X.utils.book_append_sheet(wb,ws,sh.xl);}
   const buf=X.write(wb,{bookType:'xlsx',type:'array',cellDates:true});const dl=await claude.use('downloads').catch(()=>null);if(!dl){toast('Завантаження файлів тут недоступне');return;}
@@ -5210,7 +5210,7 @@ async function pkExport(){toast('Готую файл…');let X;try{X=await load
   const aoa=[['№ з/п','Номер за технічним паспортом','Будинок','Орендар (ПІБ / Організація)','Дата початку оренди','Статус','Контактні дані / Примітки','Номер картки','Дата отримання','','Акт п-п П/М']];
   const D=s=>s?parseYmd(s):null;rows.forEach(r=>aoa.push([r.id.replace(/^C/,'С'),r.tp||'',r.bld?'Буд '+r.bld:'',r.tenant||'',D(r.start),r.tenant?(r.status||'Зайнято'):(r.status||''),r.note||'',r.card?Number(r.card)||r.card:'',D(r.cardDate),'',r.act||'']));
   aoa.push([]);(d.extra||[]).forEach(x=>aoa.push(['',x.name,'','№ картки '+x.card]));
-  const ws=X.utils.aoa_to_sheet(aoa,{cellDates:true,dateNF:'dd.mm.yyyy'});Object.keys(ws).forEach(k=>{if(ws[k]&&ws[k].t==='d')ws[k].z='dd.mm.yyyy';});ws['!cols']=[{wch:8},{wch:14},{wch:9},{wch:28},{wch:14},{wch:12},{wch:28},{wch:13},{wch:14},{wch:3},{wch:14}];
+  const ws=X.utils.aoa_to_sheet(aoa,{cellDates:true,dateNF:'dd\\.mm\\.yyyy'});Object.keys(ws).forEach(k=>{if(ws[k]&&ws[k].t==='d')ws[k].z='dd\\.mm\\.yyyy';});ws['!cols']=[{wch:8},{wch:14},{wch:9},{wch:28},{wch:14},{wch:12},{wch:28},{wch:13},{wch:14},{wch:3},{wch:14}];
   const wb=X.utils.book_new();X.utils.book_append_sheet(wb,ws,'Облік паркомісць');const buf=X.write(wb,{bookType:'xlsx',type:'array',cellDates:true});const dl=await claude.use('downloads').catch(()=>null);if(!dl){toast('Завантаження файлів тут недоступне');return;}
   try{await dl.save({filename:'Облік паркомісць '+dm(ymd(new Date()))+'.xlsx',data:new Blob([buf])});}catch(e){if(e&&e.code!=='declined')toast('Не вдалося зберегти файл');}}
 async function pkImport(){const f=await xlsxPick();if(!f)return;const {wb,X}=f;const nm=wb.SheetNames.find(n=>/паркомі/i.test(n))||wb.SheetNames[0];const a=sheetAoa(X,wb.Sheets[nm]);
