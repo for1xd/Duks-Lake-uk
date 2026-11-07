@@ -62,6 +62,7 @@ h2{font-family:var(--display);font-weight:600;font-size:18px;margin:0;text-wrap:
 .role.gardener{background:#DDF0E4;color:#1E5E39}
 .role.dev{background:#5B3FA8;color:#FFFFFF}
 .role.director{background:var(--mgr);color:var(--mgr-fg)}
+.role.ceo{background:#8A5A12;color:#FFF6E5}
 .role.senior{background:var(--accent);color:var(--accent-fg)}
 .role.manager{background:var(--accent-soft);color:var(--accent-ink)}
 .role.engineer{background:var(--amber-soft);color:var(--amber-ink)}
@@ -566,6 +567,120 @@ body.backready #app{filter:brightness(1.04)}
   #app>.list{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 
+
+/* ===== Обхід будівель ===== */
+.ip-st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap;background:var(--surface-2);color:var(--muted)}
+.ip-st i{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.ip-st.ip-draft,.ip-st.ip-sub{background:var(--amber-soft);color:var(--amber-ink)}.ip-st.ip-queued{background:var(--accent-soft);color:var(--accent-ink)}
+.ip-st.ip-ok{background:var(--ok-soft);color:var(--ok)}.ip-st.ip-ret{background:var(--warn-soft);color:var(--warn)}
+.ip-q{display:flex;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:inset 0 0 0 1.5px var(--accent),var(--shadow)}
+.ip-qd{width:12px;height:12px;border-radius:50%;background:var(--accent);flex:none}
+@media (prefers-reduced-motion:no-preference){.ip-qd{animation:psPulse 1.6s ease-in-out infinite}}
+.ip-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:14px 0 10px}
+.ip-bar .seg{flex:0 1 auto}
+.ip-sum{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:6px 2px 10px}
+.ip-sum b{font-family:var(--display);font-weight:600;font-size:17px}
+.ip-empty{margin-bottom:12px}
+.ip-blds{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ip-b{border:0;text-align:left;display:grid;grid-template-columns:1fr auto;grid-template-areas:'n go' 's s' 'r r';gap:10px;align-items:start;color:inherit;font:inherit;min-height:96px;border-left:5px solid var(--line)!important}
+.ip-b .ip-bn{grid-area:n}.ip-b .ip-st{grid-area:s;justify-self:start}.ip-b .ip-rc{grid-area:r}.ip-b .uk-go{grid-area:go}
+.ip-b-ok{border-left-color:var(--ok)!important}.ip-b-sub,.ip-b-draft{border-left-color:var(--amber)!important}.ip-b-ret{border-left-color:var(--warn)!important}.ip-b-queued{border-left-color:var(--accent)!important}
+.ip-bn{display:flex;flex-direction:column;gap:2px;min-width:0}.ip-bn b{font-family:var(--display);font-weight:600;font-size:16px}
+.ip-bn span,.ip-bn small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ip-rc{font-size:13px;color:var(--warn);font-weight:700;overflow-wrap:anywhere}
+.iw-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.iw-bn{font-family:var(--display);font-weight:600;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iw-pg{font-family:var(--display);font-weight:700;font-size:22px;color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.iw-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:12px}
+.iw-s{border:0;border-radius:10px;min-height:44px;padding:6px 4px;background:var(--surface);box-shadow:inset 0 -3px 0 var(--line);font-size:12px;font-weight:800;color:var(--muted);line-height:1.15}
+.iw-s.has{box-shadow:inset 0 -3px 0 var(--ok);color:var(--fg)}.iw-s.need{box-shadow:inset 0 -3px 0 var(--amber)}
+.iw-s.on{background:var(--accent);color:var(--accent-fg);box-shadow:none}
+.iw-card{gap:16px!important}
+.iw-ph{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.iw-ph .thumb{width:100%;height:auto;aspect-ratio:1;position:relative}.iw-ph .thumb .x{width:40px;height:40px;top:-8px;right:-8px;font-size:20px}
+.iw-gal{position:absolute;left:6px;bottom:6px;font-size:10px;font-weight:800;background:rgba(6,20,24,.72);color:#fff;border-radius:6px;padding:2px 6px}
+.iw-sk{background:linear-gradient(90deg,var(--surface-2),var(--line),var(--surface-2));background-size:200% 100%;border-radius:12px}
+@media (prefers-reduced-motion:no-preference){.iw-sk,.ip-sk i,.ip-sk-ph{animation:ipSh 1.2s linear infinite}}
+@keyframes ipSh{50%{opacity:.45}}
+.iw-cam{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+label.btn{display:inline-flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;color:var(--accent-fg);font-size:16px;font-weight:800}
+label.btn.ghost{color:var(--fg)}
+.iw-big{min-height:56px!important;font-size:17px!important;flex:1 1 220px;border-radius:16px!important}
+.iw-big svg{width:22px!important;height:22px!important}
+.iw-gbtn{min-height:44px}
+.iw-chk{flex-direction:row!important;align-items:center;gap:10px!important;font-size:15px!important;color:var(--fg)!important;min-height:44px}
+.iw-chk input{width:22px!important;height:22px!important;min-height:0!important;padding:0;flex:none;accent-color:var(--accent)}
+.iw-cl{display:flex;flex-direction:column;gap:6px}
+.iw-ci{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);background:var(--surface-2);border-radius:12px;min-height:48px;padding:8px 12px;font-weight:700;text-align:left}
+.iw-ci svg{width:20px;height:20px;flex:none;opacity:.2}
+.iw-ci[aria-pressed="true"]{border-color:var(--ok);background:var(--ok-soft)}.iw-ci[aria-pressed="true"] svg{opacity:1;color:var(--ok)}
+.iw-stt button.iw-remark[aria-pressed="true"]{background:var(--warn);color:#fff}
+.iw-stt button.iw-ok[aria-pressed="true"]{background:var(--ok);color:#fff}
+.iw-err{margin:0;color:var(--warn);font-weight:700;font-size:14px}
+.iw-nav{display:flex;gap:10px;position:sticky;bottom:calc(84px + var(--sab,0px));z-index:5;padding:10px;margin:14px -4px 0;border-radius:20px;background:var(--glass);border:1px solid var(--glass-brd);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%)}
+.iw-nav>*{flex:1}.iw-nav .btn{min-height:52px}.iw-nav .iw-next,.iw-nav .iw-big{flex:2}
+@media (min-width:900px){.iw-nav{bottom:16px}}
+.iw-row{display:flex;align-items:center;gap:12px;justify-content:space-between;border:0;background:var(--surface-2);border-radius:14px;padding:10px 12px;text-align:left;min-height:56px}
+.iw-rn{display:flex;flex-direction:column;gap:2px;min-width:0}.iw-rn small{overflow-wrap:anywhere}
+.iw-rem{color:var(--warn)!important;font-weight:700}
+.iw-mini{display:flex;gap:4px;flex:none}.iw-mini img{width:40px;height:40px;border-radius:8px;object-fit:cover}
+.iw-need{font-size:12px;font-weight:800;color:var(--warn)}
+.iw-why{margin:10px 4px 0;color:var(--warn);font-weight:700}
+.iw-done-ic{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;background:var(--ok-soft);color:var(--ok)}
+.iw-done.wait .iw-done-ic{background:var(--accent-soft);color:var(--accent)}
+.ip-fl{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.ip-per{align-self:flex-start}
+.ip-feed{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.ip-fi{border:0;text-align:left;display:flex;flex-direction:column;gap:10px;color:inherit;font:inherit}
+.ip-mi{display:flex;gap:6px;align-items:center}.ip-mi img{width:56px;height:56px;border-radius:10px;object-fit:cover}
+.ip-more{font-weight:800;color:var(--muted);font-size:13px}
+.ip-rm{align-self:flex-start;font-size:12px;font-weight:800;padding:3px 9px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.ip-sk{display:flex;flex-direction:column;gap:10px;min-height:130px}.ip-sk i{display:block;height:14px;border-radius:7px;background:linear-gradient(90deg,var(--surface-2),var(--line),var(--surface-2));background-size:200% 100%}
+.ip-sk i:nth-child(1){width:60%}.ip-sk i:nth-child(2){width:40%}.ip-sk i:nth-child(3){height:56px;width:70%}
+.ip-clb{font-variant-numeric:tabular-nums;min-width:120px;text-align:center}
+.ip-mxw{padding:12px!important}
+.tbl-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ip-mx{min-width:0!important;border-collapse:separate;border-spacing:3px;width:100%}
+.ip-mx.mon{min-width:900px!important}
+.ip-mx th,.ip-mx td{padding:0;border:0;text-align:center;font-size:12px}
+.ip-mx th{color:var(--muted);font-weight:800;text-transform:none;letter-spacing:0;padding:4px 0}
+.ip-mx th span{display:block;font-size:10px}.ip-mx th b{font-size:14px;color:var(--fg)}
+.ip-mx th.we span,.ip-mx th.we b{color:var(--amber)}.ip-mx th.now{background:var(--accent);border-radius:8px}.ip-mx th.now span,.ip-mx th.now b{color:var(--accent-fg)}
+.ip-mx td.nm,.ip-mx th.nm{text-align:left;position:sticky;left:0;background:var(--surface);z-index:1;padding:4px 8px 4px 2px;min-width:96px}
+.ip-mx td.nm b{display:block;font-size:14px}.ip-mx td.nm small{display:block;font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ip-mx td:not(.nm){height:44px;min-width:34px;border-radius:9px;font-weight:800;font-size:15px}
+.ip-mx td.c-ok{background:var(--ok-soft);color:var(--ok)}.ip-mx td.c-sub{background:var(--amber-soft);color:var(--amber-ink)}.ip-mx td.c-ret,.ip-mx td.c-miss{background:var(--warn-soft);color:var(--warn)}
+.ip-mx td.c-wait{background:var(--surface-2);color:var(--muted)}.ip-mx td.c-na{background:transparent;color:var(--line)}.ip-mx td.c-fut{background:transparent}
+.ip-cb{border:0;background:transparent;color:inherit;font:inherit;width:100%;height:100%;min-height:44px;border-radius:9px;position:relative}
+.ip-cr{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--warn)}
+.ip-lg{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:10px;font-size:12px;font-weight:700;color:var(--muted)}
+.ip-lg span{display:inline-flex;align-items:center;gap:6px}.ip-lg i{font-style:normal;width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+.ip-lg .c-ok i{background:var(--ok-soft);color:var(--ok)}.ip-lg .c-sub i{background:var(--amber-soft);color:var(--amber-ink)}.ip-lg .c-ret i,.ip-lg .c-miss i{background:var(--warn-soft);color:var(--warn)}.ip-lg .c-wait i{background:var(--surface-2)}
+.ip-miss{color:var(--warn);margin-left:auto}.ip-okk{color:var(--ok);margin-left:auto}
+.ip-rh{display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
+.ip-meta{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-size:14px}.ip-meta dt{color:var(--muted);font-weight:700}.ip-meta dd{margin:0;font-weight:700}
+.ip-rh .rework{margin:0}
+.ip-reply{margin:0;font-size:14px;background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.ip-pt{margin-bottom:12px}.ip-pn{font-family:var(--display);font-weight:600;font-size:16px}
+.ip-tag{font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap}.ip-tag.ok{background:var(--ok-soft);color:var(--ok)}.ip-tag.rem{background:var(--warn-soft);color:var(--warn)}
+ul.ip-cl{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;font-weight:600}ul.ip-cl li{display:flex;gap:6px}ul.ip-cl li.y span{color:var(--ok);font-weight:800}ul.ip-cl li.n span{color:var(--warn);font-weight:800}
+.ip-gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.ip-ph{position:relative;border:0;padding:0;border-radius:12px;overflow:hidden;aspect-ratio:1;background:var(--surface-2);display:block}
+.ip-ph img{width:100%;height:100%;object-fit:cover;display:block}.ip-ph small{position:absolute;right:6px;bottom:6px;font-size:11px;font-weight:800;background:rgba(6,20,24,.72);color:#fff;border-radius:6px;padding:2px 6px}
+.ip-sk-ph{background:linear-gradient(90deg,var(--surface-2),var(--line),var(--surface-2));background-size:200% 100%}
+.ip-acts .btn{min-height:52px}
+.lb{position:fixed;inset:0;z-index:60;background:rgba(4,12,15,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(56px,env(safe-area-inset-top,0px)) 12px calc(16px + var(--sab,0px));touch-action:pan-y}
+.lb-img{max-width:100%;max-height:calc(100% - 70px);object-fit:contain;border-radius:8px}
+.lb-cap{color:#fff;display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center;margin-top:10px;font-size:14px}.lb-cap .muted{color:#9DB3B8}
+.lb-b{position:absolute;border:0;background:rgba(255,255,255,.14);color:#fff;width:48px;height:48px;border-radius:50%;font-size:28px;line-height:1;display:flex;align-items:center;justify-content:center}
+.lb-x{top:max(10px,env(safe-area-inset-top,0px));right:12px}.lb-p{left:12px;top:50%}.lb-n{right:12px;top:50%}
+.ip-ex{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface-2);border-radius:12px;padding:10px 12px}
+.ip-ex b{overflow-wrap:anywhere;font-size:14px}
+.ip-link{border:0;text-align:left;display:block;color:inherit;font:inherit;box-shadow:inset 0 0 0 1.5px var(--accent),var(--shadow)}
+.ip-link span{display:flex;flex-direction:column;gap:2px}
+.pwa .seg{align-self:flex-start}
+.pwa-l{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px;font-size:15px}
+@media (max-width:560px){.iw-steps{grid-template-columns:repeat(5,minmax(58px,1fr));overflow-x:auto}.iw-s{font-size:11px}.ip-feed,.ip-blds{grid-template-columns:minmax(0,1fr)}.ip-bar{flex-direction:column;align-items:stretch}.ip-bar .row .btn{flex:1}}
 /* ===== header glass bar ===== */
 header.top{position:sticky;top:8px!important;z-index:15;margin:-6px -6px 14px!important;padding:10px 10px 10px 16px!important;border-radius:24px;
   background:var(--glass)!important;border:1px solid var(--glass-brd);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
@@ -3110,6 +3225,7 @@ const ROLES=[
   {id:'senior',name:'Старший менеджер'},
   {id:'engineer',name:'Головний інженер'},
   {id:'director',name:'Директор'},
+  {id:'ceo',name:'CEO Asgard'},
   {id:'dev',name:'Dev'}
 ];
 const ROLE_NAME=Object.fromEntries(ROLES.map(r=>[r.id,r.name]));
@@ -3138,8 +3254,8 @@ const IS_TOUCH=window.matchMedia('(pointer:coarse)').matches;
 const BAR=['today','schedule','tasks','chat'];
 const NAV_GROUPS=[['Робота',['today','shift','schedule','tasks']],['Facility',['uk','meet','sos','pm']],['Спілкування',['chat','team','fun']],['Допомога',['support']]];
 function updBar(){const arr=earns(myStaff())?['today','shift','schedule','tasks','chat']:['today','schedule','tasks','chat'];BAR.splice(0,BAR.length,...arr);}
-function isUK(){return hasAny(['manager','senior','engineer','director','dev']);}
-function tabVisible(id){if(id==='shift')return !!myStaff();if(id==='pm')return pmCan();if(id==='uk'||id==='sos')return isUK();if(id==='meet')return canMeet();return true;}
+function isUK(){return hasAny(['manager','senior','engineer','director','ceo','dev']);}
+function tabVisible(id){if(id==='shift')return !!myStaff();if(id==='pm')return pmCan();if(id==='uk')return isUK()||inspIsWalker();if(id==='sos')return isUK();if(id==='meet')return canMeet();return true;}
 function tabName(t){return t.id==='shift'?(earns(myStaff())?'Моя зміна':'Зміни колективу'):t.name;}
 function isCur(id){return S.tab===id||(S.tab==='person'&&id==='team')||(S.tab==='ticket'&&id==='support');}
 const WIDE=window.matchMedia('(min-width:900px)');
@@ -3218,6 +3334,10 @@ async function boot(){
   if(!db){renderNoDb();return;}
   db.collection('staff').onSnapshot(q=>{S.staff=q.docs.map(d=>({id:d.id,...d.data()}));const first=!S.loaded.staff;S.loaded.staff=true;if(first)beat();render();},e=>fail(e));
   db.collection('tasks').onSnapshot(q=>{S.tasks=q.docs.map(d=>({id:d.id,...d.data()}));S.loaded.tasks=true;render();},e=>fail(e));
+  db.collection('inspections').onSnapshot(q=>{S.insp={};q.docs.forEach(d=>{S.insp[d.id]={id:d.id,...d.data()};});S.inspLoaded=true;if(S.tab==='uk')render();renderTabs();},()=>{S.inspLoaded=true;});
+  db.collection('buildings_assignments').onSnapshot(q=>{S.inspAs={};q.docs.forEach(d=>{S.inspAs[d.id]=d.data()||{};});if(S.tab==='uk')render();renderTabs();},()=>{});
+  db.collection('inspection_exports').onSnapshot(q=>{S.inspEx=q.docs.map(d=>({id:d.id,...d.data()}));},()=>{});
+  inspLoadDrafts().then(()=>{if(S.tab==='uk')render();setTimeout(inspSync,1500);});
   db.collection('log').orderBy('at','desc').limit(400).onSnapshot(q=>{S.log=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='uk'&&S.fg==='dev')render();},()=>{});
   db.collection('maint').onSnapshot(q=>{S.pm=q.docs.map(d=>({id:d.id,...d.data()}));const first=!S._pmLoaded;S._pmLoaded=true;if(S.tab==='pm'||S.tab==='today')render();renderTabs();if(first){setTimeout(pmCheck,4000);setInterval(pmCheck,36e5);}},()=>{});
   db.collection('incidents').onSnapshot(q=>{S.sos=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='sos'||S.tab==='meet')render();if(S.db)renderTabs();},()=>{});
@@ -3320,7 +3440,8 @@ function renderHdrInfo(){const box=document.getElementById('hdrInfo');const sub=
     el('span',{class:'hi-chip clock'},svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),el('span',{},el('b',{text:pad(d.getHours())+':'+pad(d.getMinutes())}),' '+DS[tIdx].toLowerCase()+', '+d.getDate()+' '+MON_N[d.getMonth()])),
     el('button',{type:'button',class:'hi-chip',onclick:e=>onlinePop(e.currentTarget),title:onl.map(x=>x.name).join(', ')},el('span',{class:'hi-avs'},onl.slice(0,3).map(x=>avatar(x))),el('span',{},el('b',{text:String(onl.length)}),' у мережі')),
     onShift!=null?el('button',{type:'button',class:'hi-chip',onclick:()=>go('schedule')},svg('<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/>'),el('span',{},el('b',{text:String(onShift)}),' на зміні')):null,
-    el('button',{type:'button',class:'hi-chip'+(myT?' hot':''),onclick:()=>go('tasks')},svg('<path d="m4 12 4 4 12-12"/>'),el('span',{},el('b',{text:String(myT)}),' мої задачі')));}
+    el('button',{type:'button',class:'hi-chip'+(myT?' hot':''),onclick:()=>go('tasks')},svg('<path d="m4 12 4 4 12-12"/>'),el('span',{},el('b',{text:String(myT)}),' мої задачі')),
+    inspCanReview()&&inspPending()?el('button',{type:'button',class:'hi-chip hot',onclick:()=>{S.inspTab='feed';S.inspF={per:'all',s:'submitted'};if(S.tab!=='uk')go('uk');S.fg='insp';S.ukSec=null;S.inspR=null;S.inspW=null;render();}},svg('<path d="M9 4h6v3H9z"/><path d="M15 5.5h2a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7.5a2 2 0 0 1 2-2h2"/><path d="m9 13 2 2 4-4"/>'),el('span',{},el('b',{text:String(inspPending())}),' на перевірці')):null);}
 setInterval(()=>{if(WIDE.matches)renderHdrInfo();},30000);
 function render(){{const fe=document.fullscreenElement||document.webkitFullscreenElement;if(fe&&fe.classList&&fe.classList.contains('pk-3d')){S._pendRender=true;return;}}if(typeof dzTipOff==='function')dzTipOff();hwDeco();setTimeout(()=>{renderHdrInfo();tgHead();fitTitle();fancySel(document.getElementById('app'));},0);document.body.dataset.tab=S.tab;setTimeout(fitPad,0);setTimeout(chatFade,0);setTimeout(chatFade,300);requestAnimationFrame(fitTitle);setTimeout(fitTitle,250);updBar();
   asBar();if(!S.db)return;
@@ -3346,6 +3467,7 @@ function badgeFor(id){if(id==='pm')return pmCan()?pmUrgent().length:0;if(id==='s
   if(id==='team')return canAdmin()?S.requests.length:0;
   if(id==='chat')return unreadChat();
   if(id==='fun')return psMyPending();
+  if(id==='uk')return inspBadge();
   if(id==='support')return tkBadge();
   return 0;}
 function SC(){return document.getElementById('scroller');}
@@ -3378,10 +3500,10 @@ function placeComposer(){setTimeout(fitChatPad,0);requestAnimationFrame(placeAsi
 window.addEventListener('resize',()=>requestAnimationFrame(placeComposer));
 function drawFab(){const b=document.getElementById('toBottom');if(!b)return;const show=S.tab==='chat'&&!S.chatStick;b.hidden=!show;
   b.replaceChildren(...[svg('<path d="M12 5v14M6 13l6 6 6-6"/>'),S.belowNew?el('span',{class:'badge',text:String(S.belowNew)}):null].filter(Boolean));}
-function snap(){return {tab:S.tab,sid:S.viewSid,tk:S.viewTicket,room:S.room,uk:S.ukSec,wo:S.wObjSel,fg:S.fg,ab:S.arB,af:S.arF,at:S.arT};}
+function snap(){return {tab:S.tab,sid:S.viewSid,tk:S.viewTicket,room:S.room,uk:S.ukSec,wo:S.wObjSel,fg:S.fg,ab:S.arB,af:S.arF,at:S.arT,iw:S.inspW,ir:S.inspR};}
 function animIn(dir){const a=document.getElementById('app');a.style.transition='';a.style.transform='';a.style.opacity='';a.classList.remove('enter-l','enter-r');void a.offsetWidth;a.classList.add(dir>0?'enter-r':'enter-l');
   const t=document.getElementById('pageTitle');t.classList.remove('tfade');void t.offsetWidth;t.classList.add('tfade');}
-function go(id,opt){if(id==='uk'&&S.tab==='uk'&&(S.ukSec||S.fg)){closeMenu();S.hist=S.hist.filter(h=>h.tab!=='uk');S.ukSec=null;S.wObjSel=null;S.fg=null;S.arB=null;SC().scrollTop=0;render();animIn(-1);return;}
+function go(id,opt){if(id==='uk'&&S.tab==='uk'&&(S.ukSec||S.fg)){closeMenu();S.hist=S.hist.filter(h=>h.tab!=='uk');S.ukSec=null;S.wObjSel=null;S.fg=null;S.arB=null;S.inspW=null;S.inspR=null;SC().scrollTop=0;render();animIn(-1);return;}
   if(id==='chat'&&S.tab==='chat'&&S.room&&!WIDE2.matches){closeMenu();S.hist=S.hist.filter(h=>h.tab!=='chat');S.room=null;SC().scrollTop=0;render();animIn(-1);return;}
   if(id===S.tab){closeMenu();SC().scrollTo({top:0,behavior:'smooth'});return;}if(id==='chat')S.room=null;if(id==='uk'){S.ukSec=null;S.wObjSel=null;}
   const order=TABS.map(t=>t.id);const dir=(S.tab==='person'||S.tab==='ticket')?-1:(order.indexOf(id)>order.indexOf(S.tab)?1:-1);
@@ -3391,7 +3513,7 @@ function go(id,opt){if(id==='uk'&&S.tab==='uk'&&(S.ukSec||S.fg)){closeMenu();S.h
   S.tab=id;S.chatStick=true;try{localStorage.setItem('dl.tab',id);}catch(e){}closeMenu();SC().scrollTop=0;render();animIn(dir);}
 function canBack(){if(S.tab==='chat'&&S.room&&!WIDE2.matches)return true;return S.hist.length>0||!(BAR.includes(S.tab)&&S.tab!=='chat');}
 function back(){closeMenu();const p=S.hist.pop();
-  if(p){S.tab=p.tab;S.viewSid=p.sid;S.viewTicket=p.tk;S.room=p.room||null;S.ukSec=p.uk||null;S.wObjSel=p.wo||null;S.fg=p.fg||null;S.arB=p.ab||null;S.arF=p.af==null?null:p.af;S.arT=p.at||'fl';S.arHi=null;}else if(S.tab==='chat'&&S.room){S.room=null;}else{S.tab='today';}
+  if(p){S.tab=p.tab;S.viewSid=p.sid;S.viewTicket=p.tk;S.room=p.room||null;S.ukSec=p.uk||null;S.wObjSel=p.wo||null;S.fg=p.fg||null;S.arB=p.ab||null;S.arF=p.af==null?null:p.af;S.arT=p.at||'fl';S.arHi=null;S.inspW=p.iw||null;S.inspR=p.ir||null;}else if(S.tab==='chat'&&S.room){S.room=null;}else{S.tab='today';}
   S.chatStick=true;try{if(TABS.some(t=>t.id===S.tab))localStorage.setItem('dl.tab',S.tab);}catch(e){}SC().scrollTop=0;render();animIn(-1);}
 function initEdgeSwipe(){let st=null,raf=0;const app=()=>document.getElementById('app');
   const ind=el('div',{class:'edge-ind','aria-hidden':'true'},svg('<path d="M15 5l-7 7 7 7"/>'));document.body.append(ind);
@@ -3416,6 +3538,9 @@ function initEdgeSwipe(){let st=null,raf=0;const app=()=>document.getElementById
    who: без поля — усім; 'uk' — Facility (менеджери, ст. менеджер, інженер, директор, Dev); 'meet' — директор, менеджер, Dev;
    'dev' — лише Dev; 'plan' — хто планує графік і ставить задачі; 'earn' — хто відмічає зміни */
 const NOTES=[
+ {v:'5.1',date:'7 листопада',title:'Обхід будівель',items:[
+  {e:'📸',t:'Щоденний фотозвіт',d:'Facility → Обхід будівель: фото водомірного вузла, ВРП і пожежного щита по кожній закріпленій будівлі. Працює й без зв’язку — звіт відправиться сам.',who:'uk'},
+  {e:'✅',t:'Перевірка й Word-звіти',d:'Матриця покриття, погодження або повернення звіту, задача із зауваження. Тижневий і місячний звіт — у Word.',who:'uk'}]},
  {v:'5.0',date:'3 листопада',title:'Покер: розділ 2 батл пасу',items:[
   {e:'❄',t:'Розділ 2 «Крижаний ставок»',d:'Ще 30 рівнів (31–60) з новими сорочками, сукнами, рамками й титулами. Сезон продовжено до 31 грудня, а після 60 рівня падають бонусні скрині.'},
   {e:'⚖',t:'Чесніший прогрес',d:'Рівні дорожчають з кожним десятком, XP за роздачі має денний ліміт, а гра лише з ботами дає половину. Уже відкриті рівні й нагороди лишаються вашими.'},
@@ -5547,7 +5672,7 @@ function logErr(msg,src){const k=String(msg).slice(0,120);if(_errSeen[k]&&Date.n
 addEventListener('error',e=>{if(e&&e.message&&!/ResizeObserver/.test(e.message))logErr(e.message,(e.filename||'').split('/').pop()+':'+(e.lineno||''));});
 addEventListener('unhandledrejection',e=>{const r=e&&e.reason;logErr('Promise: '+(r&&(r.message||r.code)||r),r&&r.stack&&String(r.stack).split('\n')[1]);});
 function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ лише для ролі Dev.'}))];
-  const out=[el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'ПІБ керівника УК'}),el('span',{class:'muted small',text:dirName()+' · у шапці й підписах звіту для інвестора'})),el('button',{class:'btn sm ghost',type:'button',onclick:dirEdit},'Змінити')),el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Новий дизайн (тест)'}),el('span',{class:'muted small',text:'Вмикається лише у вашому браузері — інші бачать поточний дизайн.'})),el('button',{type:'button',class:'btn sm',onclick:toggleV2},v2On()?'Вимкнути':'Увімкнути'))];const L=S.log||[];const now=Date.now();const d1=L.filter(x=>now-x.at<864e5);const errs=L.filter(x=>x.kind==='err');const e1=d1.filter(x=>x.kind==='err');
+  const out=[...inspDevCards(),el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'ПІБ керівника УК'}),el('span',{class:'muted small',text:dirName()+' · у шапці й підписах звіту для інвестора'})),el('button',{class:'btn sm ghost',type:'button',onclick:dirEdit},'Змінити')),el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Новий дизайн (тест)'}),el('span',{class:'muted small',text:'Вмикається лише у вашому браузері — інші бачать поточний дизайн.'})),el('button',{type:'button',class:'btn sm',onclick:toggleV2},v2On()?'Вимкнути':'Увімкнути'))];const L=S.log||[];const now=Date.now();const d1=L.filter(x=>now-x.at<864e5);const errs=L.filter(x=>x.kind==='err');const e1=d1.filter(x=>x.kind==='err');
   const ppl=[...new Set(d1.map(x=>x.name))];const onl=S.staff.filter(x=>x.userId&&isOnline(x.id));
   out.push(el('div',{class:'card',style:'padding:16px;margin-bottom:12px'},el('h3',{style:'margin:0 0 4px;font-size:16px',text:'👁 Перегляд як роль'}),el('p',{class:'muted small',style:'margin:0 0 12px',text:'Побачте застосунок очима іншої ролі: меню, розділи, «Що нового», доступи. Дії виконуються від вашого імені — для перевірки, не для роботи.'}),
     el('div',{class:'dv-as'},ROLES.filter(r=>r.id!=='dev').map(r=>el('button',{type:'button',class:'btn ghost sm',onclick:()=>setAsRole(r.id)},r.name)))));
@@ -6915,12 +7040,13 @@ function ukStat(id){try{
 const FG=[
  {id:'obl',name:'Облік',sub:'Вода, сміття, дебіторка, паркінг, інвентар, електроенергія',c1:'#1F6F78',c2:'#3aa7a0',ic:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'},
  {id:'arch',name:'Архітектура та інформація',sub:'Техпаспорти, поверхи, приміщення й площі',c1:'#5B6CD9',c2:'#8A9BF2',ic:'<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>',plan:[['📐','Плани поверхів і креслення','PDF та схеми по кожному будинку'],['📘','Технічні паспорти','Площі, приміщення, інженерні мережі'],['🗺','Карта території','Зони, комунікації, точки обліку']]},
+ {id:'insp',name:'Обхід будівель',sub:'Щоденний фотозвіт: водомірний вузол, ВРП, пожежний щит, територія',c1:'#0E7C66',c2:'#2FB39A',ic:'<path d="M9 4h6v3H9z"/><path d="M15 5.5h2a2 2 0 0 1 2 2V12M9 5.5H7a2 2 0 0 0-2 2V19a2 2 0 0 0 2 2h4"/><path d="m8.5 12 1.5 1.5 3-3"/><path d="M14 16.5h1.5l1-1.5h2l1 1.5H21V21h-7z"/><circle cx="17.5" cy="18.2" r="1.2"/>'},
  {id:'docs',name:'Документи УК',sub:'Договори, акти, накази, регламенти',c1:'#B0742A',c2:'#E2A75A',ic:'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h8"/>',plan:[['📄','Договори з резидентами та підрядниками','Строки дії й нагадування'],['🧾','Акти виконаних робіт','Підписані акти по місяцях'],['📌','Регламенти та накази','Внутрішні правила УК']]},
  {id:'clean',name:'Клінінг',sub:'Чек-листи, графік прибирання, контроль якості',c1:'#2E8B5E',c2:'#7BC47F',ic:'<path d="M14 3 9 14"/><path d="M5 14h9l1 7H4z"/><path d="M17 8l2-2M19 12h2M18 16l2 1"/>',plan:[['✅','Чек-листи прибирання','По зонах і будинках'],['📅','Графік прибирання','Щоденні та генеральні'],['⭐','Контроль якості','Фото до/після та оцінки']]},
  {id:'dev',name:'Dev-панель',sub:'Журнал дій, помилки, стан бази, експорт',c1:'#334155',c2:'#64748B',ic:'<path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/>',dev:true},
  {id:'res',name:'Резиденти',sub:'Орендарі, приміщення, контакти, звернення',c1:'#C2416B',c2:'#EA7E9E',ic:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.8c1.6.8 2.6 2.5 3 5.2"/>',plan:[['🏢','Картки резидентів','Приміщення, площа, контакти'],['📨','Звернення резидентів','Заявки й статус виконання'],['💳','Зв’язок з дебіторкою','Борги кожного резидента']]}];
 function fgHome(){const out=[el('section',{class:'uk-hero'},el('span',{class:'eyebrow',text:'Duck’s Lake'}),el('h2',{text:'Facility відділ'}),el('p',{text:'Облік, архітектура, документи, клінінг і резиденти — усе для керування територією.'}))];
-  out.push(el('div',{class:'uk-grid'},FG.filter(g=>!g.dev||isDev()).map(g=>{const st=g.id==='dev'?[String((S.log||[]).filter(x=>Date.now()-x.at<864e5).length)+' дій',(S.log||[]).filter(x=>x.kind==='err'&&Date.now()-x.at<864e5).length+' помилок за 24 год']:g.id==='arch'?[ARCH.length+' будівель',Math.round(arTotalAll()).toLocaleString('uk-UA')+' м² за паспортами']:g.id==='obl'?[Object.keys(UKS).length+' блоків','вода, сміття, дебіторка…']:null;return el('button',{type:'button',class:'uk-tile'+(st?'':' soon-t'),style:'--c1:'+g.c1+';--c2:'+g.c2,onclick:()=>openFg(g.id)},
+  out.push(el('div',{class:'uk-grid'},FG.filter(g=>(!g.dev||isDev())&&(g.id!=='insp'||inspCan())).map(g=>{const st=g.id==='insp'?inspTileStat():g.id==='dev'?[String((S.log||[]).filter(x=>Date.now()-x.at<864e5).length)+' дій',(S.log||[]).filter(x=>x.kind==='err'&&Date.now()-x.at<864e5).length+' помилок за 24 год']:g.id==='arch'?[ARCH.length+' будівель',Math.round(arTotalAll()).toLocaleString('uk-UA')+' м² за паспортами']:g.id==='obl'?[Object.keys(UKS).length+' блоків','вода, сміття, дебіторка…']:null;return el('button',{type:'button',class:'uk-tile'+(st?'':' soon-t'),style:'--c1:'+g.c1+';--c2:'+g.c2,onclick:()=>openFg(g.id)},
     el('div',{class:'uk-tt'},el('span',{class:'uk-ic'},svg(g.ic)),st?null:el('span',{class:'soon',text:'скоро'}),el('span',{class:'uk-go'},svg('<path d="m9 6 6 6-6 6"/>'))),
     el('span',{class:'uk-t'},el('b',{text:g.name}),el('small',{text:g.sub})),el('span',{class:'uk-st'},st?[el('b',{text:st[0]}),el('small',{text:st[1]})]:el('small',{text:'Розділ у розробці'})));})));return out;}
 const ARCH=[{"id":"b1","lt":"Б","gen":"№1","name":"Lucky Office Rent","full":"Спортивно-офісний центр (будинок №1 на генплані)","addr":"вул. Академіка Підстригача, 1Б","doc":{"kind":"Технічний паспорт","reg":"TI01:1296-2306-6896-1107","no":"073/2025 від 18.06.2025","made":"18.06.2025","obj":"01.2401621.4980129.20240801.42.0000.57","client":"ТОВ «Дакс Лейк Офіс» (44486655)","permit":"ЛВ112193021330"},"tep":[["Площа забудови","953 м²"],["Загальна площа будівлі","4 517 м²"],["Загальна площа приміщень","4 382,4 м²"],["Корисна площа","4 173,3 м²"],["МЗК (загального користування)","546,2 м²"],["Поверхів","6 надземних"],["Будівельний об’єм","19 580 м³"],["Робочих місць","318"],["Електроенергія на рік","892,36 МВт·год"],["Теплова енергія на рік","694,5 Гкал"],["Вода на рік","2,665 тис. м³"],["Тривалість будівництва","15,5 міс"],["Строк експлуатації","100 років"]],"eng":[["Опалення","місцеве"],["Вентиляція",1],["Водопостачання",1],["Каналізація","центральна"],["Електропостачання",1],["Блискавкозахист",1],["Ліфт",1],["Слабкострумні мережі",0]],"land":[{"cad":"4610136900:09:009:0068","ha":1.117,"use":"07.02 — для будівництва та обслуговування об’єктів фізичної культури і спорту"},{"cad":"4610136900:09:009:0069","ha":1.3348,"use":"03.08 — для будівництва та обслуговування об’єктів туристичної інфраструктури та закладів громадського харчування"}],"floors":[{"f":"1","c":[["I","вестибюль",54.3],["II","тамбур шлюз",3.2],["III","сходова",17.4],["IV","ліфтова шахта",3.7],["V","ліфтова шахта",3.7],["VI","ліфтовий хол",9.9],["VII","приміщення укриття",16.7],["VIII","пожежний пост",15.4],["IX","сходова",17.4]],"u":[["100",[["1","нежитлове",104.2]]],["101",[["1","приміщення РУ",21.1],["2","трансформаторна",8.8],["3","трансформаторна",8.9],["4","приміщення РУ",17.7],["5","вузол вводу",15.7]]],["102",[["1","нежитлове",64.5]]],["103",[["1","нежитлове",90.3]]],["104",[["1","нежитлове",104.3]]],["105",[["1","нежитлове",135.3]]]]},{"f":"2","c":[["X","сходова",17.4],["XI","тамбур шлюз",3.1],["XII","коридор",13.9],["XIII","протиосколкове укриття",23.5],["XIV","тамбур",3.1],["XV","сходова",17.4],["XVI","підсобне приміщення",2.9],["XVII","електрощитова",0.6]],"u":[["201",[["1","нежитлове",655.2]]]]},{"f":"3","c":[["XVIII","сходова",17.5],["XIX","тамбур шлюз",3.1],["XX","коридор",13.9],["XXI","протиосколкове укриття",22.2],["XXII","тамбур",3.1],["XXIII","сходова",17.5],["XXIV","підсобне приміщення",2.9],["XXV","електрощитова",0.6]],"u":[["301",[["1","нежитлове",657.7],["2","лоджія",3.7]]]]},{"f":"4","c":[["XXVI","сходова",17.4],["XXVII","тамбур шлюз",3.1],["XXVIII","коридор",13.9],["XXIX","протиосколкове укриття",22.2],["XXX","тамбур",3.1],["XXXI","сходова",17.5],["XXXII","підсобне приміщення",3.0],["XXXIII","електрощитова",0.6]],"u":[["401",[["1","нежитлове",655.1],["2","лоджія",3.7]]]]},{"f":"5","c":[["XXXIV","сходова",17.4],["XXXV","тамбур шлюз",3.0],["XXXVI","коридор",13.8],["XXXVII","протиосколкове укриття",22.3],["XXXVIII","тамбур",3.1],["XXXIX","сходова",17.4],["XL","підсобне приміщення",3.0],["XLI","електрощитова",0.6]],"u":[["501",[["1","нежитлове",651.7],["2","лоджія",3.7]]]]},{"f":"6","c":[["XLII","сходова",17.4],["XLIII","тамбур шлюз",3.1],["XLIV","коридор",13.8],["XLV","протиосколкове укриття",22.1],["XLVI","тамбур",3.1],["XLVII","сходова",17.4],["XLVIII","підсобне приміщення",2.9],["XLIX","електрощитова",0.6]],"u":[["601",[["1","нежитлове",620.7],["2","лоджія",13.9]]]]}],"fac":"1.3"},{"id":"b2","lt":"В","gen":"№2","name":"Lucky Offices Investment","full":"Офісна будівля з вбудованим приміщенням громадського призначення та паркінгом (будинок №2 на генплані)","addr":"вул. Академіка Підстригача, 1Г","doc":{"kind":"Технічний паспорт, редакція №2","reg":"TI01:6940-4683-7506-2110","no":"086/2025 від 30.06.2025","made":"30.06.2025","obj":"01.2401672.4980031.20231003.85.0000.51","client":"ТОВ «Агенція «Європростір» (34605971)","permit":"ЛВ012231120278"},"tep":[["Площа забудови","1 596 м²"],["Загальна площа","6 706,4 м²"],["Корисна площа","6 451,1 м²"],["МЗК (загального користування)","911,7 м²"],["Поверхів","6 надземних + підвал"],["Висота будівлі","23,83 м"],["Будівельний об’єм","30 845 м³"],["Машиномісць","16"],["Робочих місць","355"],["Електроенергія на рік","728,1 МВт·год"],["Теплова енергія на рік","682,7 Гкал"],["Вода на рік","2,658 тис. м³"],["Будівництво","2023–2025, 18 міс"]],"eng":[["Опалення","місцеве"],["Вентиляція",1],["Водопостачання",1],["Каналізація",1],["Електропостачання",1],["Слабкострумні мережі",1],["Блискавкозахист",1],["Домофон",1],["Автоматизація й диспетчеризація",1],["Газопостачання",0]],"land":[{"cad":"4610136900:09:009:0069","ha":1.3348,"use":"03.08 — для будівництва та обслуговування об’єктів туристичної інфраструктури та закладів громадського харчування"}],"floors":[{"f":"пд","c":[["XLII","ліфтовий хол",20.8],["XLIII","проїзд",326.4],["XLIV","сходова",12.7],["XLV","електрощитова",14.2],["XLVI","насосна",34.0]],"u":[["П101",[["1","нежитлове",40.5],["2","коридор",8.1],["3","санвузол",1.5],["4","санвузол",2.7],["5","санвузол",2.9],["6","нежитлове",16.2]]],["П102",[["1","нежитлове",179.6]]],["П103",[["1","нежитлове",172.2]]],["П104",[["1","трансформаторна",38.7],["2","трансформаторна",9.5],["3","трансформаторна",9.6],["4","приміщення РУ",30.0],["5","приміщення вводу кабелів",8.8]]],["П105",[["1","приміщення ССМ",12.4]]],["П/М-1",[["","машиномісце",13.5]]],["П/М-2",[["","машиномісце",13.1]]],["П/М-3",[["","машиномісце",13.4]]],["П/М-4",[["","машиномісце",18.5]]],["П/М-5",[["","машиномісце",22.4]]],["П/М-6",[["","машиномісце",22.7]]],["П/М-7",[["","машиномісце",22.1]]],["П/М-8",[["","машиномісце",20.6]]],["П/М-9",[["","машиномісце",16.0]]],["П/М-10",[["","машиномісце",20.7]]],["П/М-11",[["","машиномісце",20.3]]],["П/М-12",[["","машиномісце",20.1]]],["П/М-13",[["","машиномісце",16.0]]],["П/М-14",[["","машиномісце",19.0]]],["П/М-15",[["","машиномісце",23.7]]],["П/М-16",[["","машиномісце",21.9]]]]},{"f":"1","c":[["I","вестибюль",37.6],["II","ліфтовий хол",20.1],["III","ліфтова шахта",3.7],["IV","ліфтова шахта",3.7],["V","тамбур",8.6],["VI","сходова",18.8],["VII","коридор",16.4],["VIII","сходова",13.0]],"u":[["101",[["1","нежитлове",131.5]]],["102",[["1","нежитлове",111.4],["2","санвузол",4.2],["3","санвузол",4.2],["4","комора",3.8],["5","коридор",19.8],["6","роздягалка",4.2],["7","душова",3.0],["8","санвузол",3.4],["9","доготівельне приміщення",34.1],["10","побутова персоналу",17.7],["11","мийна",12.1],["12","комора",6.3],["13","тамбур",10.5]]],["103",[["1","нежитлове",235.7],["2","санвузол",3.6],["3","тамбур",8.8]]],["104",[["1","нежитлове",328.9],["2","санвузол",3.8],["3","тамбур",14.8]]]]},{"f":"2","c":[["IX","ліфтовий хол",10.7],["X","тамбур",2.6],["XI","сходова",19.0],["XII","коридор",25.8],["XIII","тамбур",3.1],["XIV","сходова",19.0],["XV","допоміжне",3.9],["XVI","тераса",64.4]],"u":[["201",[["1","нежитлове",212.2],["2","тераса",25.5],["3","санвузол",4.4],["4","санвузол",4.0]]],["202",[["1","нежитлове",691.9],["2","тераса",68.4],["3","санвузол",6.7],["4","санвузол",6.9]]]]},{"f":"3","c":[["XVII","ліфтовий хол",10.7],["XVIII","тамбур",2.6],["XIX","сходова",19.0],["XX","тамбур",3.2],["XXI","сходова",18.9],["XXII","допоміжне",4.0]],"u":[["301",[["1","нежитлове",291.1],["2","санвузол",4.4],["3","санвузол",4.5]]],["302",[["1","нежитлове",629.4],["2","лоджія",5.8],["3","сходова",14.3],["4","санвузол",6.3],["5","санвузол",5.8]]]]},{"f":"4","c":[["XXIII","ліфтовий хол",10.7],["XXIV","тамбур",2.6],["XXV","сходова",19.0],["XXVI","тамбур",3.2],["XXVII","сходова",18.9],["XXVIII","допоміжне",4.0]],"u":[["401",[["1","нежитлове",640.4],["2","лоджія",6.8],["3","санвузол",5.8],["4","санвузол",6.3],["5","тераса",39.0]]],["302",[["6","тераса",51.4]]]]},{"f":"5","c":[["XXIX","ліфтовий хол",10.7],["XXX","тамбур",2.6],["XXXI","сходова",19.0],["XXXII","тамбур",3.2],["XXXIII","сходова",18.9],["XXXIV","допоміжне",4.0]],"u":[["501",[["1","нежитлове",325.1],["2","санвузол",5.0],["3","санвузол",5.6]]],["502",[["1","нежитлове",304.3],["2","санвузол",5.3],["3","лоджія",7.0],["4","санвузол",5.6]]]]},{"f":"6","c":[["XXXV","ліфтовий хол",10.7],["XXXVI","тамбур",2.6],["XXXVII","сходова",18.5],["XXXIX","тамбур",3.3],["XL","сходова",18.9],["XLI","допоміжне",4.0]],"u":[["601",[["1","нежитлове",578.2],["2","тераса",19.0],["3","санвузол",4.7],["4","санвузол",5.1]]]]}],"fac":"2"},{"id":"b3","lt":"Д","gen":"1-Е","name":"LUCKY SPACE INVEST","full":"Спортивно-офісний центр","addr":"вул. Академіка Підстригача, 1Е","doc":{"kind":"Технічний паспорт","reg":"TI01:9895-9621-6007-2294","no":"003/2026 від 28.01.2026","made":"28.01.2026","obj":"01.2401609.4980079.20240801.24.0000.12","client":"ТОВ «Агенція «Європростір» (34605971), ТОВ «Дакс Лейк Офіс» (44486655)","permit":"ЛВ112193013116"},"tep":[["Площа забудови","835 м²"],["Загальна площа","5 104 м²"],["Корисна площа","4 856,3 м²"],["МЗК (загального користування)","470,7 м²"],["Поверхів","7 надземних"],["Гранична висота","26,3 м"],["Будівельний об’єм","22 211 м³"],["Рік завершення","2026"]],"eng":[["Опалення","місцеве"],["Водопостачання",1],["Каналізація",1],["Електропостачання",1],["Ліфт",1],["Газопостачання",0],["Сміттєпровід",0]],"cons":[["Фундамент","з/б плита"],["Стіни","керамічні блоки, з/б колони"],["Перекриття","з/б моноліт"],["Покрівля","ПВХ мембрана"],["Підлога","цементна стяжка"],["Сходи","з/б"]],"land":[{"cad":"4610136900:09:009:0069","ha":1.3348,"use":"03.08 — для будівництва та обслуговування об’єктів туристичної інфраструктури та закладів громадського харчування"},{"cad":"4610136900:09:009:0068","ha":1.117,"use":"07.02 — для будівництва та обслуговування об’єктів фізичної культури і спорту"}],"floors":[{"f":"1","c":[["1","вестибюль",57.2],["2","вузол вводу",16.2],["3","сходова",13.5],["4","підсобне",24.0],["5","ліфтовий хол",10.3],["6","ліфтова шахта",5.4],["7","ліфтова шахта",3.7],["8","ліфтова шахта",3.7],["9","тамбур",3.9],["10","сходова",12.9]],"u":[["101",[["1","нежитлове",82.2],["2","санвузол",3.9]]],["102",[["1","нежитлове",147.5],["2","санвузол",4.3]]],["103",[["1","нежитлове",63.7],["2","санвузол",4.3]]],["104",[["1","нежитлове",54.5],["2","санвузол",3.0]]],["105",[["1","нежитлове",54.7],["2","санвузол",3.0]]],["106",[["1","нежитлове",25.8],["2","санвузол",3.1]]],["107",[["1","нежитлове",53.4],["2","санвузол",3.3]]],["108",[["1","нежитлове",53.6],["2","санвузол",3.4]]]]},{"f":"2","c":[["11","сходова",17.4],["12","тамбур",3.1],["13","коридор",7.5],["14","коридор",10.1],["15","коридор",13.1],["16","підсобне",4.2],["17","підсобне",0.6],["18","тамбур",3.1],["19","сходова",17.5]],"u":[["201",[["1","нежитлове",307.9],["2","санвузол",5.3],["3","санвузол",7.5]]],["202",[["1","нежитлове",319.1],["2","санвузол",7.2],["3","санвузол",6.4],["4","службове",14.1]]]]},{"f":"3","c":[["20","сходова",17.4],["21","тамбур",3.1],["22","тамбур",3.1],["23","сходова",17.5]],"u":[["301",[["1","коридор",4.6],["2","коридор",9.5],["3","підсобне",4.2],["4","підсобне",0.6],["5","службове",12.0],["6","нежитлове",641.3],["7","санвузол",5.2],["8","санвузол",5.8],["9","санвузол",4.3],["10","санвузол",3.3],["11","санвузол",4.5]]]]},{"f":"4","c":[["24","сходова",17.4],["25","тамбур",3.1],["26","коридор",11.0],["27","коридор",9.7],["28","коридор",12.9],["29","підсобне",4.2],["30","підсобне",0.6],["31","тамбур",3.1],["32","сходова",17.4]],"u":[["401",[["1","нежитлове",138.4],["2","санвузол",5.8]]],["402",[["1","нежитлове",163.3],["2","санвузол",4.3]]],["403",[["1","нежитлове",169.0],["2","санвузол",5.4]]],["404",[["1","нежитлове",137.3],["2","санвузол",4.9]]],["405",[["1","нежитлове",12.1]]]]},{"f":"5","c":[["33","сходова",17.4],["34","тамбур",3.2],["35","тамбур",3.1],["36","сходова",17.4]],"u":[["501",[["1","коридор",5.0],["2","коридор",10.3],["3","підсобне",4.3],["4","підсобне",0.6],["5","службове",12.1],["6","нежитлове",635.2],["7","санвузол",3.5],["8","санвузол",3.3],["9","санвузол",3.1],["10","санвузол",5.2],["11","санвузол",5.8]]]]},{"f":"6","c":[["37","сходова",17.2],["38","тамбур",3.2],["39","тамбур",3.2],["40","сходова",17.4]],"u":[["601",[["1","коридор",5.0],["2","коридор",10.5],["3","підсобне",4.3],["4","підсобне",0.6],["5","службове",12.2],["6","нежитлове",636.1],["7","санвузол",3.5],["8","санвузол",3.3],["9","санвузол",3.1],["10","санвузол",5.2],["11","санвузол",5.8]]]]},{"f":"7","c":[["41","сходова",17.1],["42","тамбур",3.0],["43","тамбур",3.2],["44","сходова",17.4]],"u":[["701",[["1","коридор",4.9],["2","коридор",10.1],["3","підсобне",4.3],["4","підсобне",0.6],["5","службове",12.1],["6","нежитлове",635.4],["7","санвузол",3.5],["8","санвузол",3.3],["9","санвузол",3.1],["10","санвузол",5.2],["11","санвузол",5.8]]]]}],"fac":"1.2"},{"id":"b4","lt":"Г","gen":"","name":"COWORKING","full":"Будівля Г-4 (за експлікацією «А5-4»)","addr":"вул. Академіка Підстригача, 1В","doc":{"kind":"Поверхові плани та експлікація"},"tep":[["Загальна площа","10 450,5 м²"],["Основна площа","9 683,4 м²"],["Допоміжна площа","767,1 м²"],["Поверхів","4 + підвал"],["Паркінг у підвалі","2 264,1 м²"]],"floors":[{"f":"пд","c":[["1","сходова",18.9],["2","паркінг",2264.1],["3","ліфтовий хол",7.1],["4","ліфтова шахта",3.7],["5","ліфтова шахта",3.7],["6","зберігання води",24.9],["7","ліфтовий хол",7.1],["8","ліфтова шахта",3.7],["9","ліфтова шахта",3.7],["10","сходова",18.9],["11","електрощитова",20.9],["12","коридор",10.6],["13","ліфтова шахта",3.7],["14","тамбур",3.7],["15","санвузол",3.7],["16","санвузол",10.6],["17","санвузол",10.6]],"u":[]},{"f":"1","c":[["18","сходова",11.8],["19","тамбур",5.0],["20","вестибюль",175.8],["21","офісне приміщення",63.0],["22","санвузол",1.9],["23","зал кафетерію",124.4],["24","коридор",20.1],["25","офісне приміщення",31.7],["26","санвузол",2.3],["27","офісне приміщення",78.8],["28","санвузол",3.7],["29","офісне приміщення",80.9],["30","санвузол",3.9],["31","офісне приміщення",409.9],["32","санвузол",1.9],["33","офісне приміщення",384.2],["34","санвузол",5.2],["35","офісне приміщення",340.8],["36","санвузол",2.2],["37","офісне приміщення",142.2],["38","санвузол",2.2],["39","коридор",32.6],["40","сходова",9.9],["41","тамбур",5.0],["42","ліфтовий хол",12.9],["43","вестибюль",42.7],["44","тамбур",5.9],["45","офісне приміщення",93.1],["46","санвузол",3.0],["47","офісне приміщення",245.3],["48","санвузол",3.1]],"u":[]},{"f":"2","c":[["49","сходова",18.9],["50","тамбур",7.6],["51","ліфтовий хол",6.5],["52","нежитлове",1372.1],["53","тераса",33.5],["54","офісне приміщення",495.2],["55","тераса",53.2],["56","ліфтовий хол",6.5],["57","тамбур",7.7],["58","сходова",18.8]],"u":[]},{"f":"3","c":[["59","сходова",18.9],["60","тамбур",7.6],["61","ліфтовий хол",6.4],["62","нежитлове",1260.0],["63","нежитлове",501.4],["64","ліфтовий хол",6.5],["65","тамбур",7.6],["66","сходова",18.8]],"u":[]},{"f":"4","c":[["67","сходова",18.9],["68","тамбур",7.6],["69","ліфтовий хол",6.6],["70","нежитлове",1291.6],["71","тераса",9.7],["72","нежитлове",458.9],["73","тераса",12.1],["74","ліфтовий хол",6.5],["75","тамбур",7.6],["76","сходова",18.8]],"u":[]}],"fac":"4"},{"id":"b5","lt":"Е","gen":"№3","name":"Medical Space","full":"Спортивно-офісний центр (будинок №3 на генплані)","addr":"вул. Академіка Підстригача, 1Д","doc":{"kind":"Поверхові плани та експлікація"},"tep":[["Площа забудови","1 400 м²"],["Загальна площа","6 384,6 м²"],["Основна площа","5 334,5 м²"],["Допоміжна площа","481,9 м²"],["МЗК (загального користування)","568,2 м²"],["Поверхів","7"],["Висота","26,5 м"],["Корисний об’єм","26 342 м³"],["Рік спорудження","2026"]],"eng":[["Опалення","місцеве"],["Електрика",1],["Водопровід",1],["Каналізація",1],["Ліфт",1],["Газопровід",0],["Сміттєпровід",0]],"cons":[["Фундамент","плитний, залізобетон"],["Стіни","керамічна цегла"],["Перекриття","монолітний залізобетон"],["Покрівля","ПВХ мембрана"],["Підлога","цементна стяжка"],["Сходи","залізобетонні марші"]],"floors":[{"f":"1","c":[["I","хол",84.8],["II","сходова",17.4],["III","вузол вводу",19.4],["IV","службове",24.0],["V","ліфтова шахта",5.4],["VI","ліфтовий хол",10.2],["VII","ліфтова шахта",3.7],["VIII","ліфтова шахта",3.6],["IX","тамбур",3.9],["X","сходова",17.4]],"u":[["101",[["1","нежитлове",156.3],["2","санвузол",4.5],["3","санвузол",5.8]]],["102",[["1","нежитлове",117.5],["2","санвузол",5.9],["3","санвузол",4.6]]],["103",[["1","нежитлове",100.8],["2","санвузол",4.0]]],["104",[["1","нежитлове",103.1],["2","санвузол",4.2]]],["105",[["1","нежитлове",70.9],["2","санвузол",4.4]]],["106",[["1","нежитлове",102.4],["2","санвузол",4.2]]],["107",[["1","нежитлове",86.8],["2","санвузол",4.0]]],["108",[["1","нежитлове",58.4],["2","санвузол",3.5]]],["109",[["1","нежитлове",232.5],["2","санвузол",5.4],["3","санвузол",4.5],["4","санвузол",3.4],["5","санвузол",4.1]]]]},{"f":"2","c":[["XI","ліфтовий хол",10.3],["XII","вестибюль",34.0],["XIII","службове",3.5],["XIV","щитова",0.7],["XV","тамбур",3.2],["XVI","сходова",17.5],["XVII","коридор",9.1],["XVIII","тамбур",3.2],["XIX","сходова",17.2]],"u":[["201",[["1","нежитлове",131.8],["2","санвузол",5.8]]],["202",[["1","нежитлове",143.2],["2","санвузол",11.4]]],["203",[["1","нежитлове",215.6],["2","санвузол",4.7]]],["204",[["1","нежитлове",302.8],["2","санвузол",6.5]]],["205",[["1","нежитлове",169.9],["2","санвузол",7.7]]],["206",[["1","нежитлове",167.5],["2","санвузол",7.5]]],["207",[["1","нежитлове",14.1]]]]},{"f":"3","c":[["XX","ліфтовий хол",10.3],["XXI","службове",4.4],["XXII","тамбур",3.2],["XXIII","сходова",17.5],["XXIV","тамбур",3.2],["XXV","сходова",17.2]],"u":[["301",[["1","нежитлове",639.1],["2","санвузол",7.2],["3","санвузол",7.5],["4","експлуатована покрівля",71.9],["5","санвузол",6.6],["6","санвузол",8.8],["7","нежитлове",12.1]]],["302",[["1","нежитлове",0.6],["2","експлуатована покрівля",92.5]]]]},{"f":"4","c":[["XXVI","ліфтовий хол",10.3],["XXVII","службове",4.2],["XXVIII","щитова",0.6],["XXIX","тамбур",3.2],["XXX","сходова",17.5],["XXXI","тамбур",3.2],["XXXII","сходова",17.4]],"u":[["401",[["1","нежитлове",639.2],["2","санвузол",7.2],["3","санвузол",7.5],["4","санвузол",6.6],["5","санвузол",7.4],["6","нежитлове",12.1]]]]},{"f":"5","c":[["XXXIII","ліфтовий хол",10.3],["XXXIV","службове",4.0],["XXXV","щитова",0.5],["XXXVI","тамбур",2.9],["XXXVII","сходова",17.4],["XXXVIII","тамбур",2.8],["XXXIX","сходова",17.4]],"u":[["501",[["1","нежитлове",329.9],["2","санвузол",6.9],["3","нежитлове",11.5],["4","санвузол",7.1]]],["502",[["1","нежитлове",314.7],["2","санвузол",6.6],["3","санвузол",6.6]]]]},{"f":"6","c":[["XL","ліфтовий хол",10.3],["XLI","службове",4.2],["XLII","щитова",0.6],["XLIII","тамбур",3.2],["XLIV","сходова",17.4],["XLV","тамбур",3.0],["XLVI","сходова",17.4]],"u":[["601",[["1","нежитлове",313.9],["2","санвузол",6.0],["3","нежитлове",12.1],["4","санвузол",7.1],["5","балкон",3.9]]],["602",[["1","нежитлове",315.0],["2","санвузол",6.6],["3","санвузол",6.6]]]]},{"f":"7","c":[["XLVII","ліфтовий хол",10.3],["XLVIII","службове",4.2],["XLIX","щитова",0.6],["L","тамбур",3.2],["LI","сходова",17.4],["LII","тамбур",3.0],["LIII","сходова",17.4]],"u":[["701",[["1","нежитлове",315.5],["2","санвузол",5.7],["3","нежитлове",12.1],["4","санвузол",7.1]]],["702",[["1","нежитлове",293.0],["2","санвузол",6.3],["3","лоджія",9.6],["4","санвузол",6.6]]]]}],"fac":"1.1"}];
@@ -7035,11 +7161,395 @@ function arPassport(b){const out=[];const d=b.doc;
   return out;}
 function fgSection(id){const g=FG.find(x=>x.id===id);if(!g)return [];
   return [el('section',{class:'uk-head',style:'--c1:'+g.c1+';--c2:'+g.c2},el('span',{class:'uk-ic big'},svg(g.ic)),el('div',{},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:g.name}),el('p',{text:g.sub}))),
+    id==='clean'&&inspCan()?el('button',{type:'button',class:'card ip-link',onclick:()=>openFg('insp')},el('span',{},el('b',{text:'Фотозвіти обходу →'}),el('small',{class:'muted',text:'Щоденні фото будівель і території — у розділі «Обхід будівель»'}))):null,
     el('div',{class:'card uk-soon'},el('span',{class:'soon',text:'у розробці'}),el('p',{style:'margin:0',text:'Розділ наповнюємо поступово. Ось що тут буде:'})),
     el('div',{class:'uk-plan'},(g.plan||[]).map(([e,t,d])=>el('div',{class:'card uk-pi'},el('span',{class:'uk-pe',text:e}),el('div',{},el('b',{text:t}),el('small',{text:d})),el('span',{class:'soon',text:'скоро'}))))];}
+/* INSP:BEGIN — Щоденний обхід будівель і території.
+   Обхідник: майстер по точках (фото з водяним знаком, стиснення, чернетка в IndexedDB, черга відправки без мережі).
+   Перевіряючі (CEO Asgard, керівник Facility, Dev): стрічка, матриця покриття, погодження/повернення, задачі, Word-звіти.
+   db: buildings_assignments/<bid>, inspections/<date>_<bid>_<staffId>, inspection_photos/<inspId>_<lid>, inspection_exports.
+   Фото: оригінал у сховищі файлів (assets), мініатюри — у документах; якщо сховище недоступне — стиснена копія в документі. */
+const INSP_PRIO={low:'низький',mid:'середній',high:'терміновий'};
+const INSP_ST={none:['не розпочато','none'],draft:['чернетка','draft'],queued:['очікує мережу','queued'],submitted:['на перевірці','sub'],returned:['повернуто','ret'],approved:['погоджено','ok']};
+const INSP_FIRE_DEF=[['closed','Щит зачинений'],['seal','Пломба на місці'],['hose','Рукав і ствол на місці'],['ext','Вогнегасник на місці']];
+function inspFireList(){const t=S.cfg&&S.cfg.inspFire;if(Array.isArray(t)&&t.length)return t.map((x,i)=>['c'+i,String(x)]);return INSP_FIRE_DEF;}
+function inspPts(){return [
+  {k:'water',n:'Водомірний вузол',req:true,max:3,hint:'1–3 фото лічильника й вузла',meter:true},
+  {k:'vrp',n:'ВРП',req:true,max:3,hint:'1–3 фото вступно-розподільчого пристрою'},
+  {k:'fire',n:'Пожежний щит',req:true,max:3,hint:'1–3 фото щита',check:inspFireList()},
+  {k:'terr',n:'Територія',req:false,max:6,hint:'Необов’язково: вхідна група, сміттєві майданчики, освітлення, паркінг (до 6 фото)'}];}
+function inspPt(k){return inspPts().find(p=>p.k===k)||{k,n:k};}
+function inspB(id){return ARCH.find(b=>b.id===id);}
+function inspBName(id){const b=inspB(id);return b?'Буд. '+b.fac+' · '+b.name:id;}
+function inspBShort(id){const b=inspB(id);return b?'Буд. '+b.fac:id;}
+/* ролі */
+function inspCanReview(){return hasAny(['ceo','director','dev']);}
+function inspCanAssign(){return hasAny(['director','dev']);}
+function inspAssigned(bid){const a=(S.inspAs||{})[bid];return a&&Array.isArray(a.userIds)?a.userIds:[];}
+function inspMyBlds(){const m=myStaff();if(!m)return [];return ARCH.filter(b=>inspAssigned(b.id).includes(m.id));}
+function inspIsWalker(){return inspMyBlds().length>0;}
+function inspCan(){return inspCanReview()||inspIsWalker()||isUK();}
+function inspId(date,bid,sid){return date+'_'+bid+'_'+sid;}
+function inspList(){return Object.values(S.insp||{});}
+function inspPending(){return inspList().filter(x=>x.status==='submitted').length;}
+function inspRemarks(x){return Object.values(x.points||{}).filter(p=>p&&p.status==='remark').length;}
+/* ---------- локальне сховище чернеток (IndexedDB з запасним варіантом у пам’яті) ---------- */
+const IDBX={p:null,mem:new Map(),
+  open(){if(this.p)return this.p;this.p=new Promise(res=>{try{const r=indexedDB.open('dl-insp',1);r.onupgradeneeded=()=>{try{r.result.createObjectStore('drafts',{keyPath:'id'});}catch(e){}};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);r.onblocked=()=>res(null);}catch(e){res(null);}});return this.p;},
+  async tx(mode,fn){const db=await this.open();if(!db)return null;return new Promise(res=>{try{const t=db.transaction('drafts',mode);const st=t.objectStore('drafts');const r=fn(st);t.oncomplete=()=>res(r&&r.result!==undefined?r.result:true);t.onerror=()=>res(null);t.onabort=()=>res(null);}catch(e){res(null);}});},
+  async all(){const r=await this.tx('readonly',st=>st.getAll());return Array.isArray(r)?r:[...this.mem.values()];},
+  async put(d){this.mem.set(d.id,d);await this.tx('readwrite',st=>st.put(d));},
+  async del(id){this.mem.delete(id);await this.tx('readwrite',st=>st.delete(id));}};
+async function inspLoadDrafts(){const a=await IDBX.all();S.inspDr={};const me=myStaff();a.forEach(d=>{if(!me||d.authorId===me.id)S.inspDr[d.id]=d;});}
+function inspSave(d){d.updatedAt=Date.now();S.inspDr[d.id]=d;return IDBX.put(d);}
+/* ---------- фото: декодування (EXIF/HEIC через браузер), водяний знак, стиснення ---------- */
+async function inspDecode(file){
+  if(window.createImageBitmap){try{return await createImageBitmap(file,{imageOrientation:'from-image'});}catch(e){}}
+  return await new Promise((res,rej)=>{const u=URL.createObjectURL(file);const i=new Image();i.onload=()=>{res(i);setTimeout(()=>URL.revokeObjectURL(u),2000);};i.onerror=()=>{URL.revokeObjectURL(u);rej({code:'decode'});};i.src=u;});}
+function inspDims(img){return [img.naturalWidth||img.width,img.naturalHeight||img.height];}
+function inspCanvas(img,max){const [w,h]=inspDims(img);const k=Math.min(1,max/Math.max(w,h));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*k));c.height=Math.max(1,Math.round(h*k));c.getContext('2d').drawImage(img,0,0,c.width,c.height);return c;}
+function inspStamp(c,lines){const g=c.getContext('2d');const fs=Math.max(16,Math.round(Math.min(c.width,c.height)*0.032));g.font='700 '+fs+'px Manrope, system-ui, sans-serif';const pad=Math.round(fs*.6),lh=Math.round(fs*1.3);
+  const bh=pad*2+lh*lines.length;g.fillStyle='rgba(6,20,24,.62)';g.fillRect(0,c.height-bh,c.width,bh);g.fillStyle='#fff';g.textBaseline='top';
+  lines.forEach((t,i)=>{let s=t;while(g.measureText(s).width>c.width-pad*2&&s.length>4)s=s.slice(0,-2);if(s!==t)s=s.slice(0,-1)+'…';g.fillText(s,pad,c.height-bh+pad+i*lh);});}
+function inspBlob(c,q){return new Promise(res=>c.toBlob(b=>res(b),'image/jpeg',q));}
+async function inspFit(c,limit){let q=.7,cv=c,b=await inspBlob(cv,q);let n=0;while(b&&b.size>limit&&n<10){if(q>.45)q-=.08;else{const k=.85;const c2=document.createElement('canvas');c2.width=Math.round(cv.width*k);c2.height=Math.round(cv.height*k);c2.getContext('2d').drawImage(cv,0,0,c2.width,c2.height);cv=c2;}b=await inspBlob(cv,q);n++;}return b;}
+async function inspProcess(file,ctx){const img=await inspDecode(file);const c=inspCanvas(img,1600);const t=new Date(ctx.takenAt);
+  inspStamp(c,[dmy(t)+' '+pad(t.getHours())+':'+pad(t.getMinutes())+' · '+inspBName(ctx.bid),ctx.point+' · '+ctx.who+(ctx.gallery?' · з галереї':'')]);
+  const blob=await inspFit(c,300*1024);if(!blob)throw {code:'encode'};
+  const th=inspCanvas(c,320).toDataURL('image/jpeg',.7);const mi=inspCanvas(c,120).toDataURL('image/jpeg',.6);
+  try{img.close&&img.close();}catch(e){}
+  return {blob,thumb:th,mini:mi,sizeKb:Math.round(blob.size/1024),w:c.width,h:c.height};}
+function inspB2U(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error);r.readAsDataURL(b);});}
+/* ---------- черга відправки ---------- */
+let _inspAssets;async function inspAssetsNs(){if(_inspAssets!==undefined)return _inspAssets;try{_inspAssets=await claude.use('assets');}catch(e){_inspAssets=null;}return _inspAssets;}
+function inspQueued(){return Object.values(S.inspDr||{}).filter(d=>d.state==='queued');}
+async function inspWaterSend(d,pt){/* показник у «Облік → Вода»: один діючий загальнобудинковий лічильник будинку, відкритий період */
+  try{const b=inspB(d.buildingId);if(!b)return 'немає будинку';const oid=b.fac==='2'||b.fac==='4'?'b24':'b'+String(b.fac).replace('.','');
+    const ms=(S.wMet||[]).filter(m=>m.obj===oid&&m.kind==='main'&&m.active!==false&&(oid!=='b24'||!m.section||String(m.section).includes(b.fac)));
+    if(ms.length!==1)return ms.length?'кілька загальнобудинкових лічильників — внесіть вручну':'не знайдено загальнобудинковий лічильник';
+    const per=d.date.slice(0,7);if(!S.wPerD||!S.wPerD[per])return 'період «'+perLabel(per)+'» в обліку води ще не створено';
+    await S.db.doc('wPeriods/'+per).update({reads:{[ms[0].id]:{e:+pt.meterValue}},updatedAt:Date.now(),updatedBy:S.myId});return 'ok';}catch(e){return 'помилка запису';}}
+async function inspSync(){if(inspSync.busy||!S.db)return;const q=inspQueued();if(!q.length)return;inspSync.busy=true;let sent=0;
+  try{const A=await inspAssetsNs();
+    for(const d of q){try{
+        for(const p of d.photos){if(p.docId)continue;
+          let assetId=p.assetId||null,data=null;
+          if(!assetId&&A){try{const up=await A.upload(p.blob,{type:'image/jpeg'});assetId=up.id;p.assetId=assetId;await IDBX.put(d);}catch(e){if(e&&['not_granted','unsupported_type','quota_or_state'].includes(e.code))assetId=null;else throw e;}}
+          if(!assetId){const small=p.blob.size>170*1024?await inspFit(await (async()=>{const im=await inspDecode(p.blob);return inspCanvas(im,1280);})(),170*1024):p.blob;data=await inspB2U(small);}
+          const docId=d.id+'_'+p.lid;
+          await S.db.doc('inspection_photos/'+docId).set({inspectionId:d.id,pointKey:p.pointKey,assetId,data,thumb:p.thumb,takenAt:p.takenAt,fromGallery:!!p.fromGallery,sizeKb:p.sizeKb,w:p.w||null,h:p.h||null,purged:false,authorId:d.authorId});
+          p.docId=docId;await IDBX.put(d);}
+        const points={};for(const pt of inspPts()){const x=d.points[pt.k]||{};const o={status:x.status||'ok',comment:x.comment||'',priority:x.status==='remark'?(x.priority||'mid'):null,photoIds:d.photos.filter(p=>p.pointKey===pt.k).map(p=>p.docId)};
+          if(pt.meter){o.meterValue=x.meterValue!=null&&x.meterValue!==''?+x.meterValue:null;o.toWater=!!x.toWater;if(o.toWater&&o.meterValue!=null){const r=await inspWaterSend(d,o);o.waterSent=r==='ok';o.waterNote=r==='ok'?'':r;}}
+          if(pt.check)o.checklist=Object.fromEntries(pt.check.map(([k,l])=>[l,!!(x.checklist||{})[k]]));points[pt.k]=o;}
+        const mini=d.photos.slice(0,4).map(p=>p.mini);const now=Date.now();
+        await S.db.doc('inspections/'+d.id).set({buildingId:d.buildingId,authorId:d.authorId,authorUid:S.myId||'',date:d.date,status:'submitted',points,generalComment:d.generalComment||'',reviewerId:null,reviewComment:'',walkerReply:'',
+          createdAt:d.createdAt||now,submittedAt:now,reviewedAt:null,archived:false,exportId:null,mini,photosN:d.photos.length,remarks:Object.values(points).filter(p=>p.status==='remark').length,purged:false});
+        await IDBX.del(d.id);delete S.inspDr[d.id];sent++;devLog('Обхід: відправлено звіт · '+inspBShort(d.buildingId)+' · '+dm(d.date));
+      }catch(e){d.lastErr=(e&&(e.code||e.message))||'network';d.lastTry=Date.now();try{await IDBX.put(d);}catch(_){}}}
+  }finally{inspSync.busy=false;}
+  if(sent&&!S.inspW)toast(sent>1?'Відправлено звітів: '+sent:'Звіт відправлено');if(S.tab==='uk')render();return sent;}
+addEventListener('online',()=>{inspSync();});setInterval(()=>{if(inspQueued().length&&navigator.onLine!==false)inspSync();},20000);
+/* ---------- стан будівлі для обхідника ---------- */
+function inspTodayOf(bid){const m=myStaff();if(!m)return null;const id=inspId(ymd(new Date()),bid,m.id);const dr=(S.inspDr||{})[id];const sv=(S.insp||{})[id];
+  if(sv&&sv.status!=='draft')return {id,st:sv.status,doc:sv,dr};if(dr)return {id,st:dr.state==='queued'?'queued':'draft',dr};return {id,st:'none'};}
+function inspPill(st){const s=INSP_ST[st]||INSP_ST.none;return el('span',{class:'ip-st ip-'+s[1]},el('i'),s[0]);}
+/* ---------- головний екран модуля ---------- */
+function inspHead(){const g=FG.find(x=>x.id==='insp');return el('section',{class:'uk-head',style:'--c1:'+g.c1+';--c2:'+g.c2},el('span',{class:'uk-ic big'},svg(g.ic)),el('div',{},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:g.name}),el('p',{text:g.sub})));}
+function inspView(){if(S.inspW)return inspWizard();if(S.inspDone)return inspDoneView();if(S.inspR)return inspReport(S.inspR);
+  const rev=inspCanReview(),walk=inspIsWalker();const tabs=[walk?['mine','Мої будівлі']:null,rev?['feed','Звіти']:null,rev?['cov','Покриття']:null].filter(Boolean);
+  if(!S.inspTab||!tabs.some(t=>t[0]===S.inspTab))S.inspTab=tabs.length?tabs[0][0]:'mine';
+  const out=[inspHead()];
+  const qd=inspQueued();if(qd.length)out.push(el('div',{class:'card ip-q',role:'status'},el('span',{class:'ip-qd'}),el('div',{class:'stack',style:'gap:2px;flex:1'},el('b',{text:'Очікує мережу: '+qd.length+' '+plural(qd.length,'звіт','звіти','звітів')}),el('span',{class:'muted small',text:'Збережено на цьому телефоні. Відправиться сам, щойно з’явиться зв’язок.'})),el('button',{class:'btn sm ghost',type:'button',onclick:async ev=>{ev.currentTarget.disabled=true;await inspSync();render();}},'Спробувати зараз')));
+  const acts=[];if(rev)acts.push(el('button',{class:'btn sm',type:'button',onclick:inspExportSheet},svg('<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/>'),' Сформувати звіт'));
+  if(inspCanAssign())acts.push(el('button',{class:'btn sm ghost',type:'button',onclick:inspAssignSheet},'Закріплення будівель'));
+  if(tabs.length>1||acts.length)out.push(el('div',{class:'ip-bar'},tabs.length>1?el('div',{class:'seg',role:'tablist'},tabs.map(([k,l])=>el('button',{type:'button','aria-pressed':String(S.inspTab===k),onclick:()=>{S.inspTab=k;render();}},el('span',{text:l}),k==='feed'&&inspPending()?el('small',{text:inspPending()+' на перевірці'}):null))):el('span'),acts.length?el('div',{class:'row',style:'gap:8px'},acts):null));
+  if(!tabs.length){out.push(el('div',{class:'card empty'},el('b',{text:'За вами не закріплено будівель'}),el('p',{class:'muted',style:'margin:0',text:'Зверніться до Віталія Головньова, щоб він закріпив за вами будівлі для обходу.'})));return out;}
+  if(S.inspTab==='mine')out.push(...inspMine());else if(S.inspTab==='feed')out.push(...inspFeed());else out.push(...inspCoverage());
+  return out;}
+function inspMine(){const bl=inspMyBlds();const out=[];const st=bl.map(b=>({b,s:inspTodayOf(b.id)}));const done=st.filter(x=>['submitted','approved','queued'].includes(x.s.st)).length;
+  out.push(el('div',{class:'ip-sum'},el('b',{text:'Мої будівлі сьогодні'}),el('span',{class:'muted small',text:dmy(new Date())+' · виконано '+done+' з '+bl.length})));
+  if(!done&&!st.some(x=>x.s.st==='draft'))out.push(el('div',{class:'card empty ip-empty'},el('b',{text:'Сьогодні ще жодного обходу'}),el('p',{class:'muted',style:'margin:0',text:'Фото водомірного вузла, ВРП і пожежного щита — це хвилини 3 на будівлю.'}),
+    el('button',{class:'btn',type:'button',onclick:()=>inspStart(st[0].b.id)},'Почати обхід')));
+  out.push(el('div',{class:'ip-blds'},st.map(({b,s})=>el('button',{type:'button',class:'card ip-b ip-b-'+(INSP_ST[s.st]||INSP_ST.none)[1],onclick:()=>{if(s.st==='none'||s.st==='draft')inspStart(b.id);else if(s.doc)inspOpen(s.id);else toast('Звіт чекає мережі й відправиться автоматично');}},
+    el('span',{class:'ip-bn'},el('b',{text:'Буд. '+b.fac}),el('span',{text:b.name}),el('small',{class:'muted',text:b.addr})),inspPill(s.st),
+    s.st==='returned'&&s.doc?el('span',{class:'ip-rc',text:'Повернуто: '+(s.doc.reviewComment||'')}):null,el('span',{class:'uk-go'},svg('<path d="m9 6 6 6-6 6"/>'))))));
+  return out;}
+/* ---------- майстер обходу ---------- */
+async function inspStart(bid){const m=myStaff();if(!m){toast('Спершу оберіть себе в колективі');return;}const date=ymd(new Date());const id=inspId(date,bid,m.id);
+  let d=(S.inspDr||{})[id];if(!d){d={id,buildingId:bid,date,authorId:m.id,points:{},photos:[],generalComment:'',state:'edit',createdAt:Date.now(),step:0};await inspSave(d);devLog('Обхід: почато · '+inspBShort(bid));}
+  if(d.state==='queued'){toast('Цей звіт уже чекає мережі');return;}
+  S.hist.push(snap());S.inspW={id,step:d.step||0};SC().scrollTop=0;render();}
+function inspWDraft(){return S.inspW&&(S.inspDr||{})[S.inspW.id];}
+function inspMissing(d){return inspPts().filter(p=>p.req&&!d.photos.some(x=>x.pointKey===p.k));}
+function inspBadRemark(d){return inspPts().filter(p=>{const x=d.points[p.k];return x&&x.status==='remark'&&!(x.comment||'').trim();});}
+function inspWizard(){const d=inspWDraft();if(!d){S.inspW=null;return inspView();}const pts=inspPts();const step=Math.min(S.inspW.step,pts.length);const out=[];
+  const close=el('button',{type:'button',class:'iconbtn sm','aria-label':'Закрити майстер (чернетка збережеться)',onclick:()=>{S.inspW=null;render();toast('Чернетку збережено');}},svg('<path d="M6 6l12 12M18 6 6 18"/>'));
+  out.push(el('div',{class:'iw-top'},el('div',{class:'stack',style:'gap:2px;min-width:0;flex:1'},el('span',{class:'eyebrow',text:'Обхід · '+dm(d.date)}),el('b',{class:'iw-bn',text:inspBName(d.buildingId)})),
+    el('span',{class:'iw-pg','aria-label':'Крок '+Math.min(step+1,pts.length)+' з '+pts.length},step<pts.length?(step+1)+' / '+pts.length:'Підсумок'),close));
+  out.push(el('div',{class:'iw-steps',role:'list'},pts.map((p,i)=>{const n=d.photos.filter(x=>x.pointKey===p.k).length;return el('button',{type:'button',role:'listitem',class:'iw-s'+(i===step?' on':'')+(n?' has':'')+(p.req&&!n?' need':''),'aria-label':p.n+(n?', фото: '+n:''),onclick:()=>{S.inspW.step=i;d.step=i;inspSave(d);render();}},el('span',{text:p.n}));}),
+    el('button',{type:'button',class:'iw-s'+(step===pts.length?' on':''),onclick:()=>{S.inspW.step=pts.length;render();}},el('span',{text:'Підсумок'}))));
+  if(step<pts.length)out.push(inspPointStep(d,pts[step],step));else out.push(...inspSummary(d));
+  return out;}
+function inspPointStep(d,p,step){const x=d.points[p.k]=d.points[p.k]||{status:'ok'};const ph=d.photos.filter(q=>q.pointKey===p.k);const box=el('div',{class:'card iw-card stack'});
+  const err=el('p',{class:'iw-err',role:'alert',hidden:true});
+  const save=()=>inspSave(d);
+  const add=async(files,gallery)=>{const m=myStaff();for(const f of files){if(d.photos.filter(q=>q.pointKey===p.k).length>=p.max){toast('Для цієї точки до '+p.max+' фото');break;}
+      const tk=gallery?(f.lastModified||Date.now()):Date.now();const tmp=el('span',{class:'thumb iw-sk','aria-label':'Обробляємо фото'});grid.insertBefore(tmp,grid.lastChild);
+      try{const r=await inspProcess(f,{takenAt:tk,bid:d.buildingId,point:p.n,who:m?m.name:'',gallery});d.photos.push({lid:Date.now().toString(36)+Math.random().toString(36).slice(2,6),pointKey:p.k,blob:r.blob,thumb:r.thumb,mini:r.mini,takenAt:tk,fromGallery:!!gallery,sizeKb:r.sizeKb,w:r.w,h:r.h});await save();}
+      catch(e){toast(e&&e.code==='decode'?'Не вдалося відкрити це фото. Зробіть знімок камерою ще раз — фото, що вже є, збережено.':'Фото не вдалося обробити. Спробуйте ще раз — попередні фото на місці.');}
+      tmp.remove();}render();};
+  const cam=el('input',{type:'file',accept:'image/*',capture:'environment',class:'iw-file','aria-label':'Зробити фото: '+p.n});cam.addEventListener('change',()=>{const f=[...cam.files];cam.value='';add(f,false);});
+  const gal=el('input',{type:'file',accept:'image/*',multiple:true,class:'iw-file','aria-label':'Додати з галереї: '+p.n});gal.addEventListener('change',()=>{const f=[...gal.files];gal.value='';add(f,true);});
+  const grid=el('div',{class:'iw-ph'},ph.map(q=>el('span',{class:'thumb rm iw-t'},el('img',{src:q.thumb,alt:p.n}),q.fromGallery?el('span',{class:'iw-gal',text:'з галереї'}):null,
+    el('button',{type:'button',class:'x','aria-label':'Прибрати фото',onclick:()=>confirmSheet('Прибрати це фото з точки «'+p.n+'»?','Прибрати фото',async()=>{d.photos=d.photos.filter(z=>z!==q);await save();render();})},'×'))),el('span'));
+  box.append(el('div',{class:'stack',style:'gap:4px'},el('h2',{text:p.n}),el('span',{class:'muted small',text:(p.req?'Обов’язково · ':'')+p.hint})),grid,
+    el('div',{class:'iw-cam'},el('label',{class:'btn iw-big filebtn'},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),' Зробити фото',cam),
+      el('label',{class:'btn ghost sm filebtn iw-gbtn'},'З галереї',gal)),
+    el('span',{class:'muted small',text:ph.length+' з '+p.max+' фото'+(p.req&&!ph.length?' · потрібне хоча б одне':'')}));
+  if(p.meter){const mi=el('input',{id:'iwMeter',type:'text',inputmode:'decimal',placeholder:'Напр.: 6534',value:x.meterValue!=null?String(x.meterValue):''});
+    mi.addEventListener('input',()=>{if(!isNaN(+mi.value.trim().replace(',','.')))err.hidden=true;});mi.addEventListener('change',()=>{const t=mi.value.trim().replace(',','.');x.meterValue=t===''?null:(isNaN(+t)?x.meterValue:+t);if(t!==''&&isNaN(+t)){err.textContent='Показник — це число, напр. 6534 або 6534,5';err.hidden=false;}else err.hidden=true;save();});
+    const tw=el('input',{type:'checkbox',id:'iwToW',checked:x.toWater?true:null});tw.addEventListener('change',()=>{x.toWater=tw.checked;save();});
+    box.append(el('label',{for:'iwMeter'},'Показник лічильника, м³ (необов’язково)',mi),el('label',{class:'iw-chk',for:'iwToW'},tw,el('span',{text:'Передати показник в «Облік → Вода»'})));}
+  if(p.check){x.checklist=x.checklist||{};box.append(el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Перевірте на місці'}),el('div',{class:'iw-cl'},p.check.map(([k,l])=>{const b=el('button',{type:'button',class:'iw-ci','aria-pressed':String(!!x.checklist[k]),onclick:()=>{x.checklist[k]=!x.checklist[k];b.setAttribute('aria-pressed',String(x.checklist[k]));save();}},svg('<path d="m5 12 5 5 9-10"/>'),el('span',{text:l}));return b;}))));}
+  const cm=el('textarea',{id:'iwCm',placeholder:'Що саме не так і де',maxlength:'600',value:x.comment||''});cm.value=x.comment||'';cm.addEventListener('input',()=>{x.comment=cm.value;if(cm.value.trim())err.hidden=true;});cm.addEventListener('change',save);cm.addEventListener('blur',()=>{if(x.status==='remark'&&!cm.value.trim()){err.textContent='Опишіть зауваження — без коментаря його не зрозуміють.';err.hidden=false;}else err.hidden=true;});
+  const remBox=el('div',{class:'stack',style:'gap:10px',hidden:x.status!=='remark'},el('label',{for:'iwCm'},'Коментар до зауваження (обов’язково)',cm),
+    el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Пріоритет'}),el('div',{class:'seg iw-pr',role:'radiogroup','aria-label':'Пріоритет'},Object.entries(INSP_PRIO).map(([k,l])=>el('button',{type:'button',role:'radio','aria-checked':String((x.priority||'mid')===k),'aria-pressed':String((x.priority||'mid')===k),onclick:()=>{x.priority=k;save();render();}},l)))));
+  box.append(el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Стан'}),el('div',{class:'seg iw-stt',role:'radiogroup','aria-label':'Стан точки'},
+    [['ok','Норма'],['remark','Зауваження']].map(([k,l])=>el('button',{type:'button',role:'radio',class:'iw-'+k,'aria-checked':String((x.status||'ok')===k),'aria-pressed':String((x.status||'ok')===k),onclick:()=>{x.status=k;if(k==='remark'&&!x.priority)x.priority='mid';save();render();}},l)))),remBox,err);
+  const nav=el('div',{class:'iw-nav'},step>0?el('button',{class:'btn ghost',type:'button',onclick:()=>{S.inspW.step=step-1;d.step=step-1;save();render();SC().scrollTop=0;}},'Назад'):el('span'),
+    el('button',{class:'btn iw-next',type:'button',onclick:()=>{if(x.status==='remark'&&!(x.comment||'').trim()){err.textContent='Опишіть зауваження — без коментаря його не зрозуміють.';err.hidden=false;cm.focus();return;}S.inspW.step=step+1;d.step=step+1;save();render();SC().scrollTop=0;}},step===inspPts().length-1?'До підсумку':'Далі'));
+  return el('div',{class:'stack'},box,nav);}
+function inspSummary(d){const miss=inspMissing(d),bad=inspBadRemark(d);const out=[];
+  out.push(el('div',{class:'card stack'},el('h2',{text:'Підсумок'}),inspPts().map((p,i)=>{const ph=d.photos.filter(q=>q.pointKey===p.k);const x=d.points[p.k]||{};
+    return el('button',{type:'button',class:'iw-row',onclick:()=>{S.inspW.step=i;render();}},el('span',{class:'iw-rn'},el('b',{text:p.n}),el('small',{class:x.status==='remark'?'iw-rem':'muted',text:(x.status==='remark'?'Зауваження · '+INSP_PRIO[x.priority||'mid']+(x.comment?' — '+x.comment:''):'Норма')+(p.meter&&x.meterValue!=null?' · показник '+x.meterValue:'')})),
+      el('span',{class:'iw-mini'},ph.length?ph.slice(0,3).map(q=>el('img',{src:q.mini||q.thumb,alt:''})):el('span',{class:p.req?'iw-need':'muted small',text:p.req?'немає фото':'без фото'})));})));
+  const gc=el('textarea',{id:'iwGc',placeholder:'Загальне враження, що передати колегам (необов’язково)',maxlength:'800'});gc.value=d.generalComment||'';gc.addEventListener('change',()=>{d.generalComment=gc.value;inspSave(d);});
+  out.push(el('div',{class:'card stack'},el('label',{for:'iwGc'},'Загальний коментар',gc)));
+  const why=miss.length?'Щоб відправити, додайте фото: '+miss.map(p=>p.n).join(', ')+'.':bad.length?'Опишіть зауваження: '+bad.map(p=>p.n).join(', ')+'.':'';
+  const go=el('button',{class:'btn iw-big',type:'button',disabled:why?true:null,'aria-describedby':'iwWhy',onclick:async()=>{d.generalComment=gc.value;d.state='queued';await inspSave(d);go.disabled=true;go.textContent='Надсилаю…';
+      await inspSync();S.inspDone={id:d.id,bid:d.buildingId,sent:!(S.inspDr||{})[d.id]};S.inspW=null;S.inspR=null;render();SC().scrollTop=0;}},'Відправити звіт');
+  out.push(el('div',{class:'iw-nav'},el('button',{class:'btn ghost',type:'button',onclick:()=>{S.inspW.step=inspPts().length-1;render();}},'Назад'),go));
+  if(why)out.push(el('p',{id:'iwWhy',class:'iw-why',text:why}));
+  return out;}
+function inspDoneView(){const x=S.inspDone;S.inspDone=null;const left=inspMyBlds().filter(b=>{const s=inspTodayOf(b.id);return s.st==='none'||s.st==='draft';});
+  return [el('div',{class:'card empty iw-done'+(x.sent?' ok':' wait')},el('span',{class:'iw-done-ic',text:x.sent?'✓':'⟳'}),el('h2',{text:x.sent?'Звіт відправлено':'Збережено на телефоні'}),
+    el('p',{class:'muted',style:'margin:0',text:x.sent?inspBName(x.bid)+' — звіт отримано, його перевірять.':'Зв’язку немає, тож звіт чекає мережі. Він відправиться сам — не закривайте застосунок надовго й не видаляйте його.'}),
+    left.length?el('button',{class:'btn',type:'button',onclick:()=>inspStart(left[0].id)},'Наступна будівля → '+'Буд. '+left[0].fac):null,
+    el('button',{class:'btn ghost',type:'button',onclick:()=>render()},'До списку будівель'))];}
+/* ---------- перевірка ---------- */
+function inspFiltered(){const f=S.inspF||{};const now=new Date();const t0=ymd(now);let from=null;
+  if(f.per==='today')from=t0;else if(f.per==='week'){const d=new Date(now);d.setDate(d.getDate()-6);from=ymd(d);}else if(!f.per||f.per==='month'){const d=new Date(now);d.setDate(d.getDate()-30);from=ymd(d);}
+  return inspList().filter(x=>x.status!=='draft'&&(!from||x.date>=from)&&(!f.b||x.buildingId===f.b)&&(!f.w||x.authorId===f.w)&&(!f.s||(f.s==='remark'?x.remarks>0:x.status===f.s)))
+    .sort((a,b)=>b.date.localeCompare(a.date)||(b.submittedAt||0)-(a.submittedAt||0));}
+function inspFeed(){const f=S.inspF=S.inspF||{per:'week'};const out=[];
+  const sel=(id,lbl,key,opts)=>{const s=el('select',{id,class:'dz-bsel','aria-label':lbl},el('option',{value:'',text:lbl}),opts.map(([v,t])=>el('option',{value:v,text:t})));s.value=f[key]||'';s.addEventListener('change',()=>{f[key]=s.value;render();});return s;};
+  const walkers=[...new Set(inspList().map(x=>x.authorId))].map(id=>staffById(id)).filter(Boolean);
+  out.push(el('div',{class:'ip-fl'},el('div',{class:'seg ip-per'},[['today','Сьогодні'],['week','7 днів'],['month','30 днів'],['all','Усі']].map(([k,l])=>el('button',{type:'button','aria-pressed':String((f.per||'week')===k),onclick:()=>{f.per=k;render();}},l))),
+    el('div',{class:'dz-fsel'},sel('ipB','Усі будівлі','b',ARCH.map(b=>[b.id,'Буд. '+b.fac+' · '+b.name])),sel('ipW','Усі обхідники','w',walkers.map(s=>[s.id,s.name])),sel('ipS','Усі статуси','s',[['submitted','На перевірці'],['approved','Погоджено'],['returned','Повернуто'],['remark','Є зауваження']]))));
+  if(!S.inspLoaded){out.push(el('div',{class:'ip-feed'},[0,1,2].map(()=>el('div',{class:'card ip-sk','aria-hidden':'true'},el('i'),el('i'),el('i')))));return out;}
+  const L=inspFiltered();
+  if(!L.length){out.push(el('div',{class:'card empty'},el('b',{text:'Звітів за цими умовами немає'}),el('p',{class:'muted',style:'margin:0',text:'Змініть період або фільтри.'}),(f.b||f.w||f.s)?el('button',{class:'btn ghost',type:'button',onclick:()=>{f.b=f.w=f.s='';render();}},'Скинути фільтри'):null));return out;}
+  out.push(el('div',{class:'ip-feed'},L.map(x=>{const a=staffById(x.authorId);return el('button',{type:'button',class:'card ip-fi',onclick:()=>inspOpen(x.id)},
+    el('div',{class:'row between',style:'gap:8px;flex-wrap:nowrap'},el('span',{class:'ip-bn'},el('b',{text:inspBName(x.buildingId)}),el('small',{class:'muted',text:dm(x.date)+'.'+x.date.slice(0,4)+' · '+(a?a.name:'—')+' · '+(x.submittedAt?hm(x.submittedAt):'')})),inspPill(x.status)),
+    el('div',{class:'ip-mi'},(x.mini||[]).map(u=>el('img',{src:u,alt:''})),x.photosN>4?el('span',{class:'ip-more',text:'+'+(x.photosN-4)}):null),
+    x.remarks?el('span',{class:'ip-rm',text:x.remarks+' '+plural(x.remarks,'зауваження','зауваження','зауважень')}):null);})));
+  return out;}
+function inspStatusOn(bid,date){const L=inspList().filter(x=>x.buildingId===bid&&x.date===date&&x.status!=='draft');if(!L.length)return null;const pr=['approved','submitted','returned'];L.sort((a,b)=>pr.indexOf(a.status)-pr.indexOf(b.status));return L[0];}
+function inspCovDays(mode,off){const now=new Date();now.setHours(12,0,0,0);const out=[];if(mode==='month'){const y=now.getFullYear(),m=now.getMonth()+off;const a=new Date(y,m,1,12),n=new Date(y,m+1,0).getDate();for(let i=0;i<n;i++){const d=new Date(a);d.setDate(i+1);out.push(d);}}
+  else{const mon=new Date(now);mon.setDate(mon.getDate()-((mon.getDay()+6)%7)+off*7);for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);out.push(d);}}return out;}
+function inspExpected(bid,ds){const a=(S.inspAs||{})[bid];if(!a||!(a.userIds||[]).length)return false;const since=a.since||(a.updatedAt?ymd(new Date(a.updatedAt)):'');return ds>=since;}
+function inspCellSt(bid,d){const ds=ymd(d),t=ymd(new Date());const x=inspStatusOn(bid,ds);if(x)return {k:x.status==='approved'?'ok':x.status==='returned'?'ret':'sub',x};if(ds>t)return {k:'fut'};if(!inspExpected(bid,ds))return {k:'na'};if(ds<t)return {k:'miss'};return {k:'wait'};}
+const INSP_CELL={ok:['✓','погоджено'],sub:['●','на перевірці'],ret:['↺','повернуто'],miss:['✕','пропущено'],wait:['·','сьогодні ще немає'],na:['—','не закріплено'],fut:['','']};
+function inspCoverage(){const mode=S.inspCm||'week',off=S.inspCo||0;const days=inspCovDays(mode,off);const W=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
+  const lbl=mode==='month'?perLabel(ymd(days[0]).slice(0,7)):dm(ymd(days[0]))+' – '+dm(ymd(days[6]));
+  const out=[el('div',{class:'ip-fl'},el('div',{class:'seg ip-per'},[['week','Тиждень'],['month','Місяць']].map(([k,l])=>el('button',{type:'button','aria-pressed':String(mode===k),onclick:()=>{S.inspCm=k;S.inspCo=0;render();}},l))),
+    el('div',{class:'row',style:'gap:6px'},el('button',{class:'iconbtn sm',type:'button','aria-label':'Попередній період',onclick:()=>{S.inspCo=off-1;render();}},svg('<path d="M15 5l-7 7 7 7"/>')),el('b',{class:'ip-clb',text:lbl}),
+      el('button',{class:'iconbtn sm',type:'button','aria-label':'Наступний період',disabled:off>=0?true:null,onclick:()=>{S.inspCo=off+1;render();}},svg('<path d="m9 5 7 7-7 7"/>'))))];
+  const t=ymd(new Date());
+  const tb=el('table',{class:'ip-mx'+(mode==='month'?' mon':'')},el('thead',{},el('tr',{},el('th',{class:'nm',text:'Будівля'}),days.map(d=>el('th',{class:(ymd(d)===t?'now':'')+((d.getDay()+6)%7>4?' we':'')},el('span',{text:W[(d.getDay()+6)%7]}),el('b',{text:String(d.getDate())}))))),
+    el('tbody',{},ARCH.map(b=>el('tr',{},el('td',{class:'nm'},el('b',{text:'Буд. '+b.fac}),el('small',{class:'muted',text:b.name})),days.map(d=>{const c=inspCellSt(b.id,d);const lab=INSP_CELL[c.k];
+      return el('td',{class:'c-'+c.k},c.x?el('button',{type:'button',class:'ip-cb','aria-label':'Буд. '+b.fac+', '+dm(ymd(d))+': '+lab[1],title:lab[1]+(c.x.remarks?' · зауважень: '+c.x.remarks:''),onclick:()=>inspOpen(c.x.id)},lab[0],c.x.remarks?el('i',{class:'ip-cr'}):null):el('span',{title:lab[1],'aria-label':lab[1]||null},lab[0]));})))));
+  const miss=ARCH.reduce((a,b)=>a+days.filter(d=>inspCellSt(b.id,d).k==='miss').length,0);
+  out.push(el('div',{class:'card ip-mxw'},el('div',{class:'tbl-x'},tb),el('div',{class:'ip-lg'},['ok','sub','ret','miss','wait','na'].map(k=>el('span',{class:'c-'+k},el('i',{text:INSP_CELL[k][0]}),INSP_CELL[k][1])),miss?el('b',{class:'ip-miss',text:'Пропущено обходів: '+miss}):el('span',{class:'ip-okk',text:'Пропусків немає'}))));
+  return out;}
+/* ---------- картка звіту ---------- */
+function inspOpen(id){S.hist.push(snap());S.inspR=id;S.inspPhL=null;SC().scrollTop=0;render();inspLoadPhotos(id);}
+async function inspLoadPhotos(id){try{const q=await S.db.collection('inspection_photos').where('inspectionId','==',id).get();S.inspPhById=S.inspPhById||{};q.docs.forEach(d=>{S.inspPhById[d.id]={id:d.id,...d.data()};});S.inspPhL=id;}catch(e){S.inspPhL='err:'+id;}if(S.inspR===id)render();}
+function inspPhUrl(p,full){if(!p)return '';if(full&&!p.purged){if(p.assetId)return '/_blob/'+p.assetId;if(p.data)return p.data;}return p.thumb||'';}
+function inspReport(id){const x=(S.insp||{})[id];if(!x)return [el('div',{class:'card empty'},el('b',{text:'Звіт не знайдено'}),el('button',{class:'btn ghost',type:'button',onclick:()=>{S.inspR=null;render();}},'До списку'))];
+  const a=staffById(x.authorId),rv=x.reviewerId&&staffById(x.reviewerId);const m=myStaff();const mine=m&&x.authorId===m.id;const rev=inspCanReview();const out=[];const loaded=S.inspPhL===id;const err=S.inspPhL==='err:'+id;
+  out.push(el('div',{class:'card ip-rh'},el('div',{class:'row between',style:'gap:8px;flex-wrap:nowrap;align-items:flex-start'},el('div',{class:'stack',style:'gap:2px;min-width:0'},el('span',{class:'eyebrow',text:'Звіт обходу · '+dmy(parseYmd(x.date))}),el('h2',{text:inspBName(x.buildingId)})),inspPill(x.status)),
+    el('dl',{class:'ip-meta'},el('dt',{text:'Обхідник'}),el('dd',{text:a?a.name:'—'}),el('dt',{text:'Почато'}),el('dd',{text:x.createdAt?dm(ymd(new Date(x.createdAt)))+' '+hm(x.createdAt):'—'}),el('dt',{text:'Відправлено'}),el('dd',{text:x.submittedAt?dm(ymd(new Date(x.submittedAt)))+' '+hm(x.submittedAt):'—'}),
+      x.reviewedAt?el('dt',{text:x.status==='approved'?'Погодив':'Перевірив'}):null,x.reviewedAt?el('dd',{text:(rv?rv.name:'—')+' · '+dm(ymd(new Date(x.reviewedAt)))+' '+hm(x.reviewedAt)}):null),
+    x.status==='returned'&&x.reviewComment?el('div',{class:'rework'},el('div',{class:'rw-h'},el('b',{text:'Повернуто на доопрацювання'})),el('p',{class:'rw-t',text:x.reviewComment})):null,
+    x.walkerReply?el('p',{class:'ip-reply'},el('b',{text:'Відповідь обхідника: '}),x.walkerReply):null,
+    x.generalComment?el('p',{class:'t-note',text:x.generalComment}):null,
+    x.purged?el('p',{class:'muted small',style:'margin:0',text:'Оригінали в архіві за '+perLabel(x.date.slice(0,7)).toLowerCase()+' (Word-звіт). Тут лишились мініатюри.'}):null));
+  const pts=inspPts();const allPh=[];
+  pts.forEach(p=>{const v=(x.points||{})[p.k];if(!v)return;const phs=(v.photoIds||[]).map(pid=>(S.inspPhById||{})[pid]).filter(Boolean);phs.forEach(q=>allPh.push({q,p}));
+    out.push(el('div',{class:'card stack ip-pt'},el('div',{class:'row between',style:'gap:8px'},el('b',{class:'ip-pn',text:p.n}),v.status==='remark'?el('span',{class:'ip-tag rem',text:'Зауваження · '+INSP_PRIO[v.priority||'mid']}):el('span',{class:'ip-tag ok',text:'Норма'})),
+      v.comment?el('p',{class:'t-note',text:v.comment}):null,
+      v.meterValue!=null?el('span',{class:'small'},'Показник лічильника: ',el('b',{text:String(v.meterValue)+' м³'}),v.toWater?el('span',{class:'muted',text:v.waterSent?' · передано в облік води':' · не передано в облік води: '+(v.waterNote||'')}):null):null,
+      v.checklist?el('ul',{class:'ip-cl'},Object.entries(v.checklist).map(([l,ok])=>el('li',{class:ok?'y':'n'},el('span',{text:ok?'✓':'✕'}),l))):null,
+      (v.photoIds||[]).length?el('div',{class:'ip-gal'},loaded||err?phs.map(q=>el('button',{type:'button',class:'ip-ph',onclick:()=>inspLight(allPh,allPh.findIndex(z=>z.q===q))},el('img',{src:inspPhUrl(q,false),alt:p.n+', '+hm(q.takenAt),loading:'lazy'}),q.fromGallery?el('span',{class:'iw-gal',text:'з галереї'}):null,el('small',{text:hm(q.takenAt)}))):(v.photoIds||[]).map(()=>el('span',{class:'ip-ph ip-sk-ph','aria-hidden':'true'}))):el('span',{class:'muted small',text:'Без фото'}),
+      err?el('p',{class:'muted small',text:'Фото не вдалося завантажити. Перевірте зв’язок і відкрийте звіт ще раз.'}):null,
+      rev&&v.status==='remark'?el('button',{class:'btn ghost sm',type:'button',style:'align-self:flex-start',onclick:()=>inspTask(x,p,v,phs)},'+ Створити задачу'):null));});
+  if(rev&&x.status!=='draft')out.push(el('div',{class:'iw-nav ip-acts'},x.status!=='returned'?el('button',{class:'btn danger',type:'button',onclick:()=>inspReturnSheet(x)},'Повернути на доопрацювання'):el('span'),x.status!=='approved'?el('button',{class:'btn',type:'button',onclick:()=>inspApprove(x)},'Погодити'):el('span',{class:'muted small',text:'Звіт погоджено'})));
+  if(mine&&x.status==='returned'){const r=el('textarea',{id:'ipRep',placeholder:'Що виправили або пояснення',maxlength:'600'});r.value=x.walkerReply||'';
+    out.push(el('div',{class:'card stack'},el('label',{for:'ipRep'},'Ваш коментар для перевіряючого',r),el('button',{class:'btn',type:'button',onclick:()=>{const t=r.value.trim();if(!t){toast('Напишіть коментар');r.focus();return;}
+      write(()=>S.db.doc('inspections/'+x.id).update({walkerReply:t,status:'submitted',submittedAt:Date.now()}),'Обхід: звіт надіслано повторно · '+inspBShort(x.buildingId));}},'Надіслати повторно')));}
+  return out;}
+function inspApprove(x){const m=myStaff();write(()=>S.db.doc('inspections/'+x.id).update({status:'approved',reviewerId:m?m.id:null,reviewedAt:Date.now()}),'Обхід: погоджено · '+inspBShort(x.buildingId)+' · '+dm(x.date));}
+function inspReturnSheet(x){const t=el('textarea',{id:'ipRet',placeholder:'Що переробити: напр. «Фото ВРП розмите, перезніміть»',maxlength:'600'});const er=el('p',{class:'iw-err',role:'alert',hidden:true,text:'Без коментаря обхідник не знатиме, що виправити.'});
+  t.addEventListener('input',()=>{if(t.value.trim())er.hidden=true;});openSheet(el('h2',{text:'Повернути звіт на доопрацювання?'}),el('p',{class:'muted',style:'margin:0',text:inspBName(x.buildingId)+' · '+dm(x.date)}),el('label',{for:'ipRet'},'Коментар для обхідника (обов’язково)',t),er,
+    el('div',{class:'row'},el('button',{class:'btn danger',type:'button',style:'flex:1',onclick:()=>{const c=t.value.trim();if(!c){er.hidden=false;t.focus();return;}const m=myStaff();closeSheet();
+      write(()=>S.db.doc('inspections/'+x.id).update({status:'returned',reviewComment:c,reviewerId:m?m.id:null,reviewedAt:Date.now()}),'Обхід: повернуто · '+inspBShort(x.buildingId)+' · '+dm(x.date));}},'Повернути звіт'),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));
+  if(!IS_TOUCH)t.focus();}
+function inspTask(x,p,v,phs){newTask({title:'Обхід: '+p.n+' — '+inspBShort(x.buildingId),note:(v.comment||'')+'\nПріоритет: '+INSP_PRIO[v.priority||'mid']+'\nЗвіт обходу від '+dm(x.date)+' ('+inspBName(x.buildingId)+')',insp:x.id,refThumbs:phs.slice(0,4).map(q=>q.thumb).filter(Boolean)});}
+/* лайтбокс: свайп, стрілки, Esc */
+function inspLight(list,i){if(!list.length)return;let k=Math.max(0,i);const img=el('img',{class:'lb-img',alt:''});const cap=el('div',{class:'lb-cap'});
+  const show=()=>{const {q,p}=list[k];img.src=inspPhUrl(q,true);img.alt=p.n;cap.replaceChildren(el('b',{text:p.n}),el('span',{text:dmy(new Date(q.takenAt))+' '+hm(q.takenAt)+(q.fromGallery?' · з галереї':'')+(q.purged?' · оригінал в архіві':'')}),el('span',{class:'muted',text:(k+1)+' / '+list.length}));};
+  const go=d=>{k=(k+d+list.length)%list.length;show();};
+  const bg=el('div',{class:'lb',role:'dialog','aria-modal':'true','aria-label':'Перегляд фото'},img,cap,
+    el('button',{class:'lb-b lb-x',type:'button','aria-label':'Закрити',onclick:()=>cl()},'×'),list.length>1?el('button',{class:'lb-b lb-p',type:'button','aria-label':'Попереднє фото',onclick:()=>go(-1)},'‹'):null,list.length>1?el('button',{class:'lb-b lb-n',type:'button','aria-label':'Наступне фото',onclick:()=>go(1)},'›'):null);
+  const key=e=>{if(e.key==='Escape')cl();else if(e.key==='ArrowLeft')go(-1);else if(e.key==='ArrowRight')go(1);};let x0=null;
+  bg.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});bg.addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>50)go(dx<0?1:-1);});
+  const prevFocus=document.activeElement;const cl=()=>{document.removeEventListener('keydown',key);bg.remove();try{prevFocus&&prevFocus.focus();}catch(e){}};document.addEventListener('keydown',key);document.body.append(bg);show();bg.querySelector('.lb-x').focus();}
+/* ---------- закріплення будівель ---------- */
+function inspAssignSheet(){if(!inspCanAssign())return;const sel={};ARCH.forEach(b=>sel[b.id]=new Set(inspAssigned(b.id)));const staff=sortedStaff();
+  openSheet(el('h2',{text:'Закріплення будівель'}),el('p',{class:'muted',style:'margin:0',text:'Хто обходить кожну будівлю. Можна кількох людей на будівлю — кожен бачитиме лише свої будівлі.'}),
+    ARCH.map(b=>el('div',{class:'stack',style:'gap:6px'},el('b',{text:'Буд. '+b.fac+' · '+b.name}),el('div',{class:'pick'},staff.map(s=>{const on=sel[b.id].has(s.id);const btn=el('button',{type:'button',class:'pk','aria-pressed':String(on),onclick:()=>{const v=!sel[b.id].has(s.id);v?sel[b.id].add(s.id):sel[b.id].delete(s.id);btn.setAttribute('aria-pressed',String(v));}},avatar(s),el('span',{text:s.name}));return btn;})))),
+    el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:()=>{const m=myStaff();closeSheet();write(async()=>{for(const b of ARCH){const ids=staff.map(s=>s.id).filter(id=>sel[b.id].has(id));const old=inspAssigned(b.id);if(ids.join()===old.join())continue;
+      const prev=(S.inspAs||{})[b.id]||{};await S.db.doc('buildings_assignments/'+b.id).set({buildingId:b.id,userIds:ids,since:prev.since&&old.length?prev.since:ymd(new Date()),updatedBy:m?m.id:'',updatedAt:Date.now()});}},'Обхід: оновлено закріплення будівель');}},'Зберегти'),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));
+  const sh=document.querySelector('#sheetRoot .sheet');if(sh)sh.classList.add('wide');}
+/* ---------- Word-звіт (.docx) ---------- */
+let _docxP=null;function loadDocx(){if(window.docx)return Promise.resolve(window.docx);if(!_docxP){const ld=src=>new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src;sc.onload=()=>window.docx?res(window.docx):rej(new Error('docx'));sc.onerror=()=>{sc.remove();rej(new Error(src));};document.head.append(sc);});
+  _docxP=ld('https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js').catch(()=>ld('https://unpkg.com/docx@8.5.0/build/index.umd.js')).catch(e=>{_docxP=null;throw e;});}return _docxP;}
+function inspIsoWeek(d){const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));return t.getUTCFullYear()+'-W'+pad(Math.ceil(((t-y0)/864e5+1)/7));}
+function inspExportSheet(){const now=new Date();const mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));let per='week';
+  const f=el('input',{id:'ieF',type:'date'}),t=el('input',{id:'ieT',type:'date'});const setPer=k=>{per=k;if(k==='week'){f.value=ymd(mon);const e=new Date(mon);e.setDate(mon.getDate()+6);t.value=ymd(e);}else if(k==='month'){f.value=ymd(new Date(now.getFullYear(),now.getMonth(),1));t.value=ymd(new Date(now.getFullYear(),now.getMonth()+1,0));}
+    seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.k===k)));dates.hidden=k!=='custom';};
+  const seg=el('div',{class:'seg'},[['week','Тиждень'],['month','Місяць'],['custom','Довільний']].map(([k,l])=>{const b=el('button',{type:'button',onclick:()=>setPer(k)},l);b.dataset.k=k;return b;}));
+  const dates=el('div',{class:'grid2',hidden:true},el('label',{for:'ieF'},'З',f),el('label',{for:'ieT'},'По',t));
+  const bs=new Set(ARCH.map(b=>b.id));const ws=new Set();const walkers=[...new Set(inspList().map(x=>x.authorId))].map(staffById).filter(Boolean);
+  const chip=(set,id,label)=>{const b=el('button',{type:'button',class:'pk','aria-pressed':String(set.has(id)),onclick:()=>{set.has(id)?set.delete(id):set.add(id);b.setAttribute('aria-pressed',String(set.has(id)));}},el('span',{text:label}));return b;};
+  const go=el('button',{class:'btn',type:'button',style:'flex:1',onclick:async()=>{if(!f.value||!t.value||f.value>t.value){toast('Перевірте дати періоду');return;}if(!bs.size){toast('Оберіть хоча б одну будівлю');return;}
+    go.disabled=true;go.textContent='Формую…';await inspWord({per,from:f.value,to:t.value,blds:[...bs],walkers:[...ws]});closeSheet();}},'Сформувати Word');
+  openSheet(el('h2',{text:'Звіт обходу будівель (Word)'}),el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Період'}),seg,dates),
+    el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Будівлі'}),el('div',{class:'pick'},ARCH.map(b=>chip(bs,b.id,'Буд. '+b.fac)))),
+    walkers.length?el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Обхідники (не вибрано — усі)'}),el('div',{class:'pick'},walkers.map(s=>chip(ws,s.id,s.name)))):null,
+    el('div',{class:'row'},go,el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')),inspExportsList());setPer('week');}
+function inspExportsList(){const L=(S.inspEx||[]).slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,6);if(!L.length)return null;
+  return el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Сформовані звіти'}),L.map(e=>{const by=staffById(e.createdBy);const can=e.period==='month'&&!e.purgedAt;const at=(e.createdAt||0)+14*864e5;const ready=Date.now()>=at;
+    return el('div',{class:'ip-ex'},el('div',{class:'stack',style:'gap:2px;min-width:0;flex:1'},el('b',{text:e.fileName}),el('small',{class:'muted',text:dm(ymd(new Date(e.createdAt)))+' · '+(by?by.name:'—')+' · '+e.reportsCount+' звітів, '+e.photosCount+' фото'+(e.purgedAt?' · оригінали очищено':'')})),
+      can?el('button',{class:'btn sm danger',type:'button',disabled:ready?null:true,title:ready?'':'Можна очистити з '+dm(ymd(new Date(at))),onclick:()=>inspPurge(e)},ready?'Звіт збережено, очистити фото':'Очищення з '+dm(ymd(new Date(at)))):null);}));}
+async function inspFetchImg(p,max){try{let src=null;if(!p.purged&&p.assetId){const r=await fetch('/_blob/'+p.assetId);if(r.ok)src=await r.blob();}else if(!p.purged&&p.data)src=await (await fetch(p.data)).blob();
+    if(!src&&p.thumb)src=await (await fetch(p.thumb)).blob();if(!src)return null;const im=await inspDecode(src);const c=inspCanvas(im,max);const b=await inspFit(c,260*1024);return {data:new Uint8Array(await b.arrayBuffer()),w:c.width,h:c.height};}catch(e){return null;}}
+async function inspWord(o){toast('Готую Word-звіт…');let D;try{D=await loadDocx();}catch(e){toast('Не вдалося завантажити модуль Word. Перевірте зв’язок і спробуйте ще раз.');return;}
+  const L=inspList().filter(x=>x.status!=='draft'&&x.date>=o.from&&x.date<=o.to&&o.blds.includes(x.buildingId)&&(!o.walkers.length||o.walkers.includes(x.authorId))).sort((a,b)=>a.date.localeCompare(b.date)||a.buildingId.localeCompare(b.buildingId));
+  const photos={};for(const x of L){try{const q=await S.db.collection('inspection_photos').where('inspectionId','==',x.id).get();q.docs.forEach(d=>{photos[d.id]={id:d.id,...d.data()};});}catch(e){}}
+  const totalKb=Object.values(photos).reduce((a,p)=>a+Math.min(p.sizeKb||200,260),0);
+  const lab=o.per==='month'?o.from.slice(0,7)+'_місяць':o.per==='week'?inspIsoWeek(parseYmd(o.from))+'_тиждень':o.from+'_'+o.to;
+  const parts=totalKb>36*1024?o.blds.map(b=>({blds:[b],sfx:'_Буд-'+(inspB(b)||{}).fac})):[{blds:o.blds,sfx:''}];
+  const me=myStaff();let n=0;
+  for(const part of parts){const LL=L.filter(x=>part.blds.includes(x.buildingId));if(parts.length>1&&!LL.length)continue;
+    const blob=await inspDocx(D,o,LL,photos,part.blds,me);const name='Обхід_DucksLake_'+lab+part.sfx+'.docx';await saveFile(name,blob);n++;}
+  const pc=L.reduce((a,x)=>a+(x.photosN||0),0);
+  try{const ref=await S.db.collection('inspection_exports').add({period:o.per,from:o.from,to:o.to,createdBy:me?me.id:'',createdAt:Date.now(),buildings:o.blds,reportsCount:L.length,photosCount:pc,fileName:'Обхід_DucksLake_'+lab+'.docx',parts:n});
+    for(const x of L)if(!x.exportId||o.per==='month')await S.db.doc('inspections/'+x.id).update({exportId:ref.id});}catch(e){}
+  devLog('Обхід: сформовано Word · '+lab+' · '+L.length+' звітів');}
+async function inspDocx(D,o,L,photos,blds,me){const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,ImageRun,AlignmentType,Header,Footer,PageNumber,ShadingType,BorderStyle,VerticalAlign}=D;
+  const C={acc:'1F6F78',ink:'0F2A33',mut:'53686F',soft:'DCEEEC',bg:'F4F8F7',ok:'2E7D4F',okS:'DDF0E4',warn:'B4232A',warnS:'F8DEDF',amb:'B9781F',ambS:'F6E3C4',line:'D3DFDD'};const F='Calibri';
+  const T=(t,x)=>new TextRun(Object.assign({text:String(t==null?'':t),font:F,size:21,color:C.ink},x||{}));
+  const P=(runs,x)=>new Paragraph(Object.assign({children:Array.isArray(runs)?runs:[runs],spacing:{after:80}},x||{}));
+  const H=(t,x)=>P([T(t,{bold:true,size:30,color:C.acc})],Object.assign({spacing:{before:200,after:120}},x||{}));
+  const bd={top:{style:BorderStyle.SINGLE,size:4,color:C.line},bottom:{style:BorderStyle.SINGLE,size:4,color:C.line},left:{style:BorderStyle.SINGLE,size:4,color:C.line},right:{style:BorderStyle.SINGLE,size:4,color:C.line}};
+  const cell=(c,x)=>new TableCell(Object.assign({children:Array.isArray(c)?c:[c instanceof Paragraph?c:P(T(c))],borders:bd,margins:{top:60,bottom:60,left:90,right:90},verticalAlign:VerticalAlign.CENTER},x||{}));
+  const hcell=t=>cell(P(T(t,{bold:true,color:'FFFFFF',size:19})),{shading:{type:ShadingType.CLEAR,color:'auto',fill:C.acc}});
+  const tbl=(rows,w)=>new Table({rows,width:{size:100,type:WidthType.PERCENTAGE},columnWidths:w});
+  const per=(o.per==='month'?perLabel(o.from.slice(0,7)):dmy(parseYmd(o.from))+' – '+dmy(parseYmd(o.to)));const kids=[];
+  /* 1. титул */
+  kids.push(P(T('DUCK’S LAKE · FACILITY ВІДДІЛ',{bold:true,color:C.acc,size:20}),{spacing:{before:2400,after:200}}),P(T('Звіт обходу будівель',{bold:true,size:56,color:C.ink})),P(T(per,{size:32,color:C.acc}),{spacing:{after:600}}),
+    P([T('Дата формування: ',{color:C.mut}),T(dmy(new Date()))]),P([T('Сформував: ',{color:C.mut}),T(me?me.name+(ROLE_NAME[me.role]?' ('+ROLE_NAME[me.role]+')':''):'—')]),
+    P([T('Будівлі: ',{color:C.mut}),T(blds.map(b=>inspBShort(b)).join(', '))]),P([T('Звітів у документі: ',{color:C.mut}),T(String(L.length))]));
+  /* 2. зведення */
+  const days=[];for(let d=parseYmd(o.from);ymd(d)<=o.to;d.setDate(d.getDate()+1))days.push(new Date(d));const today=ymd(new Date());
+  kids.push(H('Зведення',{pageBreakBefore:true}));
+  kids.push(tbl([new TableRow({tableHeader:true,children:['Будівля','Обходів','Пропущено днів','Зауважень','Погоджено'].map(hcell)}),...blds.map(b=>{const xs=L.filter(x=>x.buildingId===b);const miss=days.filter(d=>ymd(d)<today&&inspExpected(b,ymd(d))&&!xs.some(x=>x.date===ymd(d))).length;
+    return new TableRow({children:[cell(inspBName(b)),cell(String(xs.length)),cell(P(T(String(miss),{color:miss?C.warn:C.ink,bold:!!miss}))),cell(String(xs.reduce((a,x)=>a+(x.remarks||0),0))),cell(String(xs.filter(x=>x.status==='approved').length))]});})],[3600,1300,1600,1300,1300]));
+  const open=[];L.forEach(x=>Object.entries(x.points||{}).forEach(([k,v])=>{if(v&&v.status==='remark')open.push({x,k,v});}));const po={high:0,mid:1,low:2};open.sort((a,b)=>(po[a.v.priority]??1)-(po[b.v.priority]??1));
+  kids.push(P(T('Відкриті зауваження',{bold:true,size:24,color:C.acc}),{spacing:{before:240,after:80}}));
+  if(!open.length)kids.push(P(T('Зауважень за період немає.',{color:C.mut})));
+  open.forEach(({x,k,v})=>kids.push(P([T((v.priority==='high'?'● терміновий':v.priority==='low'?'● низький':'● середній')+'  ',{bold:true,color:v.priority==='high'?C.warn:v.priority==='low'?C.mut:C.amb}),T(dm(x.date)+' · '+inspBShort(x.buildingId)+' · '+inspPt(k).n+': ',{bold:true}),T(v.comment||'')],{indent:{left:200}})));
+  /* 3. матриця покриття */
+  kids.push(H('Матриця покриття',{pageBreakBefore:true}));const fills={ok:[C.okS,C.ok,'✓'],sub:[C.ambS,C.amb,'●'],ret:[C.warnS,C.warn,'↺'],miss:[C.warnS,C.warn,'✕'],wait:[C.bg,C.mut,'·'],na:['FFFFFF',C.mut,'—'],fut:['FFFFFF',C.mut,'']};
+  const cw=Math.max(240,Math.floor(7600/Math.max(1,days.length)));const sm=days.length>10?14:18;
+  kids.push(tbl([new TableRow({tableHeader:true,children:[hcell('Будівля'),...days.map(d=>cell(P(T(String(d.getDate()),{bold:true,color:'FFFFFF',size:sm}),{alignment:AlignmentType.CENTER}),{shading:{type:ShadingType.CLEAR,color:'auto',fill:C.acc},margins:{top:40,bottom:40,left:20,right:20}}))]}),
+    ...blds.map(b=>new TableRow({children:[cell(P(T(inspBShort(b),{bold:true,size:sm+2}))),...days.map(d=>{const ds=ymd(d);const x=L.find(z=>z.buildingId===b&&z.date===ds);const k=x?(x.status==='approved'?'ok':x.status==='returned'?'ret':'sub'):ds>today?'fut':!inspExpected(b,ds)?'na':ds<today?'miss':'wait';const f=fills[k];
+      return cell(P(T(f[2],{bold:true,color:f[1],size:sm}),{alignment:AlignmentType.CENTER,spacing:{after:0}}),{shading:{type:ShadingType.CLEAR,color:'auto',fill:f[0]},margins:{top:40,bottom:40,left:20,right:20}});})]}))],[1800,...days.map(()=>cw)]));
+  kids.push(P([T('✓ погоджено   ',{color:C.ok,bold:true}),T('● на перевірці   ',{color:C.amb,bold:true}),T('↺ повернуто   ',{color:C.warn,bold:true}),T('✕ пропущено',{color:C.warn,bold:true})],{spacing:{before:120}}));
+  /* 4. по днях → по будівлях */
+  for(const x of L){const a=staffById(x.authorId),rv=x.reviewerId&&staffById(x.reviewerId);const st=(INSP_ST[x.status]||INSP_ST.none)[0];
+    kids.push(H(inspBName(x.buildingId)+' · '+dmy(parseYmd(x.date))+' · '+(a?a.name:'—'),{pageBreakBefore:true}));
+    kids.push(P([T('Статус перевірки: ',{color:C.mut}),T(st,{bold:true,color:x.status==='approved'?C.ok:x.status==='returned'?C.warn:C.amb}),T(rv?'   ·   Перевірив: '+rv.name:'',{color:C.mut}),T(x.submittedAt?'   ·   Відправлено: '+hm(x.submittedAt):'',{color:C.mut})]));
+    if(x.reviewComment)kids.push(P([T('Коментар перевіряючого: ',{bold:true,color:C.warn}),T(x.reviewComment)]));
+    if(x.generalComment)kids.push(P([T('Загальний коментар: ',{bold:true}),T(x.generalComment)]));
+    for(const pt of inspPts()){const v=(x.points||{})[pt.k];if(!v)continue;
+      kids.push(P([T(pt.n+'  ',{bold:true,size:24}),T(v.status==='remark'?' Зауваження · '+INSP_PRIO[v.priority||'mid']+' ':' Норма ',{bold:true,color:'FFFFFF',shading:{type:ShadingType.CLEAR,color:'auto',fill:v.status==='remark'?C.warn:C.ok}})],{spacing:{before:200,after:60}}));
+      if(v.comment)kids.push(P(T(v.comment)));
+      if(v.meterValue!=null)kids.push(P([T('Показник лічильника: ',{color:C.mut}),T(v.meterValue+' м³',{bold:true})]));
+      if(v.checklist)kids.push(P(T(Object.entries(v.checklist).map(([l,ok])=>(ok?'✓ ':'✕ ')+l).join('   '),{size:19,color:C.mut})));
+      const phs=(v.photoIds||[]).map(id=>photos[id]).filter(Boolean);
+      for(let i=0;i<phs.length;i+=4){const four=phs.slice(i,i+4);const imgs=await Promise.all(four.map(p=>inspFetchImg(p,1200)));
+        const mk=j=>{const p=four[j],im=imgs[j];if(!p)return cell(P(T('')),{borders:{top:{style:BorderStyle.NONE,size:0,color:'FFFFFF'},bottom:{style:BorderStyle.NONE,size:0,color:'FFFFFF'},left:{style:BorderStyle.NONE,size:0,color:'FFFFFF'},right:{style:BorderStyle.NONE,size:0,color:'FFFFFF'}}});
+          let W=290,Hh=im?Math.round(W*im.h/im.w):0;if(Hh>380){W=Math.round(W*380/Hh);Hh=380;}const ch=[];if(im)ch.push(new Paragraph({children:[new ImageRun({data:im.data,transformation:{width:W,height:Hh}})],alignment:AlignmentType.CENTER}));else ch.push(P(T('фото недоступне',{color:C.mut,italics:true})));
+          ch.push(P([T(pt.n+' · '+hm(p.takenAt),{size:17,color:C.mut}),p.fromGallery?T(' · з галереї',{size:17,color:C.warn,bold:true}):T('')],{alignment:AlignmentType.CENTER}));return cell(ch);};
+        const rows=[new TableRow({children:[mk(0),mk(1)]})];if(four.length>2)rows.push(new TableRow({children:[mk(2),mk(3)]}));kids.push(tbl(rows,[4800,4800]));}}}
+  /* 5. підписи */
+  const ceo=S.staff.find(s=>s.role==='ceo'||s.extraRole==='ceo');
+  kids.push(H('Підписи',{pageBreakBefore:L.length>0}));
+  kids.push(P([T('Перевірив: CEO Asgard '+(ceo?ceo.name:'Б. Александрович')+'   ______________________',{size:22})],{spacing:{before:400,after:400}}),P([T('Керівник Facility '+dirName()+'   ______________________',{size:22})],{spacing:{after:400}}),P([T('Дата: ____________',{color:C.mut})]));
+  const doc=new Document({creator:'Duck’s Lake',title:'Звіт обходу будівель '+per,styles:{default:{document:{run:{font:F}}}},
+    sections:[{properties:{page:{margin:{top:1000,bottom:1000,left:1000,right:1000}}},
+      headers:{default:new Header({children:[P([T('Duck’s Lake · Facility відділ   ',{bold:true,color:C.acc,size:17}),T('Звіт обходу будівель · '+per,{color:C.mut,size:17})],{alignment:AlignmentType.RIGHT})]})},
+      footers:{default:new Footer({children:[new Paragraph({alignment:AlignmentType.CENTER,children:[T('стор. ',{size:17,color:C.mut}),new TextRun({children:[PageNumber.CURRENT],size:17,color:C.mut,font:F}),T(' з ',{size:17,color:C.mut}),new TextRun({children:[PageNumber.TOTAL_PAGES],size:17,color:C.mut,font:F})]})]})},
+      children:kids}]});
+  return await Packer.toBlob(doc);}
+/* ---------- очищення оригіналів після місячного звіту ---------- */
+function inspPurge(e){confirmSheet('Очистити оригінали фото за '+perLabel(e.from.slice(0,7)).toLowerCase()+'? Мініатюри й усі тексти лишаться.','Звіт збережено, очистити фото',async()=>{toast('Очищаю…');const A=await inspAssetsNs();let n=0,fail=0;
+  const L=inspList().filter(x=>x.date>=e.from&&x.date<=e.to&&!x.purged);
+  for(const x of L){let q;try{q=await S.db.collection('inspection_photos').where('inspectionId','==',x.id).get();}catch(_){fail++;continue;}
+    for(const d of q.docs){const p=d.data();if(p.purged)continue;try{if(p.assetId){if(!A)throw {code:'not_granted'};await A.delete(p.assetId);}await S.db.doc('inspection_photos/'+d.id).update({purged:true,data:null});n++;}catch(err){fail++;}}
+    try{await S.db.doc('inspections/'+x.id).update({purged:true});}catch(_){}}
+  try{await S.db.doc('inspection_exports/'+e.id).update({purgedAt:Date.now(),purgedBy:(myStaff()||{}).id||''});}catch(_){}
+  devLog('Обхід: очищено оригінали фото · '+e.from.slice(0,7)+' · '+n+' фото'+(fail?' · не вдалося '+fail:''));
+  toast(fail?'Очищено '+n+' фото. '+fail+' не вдалося — їх може видалити власник артефакту.':'Очищено '+n+' фото');render();});}
+/* ---------- Dev: сховище й чекліст ---------- */
+function inspDevCards(){const u=S.assetUse;const card=el('div',{class:'card stack',style:'gap:8px;margin-bottom:12px'},el('b',{text:'Сховище фото (обхід, чат)'}));
+  if(u===undefined){S.assetUse=null;inspAssetsNs().then(A=>A?A.list():null).then(r=>{S.assetUse=r?r.usage:false;if(S.fg==='dev')render();}).catch(()=>{S.assetUse=false;});}
+  if(u){const p=u.maxBytes?u.bytes/u.maxBytes:0;card.append(el('div',{class:'w-prog'},el('i',{style:'width:'+Math.min(100,Math.round(p*100))+'%;'+(p>=.8?'background:var(--warn)':'')})),
+    el('span',{class:p>=.8?'small iw-rem':'muted small',text:'Використано сховища: '+(u.bytes/1048576).toFixed(1)+' МБ з '+Math.round(u.maxBytes/1048576)+' МБ · файлів '+u.files+(u.maxFiles?' з '+u.maxFiles:'')+(p>=.8?' — понад 80%: сформуйте місячний Word-звіт і очистіть оригінали.':'')}));}
+  else card.append(el('span',{class:'muted small',text:u===false?'Дані про сховище недоступні для цього перегляду.':'Завантажую…'}));
+  const fl=inspFireList().map(x=>x[1]).join('\n');const ta=el('textarea',{id:'inspFl',rows:'4'});ta.value=fl;
+  const ck=el('div',{class:'card stack',style:'gap:8px;margin-bottom:12px'},el('label',{for:'inspFl'},'Чекліст пожежного щита (по пункту в рядку)',ta),el('div',{class:'row'},el('button',{class:'btn sm',type:'button',onclick:()=>{const a=ta.value.split('\n').map(s=>s.trim()).filter(Boolean).slice(0,10);
+    write(()=>S.db.doc('settings/main').set({...(S.cfg||{}),inspFire:a.length?a:null,updatedAt:Date.now(),updatedBy:S.myId||''}),'Обхід: оновлено чекліст пожежного щита');}},'Зберегти чекліст')));
+  return [card,ck];}
+/* INSP:END */
+
+function inspTileStat(){const t=ymd(new Date());const bl=ARCH.filter(b=>inspAssigned(b.id).length);const tot=bl.length||ARCH.length;const td=inspList().filter(x=>x.date===t&&x.status!=='draft');
+  const done=new Set(td.map(x=>x.buildingId)).size;const pend=inspPending();const rem=td.reduce((a,x)=>a+(x.remarks||0),0);
+  return [done+' / '+tot+' будівель сьогодні',pend+' '+plural(pend,'очікує','очікують','очікують')+' · '+rem+' '+plural(rem,'зауваження','зауваження','зауважень')];}
+function inspBadge(){let n=inspCanReview()?inspPending():0;const m=myStaff();if(m)n+=inspList().filter(x=>x.authorId===m.id&&x.status==='returned').length;return n;}
+function inspGoto(id){S.hist.push(snap());S.tab='uk';S.ukSec=null;S.fg='insp';S.inspW=null;S.inspR=id;SC().scrollTop=0;render();inspLoadPhotos(id);}
+function pwaCard(){let os=/iPhone|iPad|iPod/.test(navigator.userAgent)?'ios':'and';const body=el('ol',{class:'pwa-l'});
+  const steps={ios:['Відкрийте посилання на Duck’s Lake у Safari (саме Safari, не в Telegram чи Instagram).','Натисніть «Поділитися» — квадрат зі стрілкою вгору внизу екрана.','Прокрутіть список і оберіть «На екран “Додому”».','Назва — «Duck’s Lake», натисніть «Додати». На головному екрані з’явиться іконка.','Відкрийте застосунок з іконки, увійдіть своїм акаунтом Claude і оберіть своє ім’я в колективі. Камера відкриється сама, коли натиснете «Зробити фото».'],
+    and:['Відкрийте посилання на Duck’s Lake у Chrome.','Натисніть меню ⋮ у правому верхньому куті.','Оберіть «Додати на головний екран» (або «Установити застосунок»).','Підтвердьте «Додати» — на головному екрані з’явиться іконка Duck’s Lake.','Відкрийте застосунок з іконки, увійдіть своїм акаунтом Claude і оберіть своє ім’я в колективі. Дозвольте доступ до камери, коли телефон запитає.']};
+  const seg=el('div',{class:'seg',role:'tablist'});const draw=()=>{seg.replaceChildren(...[['ios','iPhone (iOS)'],['and','Android']].map(([k,l])=>el('button',{type:'button',role:'tab','aria-selected':String(os===k),'aria-pressed':String(os===k),onclick:()=>{os=k;draw();}},l)));body.replaceChildren(...steps[os].map(t=>el('li',{text:t})));};draw();
+  return el('div',{class:'card stack pwa'},el('h2',{text:'Встановити Duck’s Lake на телефон'}),el('p',{class:'muted',style:'margin:0',text:'Застосунок відкривається з іконки, як звичайна програма. Потрібно для обходу будівель і фото.'}),seg,body);}
 function openFg(id){S.hist.push(snap());S.fg=id;S.arB=null;S.arHi=null;SC().scrollTop=0;render();animIn(1);}
 function openUk(id){S.hist.push(snap());S.ukSec=id;S.fg='obl';SC().scrollTop=0;render();animIn(1);}
-function viewUK(){if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Цей розділ доступний лише для управлінської компанії.'}))];
+function viewUK(){if(!isUK()&&inspIsWalker()){S.fg='insp';S.ukSec=null;return inspView();}if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Цей розділ доступний лише для управлінської компанії.'}))];
   if(S.ukSec==='water')return S.wObjSel?waterObject(S.wObjSel):waterHome();
   if(S.ukSec==='debt')return debtView();
   if(S.ukSec==='waste')return wasteView();
@@ -7047,6 +7557,7 @@ function viewUK(){if(!isUK())return [el('div',{class:'card empty'},el('p',{class
   if(S.ukSec==='res')return resView();
   if(S.ukSec&&UKS[S.ukSec])return ukSection(S.ukSec);
   if(!S.fg)return fgHome();
+  if(S.fg==='insp')return inspView();
   if(S.fg==='dev')return devView();
   if(S.fg==='arch')return S.arB?arBuilding():arHome();
   if(S.fg!=='obl')return fgSection(S.fg);
@@ -7342,6 +7853,7 @@ function taskCard(t){
   const secs=[];
   if(t.note)secs.push(tsec('Опис',el('p',{class:'t-note',text:t.note})));
   if(t.refPhotos&&t.refPhotos.length)secs.push(tsec('Фото до задачі',thumbs(t.refPhotos,'Фото до задачі','ref')));
+  if(t.insp&&(S.insp||{})[t.insp]&&inspCan())secs.push(tsec('Обхід будівель',el('button',{class:'btn ghost sm',type:'button',style:'align-self:flex-start',onclick:()=>inspGoto(t.insp)},'Відкрити звіт обходу →')));
   secs.push(tsec(ids.length>1?'Виконавці':'Виконавець',people,prog));
   const lastRw=t.rework&&t.rework.length?t.rework[t.rework.length-1]:null;
   if(t.report||(t.photos&&t.photos.length))secs.push(tsec(lastRw?'Звіт після доопрацювання':'Звіт',t.report?el('div',{class:'report',text:t.report}):null,(t.photos&&t.photos.length)?thumbs(t.photos,'Фото-звіт'):null));
@@ -7564,13 +8076,13 @@ function whenPicker(d,tm,rm){const today=ymd(new Date());
     sum);
   setTimeout(sync,0);return node;}
 function newTask(pre){pre=pre||{};const zq=pre.zone&&mzById(pre.zone);
-  const t=el('input',{id:'tTitle',placeholder:'Напр.: Замінити пакети в урнах біля входу',maxlength:'140'});
+  const t=el('input',{id:'tTitle',placeholder:'Напр.: Замінити пакети в урнах біля входу',maxlength:'140'});if(pre.title)t.value=pre.title;
   const picked=new Set();
   const who=assignPicker(picked);
   const d=el('input',{id:'tDue',type:'date',value:ymd(new Date())});
   const tm=el('input',{id:'tTime',type:'time',step:'300'});
   const rm=el('select',{id:'tRem'},el('option',{value:'',text:'Без нагадування'}),Object.entries(REMIND).map(([k,v])=>el('option',{value:k,text:'Нагадати '+v})));
-  const n=el('textarea',{id:'tNote',placeholder:'Деталі (необов’язково)',maxlength:'1000'});
+  const n=el('textarea',{id:'tNote',placeholder:'Деталі (необов’язково)',maxlength:'1000'});if(pre.note)n.value=pre.note;
   const files=[];const prev=el('div',{class:'thumbs'});
   const fin=el('input',{type:'file',accept:'image/*',multiple:true,'aria-label':'Додати фото до задачі'});
   const drawPrev=()=>prev.replaceChildren(...files.map((f,i)=>el('span',{class:'thumb rm'},el('img',{src:URL.createObjectURL(f),alt:''}),el('button',{type:'button',class:'x','aria-label':'Прибрати фото',onclick:()=>{files.splice(i,1);drawPrev();}},'×'))));
@@ -7582,8 +8094,9 @@ function newTask(pre){pre=pre||{};const zq=pre.zone&&mzById(pre.zone);
       const ids=sortedStaff().map(x=>x.id).filter(id=>picked.has(id));
       const btn=ev.currentTarget;btn.disabled=true;btn.textContent=files.length?'Завантаження фото…':'Призначаємо…';
       const ref=[];await write(async()=>{ref.length=0;
+        for(const th of (pre.refThumbs||[])){const r=await S.db.collection('photos').add({taskId:null,img:th,by:S.myId,at:Date.now()});ref.push({id:r.id,thumb:th});}
         for(const f of files){const img=await loadImg(f);const r=await S.db.collection('photos').add({taskId:null,img:shrinkFit(img),by:S.myId,at:Date.now()});ref.push({id:r.id,thumb:shrink(img,220,0.6)});}
-        await S.db.collection('tasks').add({title,zone:pre.zone||null,note:n.value.trim(),refPhotos:ref,assignees:ids,assignee:ids[0],doneMap:{},due:d.value||null,dueTime:tm.value||null,remind:rm.value||null,done:false,doneAt:null,createdBy:S.myId,createdAt:Date.now()});},'Задачу призначено');
+        await S.db.collection('tasks').add({title,insp:pre.insp||null,zone:pre.zone||null,note:n.value.trim(),refPhotos:ref,assignees:ids,assignee:ids[0],doneMap:{},due:d.value||null,dueTime:tm.value||null,remind:rm.value||null,done:false,doneAt:null,createdBy:S.myId,createdAt:Date.now()});},'Задачу призначено');
       closeSheet();notifyTask({title,note:n.value.trim(),due:d.value||null,photos:ref.length},ids);}},'Призначити'),
       el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));
   if(!IS_TOUCH)t.focus();
@@ -7757,6 +8270,7 @@ function viewSupport(){
     el('div',{class:'stack',style:'gap:4px;flex:1;min-width:0'},el('h2',{text:dev?'Запити від колективу':'Щось не працює чи є ідея?'}),
       el('p',{class:'muted',style:'margin:0',text:dev?'Тут усі помилки, пропозиції й зауваження. Бачите їх лише ви та інші Dev.':'Напишіть нам. Запит побачать лише розробники (Dev), і відповідь прийде сюди ж.'})),
     el('button',{class:'btn',type:'button',onclick:newTicket},'+ Новий запит')));
+  out.push(pwaCard());
   if(dev){
     const F=[['open','Відкриті'],['new','Нові'],['progress','В роботі'],['done','Вирішені'],['all','Усі']];
     out.push(el('div',{class:'seg',role:'group','aria-label':'Фільтр'},F.map(([id,n])=>{const c=id==='all'?S.tickets.length:S.tickets.filter(t=>id==='open'?t.status!=='done':(t.status||'new')===id).length;
