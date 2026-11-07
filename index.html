@@ -63,7 +63,6 @@ h2{font-family:var(--display);font-weight:600;font-size:18px;margin:0;text-wrap:
 .role.dev{background:#5B3FA8;color:#FFFFFF}
 .role.director{background:var(--mgr);color:var(--mgr-fg)}
 .role.ceo{background:#8A5A12;color:#FFF6E5}
-.role.walker{background:#CFEDE6;color:#0B5446}
 .role.senior{background:var(--accent);color:var(--accent-fg)}
 .role.manager{background:var(--accent-soft);color:var(--accent-ink)}
 .role.engineer{background:var(--amber-soft);color:var(--amber-ink)}
@@ -651,6 +650,7 @@ label.btn.ghost{color:var(--fg)}
 @media (max-width:899px){.iw-nav:not(.static){position:sticky;bottom:calc(84px + var(--sab,0px));z-index:5;padding:16px 0 calc(4px + env(safe-area-inset-bottom,0px));margin-top:-8px;background:linear-gradient(to bottom,transparent,var(--bg) 40%)}}
 @media (min-width:900px){.btn-pair.end{display:flex;justify-content:flex-end}.btn-pair.end .btn{min-width:200px}}
 .ip-one{align-self:flex-end;min-width:200px}
+.ip-del{display:flex;justify-content:flex-end}.ip-del .btn{min-height:44px}.ip-del .btn svg{width:18px;height:18px}
 @media (max-width:560px){.iw-cam{grid-template-columns:1fr}.ip-one{align-self:stretch}}
 .ip-feed{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 @media (min-width:1280px){.ip-feed{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -3271,7 +3271,6 @@ const ROLES=[
   {id:'engineer',name:'Головний інженер'},
   {id:'director',name:'Директор'},
   {id:'ceo',name:'CEO Asgard'},
-  {id:'walker',name:'Обхідник'},
   {id:'dev',name:'Dev'}
 ];
 const ROLE_NAME=Object.fromEntries(ROLES.map(r=>[r.id,r.name]));
@@ -7389,6 +7388,7 @@ function inspSummary(d){const miss=inspMissing(d),bad=inspBadRemark(d);const out
   const go=el('button',{class:'btn',type:'button',disabled:why?true:null,'aria-describedby':why?'iwWhy':null,onclick:async()=>{d.generalComment=gc.value;d.state='queued';await inspSave(d);go.disabled=true;go.textContent='Надсилаю…';
       await inspSync();S.inspDone={id:d.id,bid:d.buildingId,sent:!(S.inspDr||{})[d.id]};S.inspW=null;S.inspR=null;render();SC().scrollTop=0;}},'Відправити звіт');
   out.push(el('div',{class:'iw-nav'},el('button',{class:'btn ghost',type:'button',onclick:()=>{S.inspW.step=inspPts().length-1;render();}},'Назад'),go));
+  out.push(el('div',{class:'ip-del'},el('button',{class:'btn danger sm',type:'button',onclick:()=>inspDraftDelete(d)},'Видалити чернетку')));
   return out;}
 function inspDoneView(){const x=S.inspDone;const left=inspMyBlds().filter(b=>{const s=inspTodayOf(b.id);return s.st==='none'||s.st==='draft';});
   return [el('div',{class:'iw-wrap narrow'},el('section',{class:'card empty iw-done'+(x.sent?' ok':' wait')},el('span',{class:'iw-done-ic','aria-hidden':'true',text:x.sent?'✓':'⟳'}),el('h2',{text:x.sent?'Звіт відправлено':'Збережено на телефоні'}),
@@ -7398,7 +7398,9 @@ function inspDoneView(){const x=S.inspDone;const left=inspMyBlds().filter(b=>{co
 const INSP_REV_ROLES={director:'керівник Facility',ceo:'CEO Asgard'};
 function inspRoles(s){return [s.role,s.extraRole].filter(Boolean);}
 function inspIsRevStaff(s){return inspRoles(s).some(r=>INSP_REV_ROLES[r]);}
-function inspCandidates(){return sortedStaff().filter(s=>inspRoles(s).includes('walker')||(s.walks&&inspIsRevStaff(s)));}
+/* Хто може обходити: працівники Facility за звичайними ролями + керівники з увімкненим «Також проводить обхід» */
+const INSP_WALK_ROLES=['senior','engineer','master'];
+function inspCandidates(){return sortedStaff().filter(s=>inspRoles(s).some(r=>INSP_WALK_ROLES.includes(r))||(s.walks&&inspIsRevStaff(s)));}
 function inspAssignOpen(){S.hist.push(snap());S.inspA=true;S.inspAD=null;SC().scrollTop=0;render();}
 function inspAssignView(){if(!inspCanAssign()){S.inspA=false;return inspView();}
   const D=S.inspAD=S.inspAD||Object.fromEntries(ARCH.map(b=>[b.id,new Set(inspAssigned(b.id))]));
@@ -7408,14 +7410,14 @@ function inspAssignView(){if(!inspCanAssign()){S.inspA=false;return inspView();}
   const revs=sortedStaff().filter(inspIsRevStaff);
   const out=[el('div',{class:'ia-wrap'},el('div',{class:'stack',style:'gap:4px'},el('span',{class:'eyebrow',text:'Обхід будівель'}),el('h2',{text:'Закріплення будівель'}),el('p',{class:'muted',style:'margin:0',text:'Обхідник бачить лише закріплені за ним будівлі. На одну будівлю можна закріпити кількох людей.'})),
     revs.length?el('p',{class:'ia-info'},el('b',{text:'Бачать усі будівлі: '}),revs.map(s=>s.name+' ('+inspRoles(s).map(r=>INSP_REV_ROLES[r]).filter(Boolean)[0]+')').join(', ')):null)];
-  if(!cols.length){out.push(el('div',{class:'ia-wrap'},el('section',{class:'card empty'},el('b',{text:'У Facility відділі ще немає обхідників'}),el('p',{class:'muted',style:'margin:0',text:'Додайте роль «Обхідник» (основну або додаткову) потрібним людям у розділі «Колектив».'}),el('button',{class:'btn',type:'button',onclick:()=>go('team')},'Відкрити «Колектив»'))));return out;}
+  if(!cols.length){out.push(el('div',{class:'ia-wrap'},el('section',{class:'card empty'},el('b',{text:'У Facility відділі ще немає людей для обходу'}),el('p',{class:'muted',style:'margin:0',text:'Обхід проводять старший менеджер, головний інженер і майстри. Призначте цю роль потрібним людям у розділі «Колектив».'}),el('button',{class:'btn',type:'button',onclick:()=>go('team')},'Відкрити «Колектив»'))));return out;}
   const toggle=(bid,sid,on)=>{on?D[bid].add(sid):D[bid].delete(sid);render();};
   /* ПК / планшет: матриця */
-  const tb=el('table',{class:'ia-mx'},el('thead',{},el('tr',{},el('th',{class:'nm',scope:'col',text:'Будівля'}),cols.map(s=>el('th',{scope:'col'},el('span',{class:'ia-ph'},avatar(s,'xs'),el('span',{text:s.name})),cand.includes(s)?null:el('small',{class:'muted',text:'не обхідник'}))))),
+  const tb=el('table',{class:'ia-mx'},el('thead',{},el('tr',{},el('th',{class:'nm',scope:'col',text:'Будівля'}),cols.map(s=>el('th',{scope:'col'},el('span',{class:'ia-ph'},avatar(s,'xs'),el('span',{text:s.name})),cand.includes(s)?null:el('small',{class:'muted',text:'поза Facility'}))))),
     el('tbody',{},ARCH.map(b=>el('tr',{},el('th',{class:'nm',scope:'row'},el('b',{text:'Буд. '+b.fac+' · '+b.name}),sum(b)),cols.map(s=>{const on=D[b.id].has(s.id);const id='ia_'+b.id+'_'+s.id;const c=el('input',{type:'checkbox',class:'ck',id,checked:on?true:null,'aria-label':'Закріпити '+s.name+' за Буд. '+b.fac});c.addEventListener('change',()=>toggle(b.id,s.id,c.checked));
       return el('td',{class:on?'on':''},el('label',{class:'ia-cell',for:id},c));})))));
   /* телефон: список будівель → шторка */
-  const list=el('div',{class:'ia-list'},ARCH.map(b=>el('button',{type:'button',class:'card ia-b',onclick:()=>{const box=el('div',{class:'stack',style:'gap:4px'});const draw=()=>box.replaceChildren(...cols.map(s=>{const id='iam_'+s.id;const c=el('input',{type:'checkbox',class:'ck',id,checked:D[b.id].has(s.id)?true:null});c.addEventListener('change',()=>{c.checked?D[b.id].add(s.id):D[b.id].delete(s.id);});return el('label',{class:'ck-row big',for:id},c,avatar(s,'xs'),el('span',{text:s.name+(cand.includes(s)?'':' (не обхідник)')}));}));draw();
+  const list=el('div',{class:'ia-list'},ARCH.map(b=>el('button',{type:'button',class:'card ia-b',onclick:()=>{const box=el('div',{class:'stack',style:'gap:4px'});const draw=()=>box.replaceChildren(...cols.map(s=>{const id='iam_'+s.id;const c=el('input',{type:'checkbox',class:'ck',id,checked:D[b.id].has(s.id)?true:null});c.addEventListener('change',()=>{c.checked?D[b.id].add(s.id):D[b.id].delete(s.id);});return el('label',{class:'ck-row big',for:id},c,avatar(s,'xs'),el('span',{text:s.name+(cand.includes(s)?'':' (поза Facility)')}));}));draw();
       openSheet(el('h2',{text:'Буд. '+b.fac+' · '+b.name}),el('p',{class:'muted',style:'margin:0',text:'Оберіть, хто обходить цю будівлю.'}),box,el('div',{class:'btn-pair'},el('button',{class:'btn',type:'button',onclick:()=>{closeSheet();render();}},'Готово')));}},
     el('span',{class:'stack',style:'gap:2px;min-width:0;flex:1;text-align:left'},el('b',{text:'Буд. '+b.fac+' · '+b.name}),sum(b)),el('span',{class:'uk-go','aria-hidden':'true'},svg('<path d="m9 6 6 6-6 6"/>')))));
   const save=el('button',{class:'btn',type:'button',disabled:dirty?null:true,onclick:()=>{const m=myStaff();write(async()=>{for(const b of ARCH){const ids=sortedStaff().map(s=>s.id).filter(id=>D[b.id].has(id));const old=inspAssigned(b.id);if(ids.length===old.length&&ids.every(id=>old.includes(id)))continue;
@@ -7487,7 +7489,17 @@ function inspReport0(id){const x=(S.insp||{})[id];if(!x)return [el('div',{class:
   if(mine&&x.status==='returned'){const r=el('textarea',{id:'ipRep',placeholder:'Що виправили або пояснення',maxlength:'600'});r.value=x.walkerReply||'';
     out.push(el('div',{class:'card stack'},el('label',{for:'ipRep'},'Ваш коментар для перевіряючого',r),el('button',{class:'btn ip-one',type:'button',onclick:()=>{const t=r.value.trim();if(!t){toast('Напишіть коментар');r.focus();return;}
       write(()=>S.db.doc('inspections/'+x.id).update({walkerReply:t,status:'submitted',submittedAt:Date.now()}),'Обхід: звіт надіслано повторно · '+inspBShort(x.buildingId));}},'Надіслати повторно')));}
+  if(inspCanDelete(x))out.push(el('div',{class:'ip-del'},el('button',{class:'btn danger sm',type:'button',onclick:()=>inspDelete(x)},svg('<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>'),' Видалити обхід')));
   return out;}
+function inspCanDelete(x){const m=myStaff();return !!(x&&((m&&x.authorId===m.id)||hasAny(['dev','ceo','director'])));}
+function inspDelete(x){if(!inspCanDelete(x))return;confirmSheet('Видалити обхід «'+inspBName(x.buildingId)+' · '+dm(x.date)+'» разом з усіма фото? Відновити його не можна.','Видалити обхід',async()=>{
+  const A=await inspAssetsNs();let fail=0;
+  await write(async()=>{let q=null;try{q=await S.db.collection('inspection_photos').where('inspectionId','==',x.id).get();}catch(e){}
+    for(const d of (q?q.docs:[])){const p=d.data()||{};if(p.inspectionId!==x.id)continue;if(p.assetId&&!p.purged&&A){try{await A.delete(p.assetId);}catch(e){fail++;}}await S.db.doc('inspection_photos/'+d.id).delete();}
+    await S.db.doc('inspections/'+x.id).delete();},'Обхід видалено');
+  devLog('Обхід: видалено · '+inspBShort(x.buildingId)+' · '+dm(x.date)+(fail?' · файлів фото не видалено: '+fail:''));
+  if(S.inspR===x.id){S.inspR=null;if(S.hist.length&&S.hist[S.hist.length-1].ir===x.id)S.hist.pop();}render();});}
+function inspDraftDelete(d){confirmSheet('Видалити чернетку обходу «'+inspBName(d.buildingId)+'» разом із зробленими фото?','Видалити чернетку',async()=>{await IDBX.del(d.id);delete S.inspDr[d.id];S.inspW=null;devLog('Обхід: видалено чернетку · '+inspBShort(d.buildingId));toast('Чернетку видалено');render();});}
 function inspApprove(x){const m=myStaff();write(()=>S.db.doc('inspections/'+x.id).update({status:'approved',reviewerId:m?m.id:null,reviewedAt:Date.now()}),'Обхід: погоджено · '+inspBShort(x.buildingId)+' · '+dm(x.date));}
 function inspReturnSheet(x){const t=el('textarea',{id:'ipRet',placeholder:'Що переробити: напр. «Фото ВРП розмите, перезніміть»',maxlength:'600'});const er=el('p',{class:'iw-err',role:'alert',hidden:true,text:'Без коментаря обхідник не знатиме, що виправити.'});
   t.addEventListener('input',()=>{if(t.value.trim())er.hidden=true;});openSheet(el('h2',{text:'Повернути звіт на доопрацювання?'}),el('p',{class:'muted',style:'margin:0',text:inspBName(x.buildingId)+' · '+dm(x.date)}),el('label',{for:'ipRet'},'Коментар для обхідника (обов’язково)',t),er,
@@ -8439,7 +8451,7 @@ function editPerson(s){
   const ex=el('select',{id:'pExtra'},el('option',{value:'',text:'Немає'}),ROLES.map(r=>el('option',{value:r.id,text:r.name,selected:!!(s&&s.extraRole===r.id)})));
   const rl=el('select',{id:'pRole'},ROLES.map(r=>el('option',{value:r.id,text:r.name,selected:s?s.role===r.id:r.id==='cleaner'})));
   const inS=el('input',{id:'pSched',type:'checkbox',checked:!s||s.inSchedule!==false,style:'width:24px;height:24px;min-height:0;flex:none'});
-  const wk=el('input',{id:'pWalks',type:'checkbox',class:'ck',checked:s&&s.walks?true:null});const wkRow=el('label',{class:'ck-row',for:'pWalks'},wk,el('span',{},'Також проводить обхід будівель',el('small',{class:'muted',style:'display:block;font-weight:600',text:'Для керівника Facility чи CEO Asgard: з’явиться серед обхідників у закріпленні будівель'})));
+  const wk=el('input',{id:'pWalks',type:'checkbox',class:'ck',checked:s&&s.walks?true:null});const wkRow=el('label',{class:'ck-row',for:'pWalks'},wk,el('span',{},'Також проводить обхід будівель',el('small',{class:'muted',style:'display:block;font-weight:600',text:'Для керівника Facility чи CEO Asgard: з’явиться серед тих, кого можна закріпити за будівлею'})));
   const wkUpd=()=>{wkRow.hidden=![rl.value,ex.value].some(r=>r==='director'||r==='ceo');};rl.addEventListener('change',wkUpd);ex.addEventListener('change',wkUpd);wkUpd();
   const kids=[el('h2',{text:s?s.name:'Новий працівник'}),el('label',{for:'pName'},'Ім’я',nm),el('label',{for:'pEmail'},'Пошта для сповіщень про задачі',em),el('label',{for:'pRole'},'Основна роль',rl),el('label',{for:'pExtra'},'Додаткова роль',ex),el('label',{for:'pSched',style:'flex-direction:row;align-items:center;gap:10px;font-size:15px;color:var(--fg)'},inS,'Показувати в графіку'),wkRow,
     el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:()=>{const name=nm.value.trim();if(!name){toast('Вкажіть ім’я');return;}
