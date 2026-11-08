@@ -735,6 +735,19 @@ ul.ip-cl{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 
 .rs-d b{font-size:11px;color:var(--muted);text-transform:uppercase}.rs-d span{font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rs-d.now{background:var(--accent);color:var(--accent-fg)}.rs-d.now b{color:inherit}
 .rs-row{flex-direction:row!important;align-items:center;gap:12px!important}.rs-row .rs-dl{flex:0 0 92px;font-weight:700;color:var(--fg)}.rs-row select,.rs-row .fx-btn{flex:1 1 0;min-width:0;width:auto;margin-top:0!important}.rs-row .fx-btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rs-row{min-width:0}
+.sc-wk.nosum{grid-template-columns:minmax(112px,1.2fr) repeat(var(--cols),minmax(82px,1fr))!important}
+.sx-page{width:1400px;box-sizing:border-box;padding:40px 44px;background:#fff;color:#0F2A33;font-family:var(--body)}
+.sx-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:22px}
+.sx-logo{font-size:13px;font-weight:800;letter-spacing:.14em;color:#1F6F78}.sx-page h1{font-family:var(--display);font-size:34px;margin:6px 0 4px;color:#0F2A33}.sx-per{font-size:18px;font-weight:700;color:#53686F}
+.sx-resp{display:flex;flex-direction:column;align-items:flex-end;gap:2px;background:#DCEEEC;border-radius:16px;padding:14px 18px}.sx-resp small{font-size:12px;font-weight:800;color:#0F4A51;text-transform:uppercase;letter-spacing:.06em}.sx-resp b{font-size:20px;color:#0F2A33}.sx-resp span{font-size:14px;font-weight:700;color:#0F4A51}
+.sx-t{width:100%;min-width:0!important;border-collapse:collapse;table-layout:fixed;font-size:14px;font-variant-numeric:normal!important}.sx-t td.nm,.sx-t th.nm{position:static!important}.sx-p{font-variant-numeric:normal;letter-spacing:0}
+.sx-t th{background:#1F6F78;color:#fff;font-size:13px;font-weight:800;padding:10px 6px;text-transform:none;letter-spacing:0;border:0}
+.sx-t th:first-child{border-radius:10px 0 0 0;text-align:left;padding-left:12px}.sx-t th:last-child{border-radius:0 10px 0 0}.sx-t th.we{background:#2B8590}
+.sx-t td{border-bottom:1px solid #D3DFDD;padding:8px 6px;text-align:center;vertical-align:middle}.sx-t td.we{background:#FBF6EE}
+.sx-t td.nm,.sx-t th.nm{width:190px;text-align:left}.sx-t td.nm{padding-left:12px}.sx-t td.nm b{display:block;font-size:15px}.sx-t td.nm small{display:block;color:#53686F;font-size:12px;font-weight:600}
+.sx-p{display:block;border-radius:8px;padding:5px 4px;margin:3px 0;font-weight:800;font-size:13px;white-space:nowrap}.sx-off{color:#9DB3B8;font-weight:700}
+.sx-rd td{background:#EEF6F5;font-size:13px}.sx-f td{font-size:16px;border-bottom:0;background:#F4F8F7}.sx-f td.nm b,.sx-rd td.nm b{font-size:14px}
+.sx-leg{display:flex;gap:18px;align-items:center;margin-top:16px;font-size:13px;font-weight:700;color:#53686F}.sx-leg span{display:inline-flex;align-items:center;gap:6px}.sx-leg i{width:14px;height:14px;border-radius:4px;border:1.5px solid}.sx-gen{margin-left:auto}
 /* ===== header glass bar ===== */
 header.top{position:sticky;top:8px!important;z-index:15;margin:-6px -6px 14px!important;padding:10px 10px 10px 16px!important;border-radius:24px;
   background:var(--glass)!important;border:1px solid var(--glass-brd);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
@@ -7768,6 +7781,29 @@ function respEdit(ws){const w=S.week||{};const pool=respPool();let main=w.respon
     el('div',{class:'btn-pair'},el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'),el('button',{class:'btn',type:'button',onclick:()=>{const h=hrs.value.trim();const hh=h?(normShift(h)||h):'8:00–20:00';
       const days={};[0,1,2,3,4,5,6].forEach(i=>{days[i]=byDay.checked&&rd[i]?rd[i]:null;});closeSheet();
       write(()=>S.db.doc('weeks/'+ws).update({responsibleId:main,responsibleHours:hh,respDays:days}),'Відповідального за об’єкт збережено');}},'Зберегти')));}
+/* Графік тижня картинкою (PNG): усі працівники зі змінами + відповідальний. Годин за тиждень у картинці немає */
+async function scExportImg(ws,btn){if(btn){if(btn.disabled)return;btn.disabled=true;}toast('Готую картинку…');const host=el('div',{class:'rp-host','aria-hidden':'true'});
+  try{await loadPdfLibs();if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    const list=schedStaff();const w=S.week||{};const we=addDays(ws,6);const C={am:['#DCEEEC','#0F4A51'],pm:['#F6E3C4','#6B4210'],full:['#DCE6FA','#21407A'],mg:['#E6DEFA','#4A2E8F']};
+    const typ=p=>{if(p==='Д')return 'mg';const m=p.match(/(\d{1,2})(?::(\d{2}))?\s*[–-]\s*(\d{1,2})(?::(\d{2}))?/);if(!m)return 'full';const a=+m[1]+(+m[2]||0)/60,b=+m[3]+(+m[4]||0)/60;return b-a>=7?'full':a<12?'am':'pm';};
+    const fmt=p=>{const t=p==='Д'?'8:30–17:30':p;const m=t.match(/(\d{1,2}(?::\d{2})?)\s*[–-]\s*(\d{1,2}(?::\d{2})?)/);return m?(m[1].includes(':')?m[1]:m[1]+':00')+'–'+(m[2].includes(':')?m[2]:m[2]+':00'):t;};
+    const dLbl=i=>{const d=dm(addDays(ws,i));return DS[i]+' '+d;};const cnt=i=>list.filter(x=>isWorking(dayValue(x.id,i))).length;
+    const main=w.responsibleId&&staffById(w.responsibleId);const rd=w.respDays||{};const hasDays=[0,1,2,3,4,5,6].some(i=>rd[i]||rd[String(i)]);
+    const pg=el('div',{class:'sx-page'},
+      el('div',{class:'sx-top'},el('div',{},el('div',{class:'sx-logo',text:'DUCK’S LAKE · FACILITY'}),el('h1',{text:'Графік змін'}),el('div',{class:'sx-per',text:dm(ws)+' – '+dm(we)+'.'+we.slice(0,4)})),
+        main||hasDays?el('div',{class:'sx-resp'},el('small',{text:'Відповідальний за об’єкт'}),el('b',{text:main?main.name:'по днях'}),el('span',{text:w.responsibleHours||'8:00–20:00'})):null),
+      el('table',{class:'sx-t'},el('thead',{},el('tr',{},el('th',{class:'nm',text:'Працівник'}),DS.map((_,i)=>el('th',{class:i>=5?'we':''},dLbl(i))))),
+        el('tbody',{},list.map(st=>el('tr',{},el('td',{class:'nm'},el('b',{text:st.name}),el('small',{text:roleName(st.role)||''})),DS.map((_,i)=>{const parts=shiftParts(dayValue(st.id,i));
+          return el('td',{class:i>=5?'we':''},parts.length?parts.map(p=>{const c=C[typ(p)];return el('span',{class:'sx-p',style:'background:'+c[0]+';color:'+c[1]},fmt(p));}):el('span',{class:'sx-off',text:'—'}));}))),
+          hasDays?el('tr',{class:'sx-rd'},el('td',{class:'nm'},el('b',{text:'Відповідальний'})),DS.map((_,i)=>{const s=staffById(respOn(w,i));return el('td',{},el('b',{text:s?s.name:'—'}));})):null,
+          el('tr',{class:'sx-f'},el('td',{class:'nm'},el('b',{text:'На змінах'})),DS.map((_,i)=>el('td',{},el('b',{text:String(cnt(i))})))))),
+      el('div',{class:'sx-leg'},[['am','Ранкова до 13:00'],['pm','Вечірня після 13:00'],['full','Повний день'],['mg','Менеджер 8:30–17:30']].map(([k,l])=>el('span',{},el('i',{style:'background:'+C[k][0]+';border-color:'+C[k][1]}),l)),el('span',{class:'sx-gen',text:'Сформовано '+dmy()})));
+    host.append(pg);document.body.append(host);
+    const cv=await html2canvas(pg,{scale:2,backgroundColor:'#ffffff',useCORS:true,logging:false,windowWidth:1500});
+    const blob=await new Promise(r=>cv.toBlob(r,'image/png'));window.__lastPng=blob;
+    await saveFile('Графік Duck’s Lake '+dm(ws)+'–'+dm(we)+'.'+we.slice(0,4)+'.png',blob);devLog('Графік: збережено фото тижня '+dm(ws));
+  }catch(e){console.error(e);toast('Не вдалося зібрати картинку. Перевірте зв’язок і спробуйте ще раз.');}
+  finally{host.remove();if(btn)btn.disabled=false;}}
 function viewSchedule(){
   const out=[];const ws=S.weekStart;
   const we=addDays(ws,6);const fmtD=d=>(+dm(d).slice(0,2))+' '+MON_N[+dm(d).slice(3,5)-1];
@@ -7784,13 +7820,14 @@ function viewSchedule(){
       :el('p',{class:'muted',text:'Керівник додасть його найближчим часом.'})));
     return out;
   }
-  const edit=canPlan();const list=schedStaff();const tIdx=isThisWeek()?todayIdx():-1;
+  const edit=canPlan();const showHrs=hasAny(['dev','manager','director']);const list=schedStaff();const tIdx=isThisWeek()?todayIdx():-1;
   const cnt=i=>list.filter(x=>isWorking(dayValue(x.id,i))).length;
   const IC_D='<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/>',IC_W='<path d="M4 6h16M4 12h16M4 18h16"/>';
   out.push(el('div',{class:'sc-bar'},el('div',{class:'sg sc-seg'},
       el('button',{type:'button','aria-pressed':String(S.schedView!=='week'),onclick:()=>{S.schedView='day';render();}},svg(IC_D),'По днях'),
       el('button',{type:'button','aria-pressed':String(S.schedView==='week'),onclick:()=>{S.schedView='week';render();}},svg(IC_W),'Весь тиждень')),
-    !isThisWeek()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.weekStart=mondayOf(new Date());S.day=todayIdx();watchWeek();render();}},'Сьогодні'):null));
+    el('div',{class:'row',style:'gap:8px'},!isThisWeek()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.weekStart=mondayOf(new Date());S.day=todayIdx();watchWeek();render();}},'Сьогодні'):null,
+      el('button',{class:'btn ghost sm',type:'button',title:'Зберегти графік тижня картинкою (PNG)',onclick:e=>scExportImg(ws,e.currentTarget)},svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/>'),' Зберегти фото'))));
   if(edit)out.push(scToolbar());
   if(S.schedView!=='week'){
     out.push(el('div',{class:'sc-days'},DS.map((d,i)=>{const n=cnt(i);return el('button',{type:'button',class:'sc-day'+(i>=5?' we':'')+(i===tIdx?' now':''),'aria-pressed':String(S.day===i),onclick:()=>{S.day=i;render();}},
@@ -7810,14 +7847,14 @@ function viewSchedule(){
           const kids=[];if(parts.length){const tr=el('span',{class:'scg-tr'});parts.forEach(p=>{const q=pr(p);if(!q)return;tr.append(el('i',{class:'t-'+typ(p),style:'left:'+((q.a-H0)/(H1-H0)*100)+'%;width:'+((q.b-q.a)/(H1-H0)*100)+'%'}));});kids.push(tr);
             kids.push(el('span',{class:'scg-tx'},parts.map(p=>{const q=pr(p);if(!q)return el('span',{class:'t-'+typ(p),text:p});const one=(q.ta+q.tb).length<=4;return el('span',{class:'t-'+typ(p)+(one?'':' two')},one?q.ta+'–'+q.tb:[el('b',{text:q.ta}),el('b',{text:q.tb})]);})));}
           const cls='scg-c'+(i===tIdx?' now':'')+(parts.length?'':' off');g.append(edit?el('button',{class:cls,type:'button','aria-label':lbl,onclick:()=>editShift(st,i)},kids):el('div',{class:cls,'aria-label':lbl},kids));});
-        nEl.textContent=String(Math.round(tot*10)/10).replace('.',',')+' год';});
+        if(showHrs)nEl.textContent=String(Math.round(tot*10)/10).replace('.',',')+' год';});
       g.append(el('span',{class:'scg-n scg-f'},'На зміні'),...DS.map((_,i)=>el('span',{class:'scg-c scg-f'+(i===tIdx?' now':'')},String(cnt(i)))));
       out.push(el('div',{class:'card scg-card'},g,el('div',{class:'sc-leg'},[['am','Ранкова'],['pm','Вечірня'],['full','Повний день'],['mg','Менеджер']].map(([k,l])=>el('span',{class:'t-'+k},el('i'),l)))));
     }else{
-    const tb=el('div',{class:'sc-wk',role:'table','aria-label':'Графік на тиждень',style:'--cols:7'});
+    const tb=el('div',{class:'sc-wk'+(showHrs?'':' nosum'),role:'table','aria-label':'Графік на тиждень',style:'--cols:7'});
     tb.append(el('div',{class:'sc-h sc-n',role:'columnheader'},el('span',{text:'Працівник'})));
     DS.forEach((d,i)=>tb.append(el('div',{class:'sc-h'+(i>=5?' we':'')+(i===tIdx?' now':''),role:'columnheader'},el('small',{text:d}),el('b',{text:dm(addDays(ws,i)).slice(0,2)}),el('span',{text:cnt(i)+' на зміні'}))));
-    tb.append(el('div',{class:'sc-h sc-sum',role:'columnheader'},el('small',{text:'За тиждень'})));
+    if(showHrs)tb.append(el('div',{class:'sc-h sc-sum',role:'columnheader'},el('small',{text:'За тиждень'})));
     list.forEach((st,r)=>{let tot=0;
       tb.append(el('div',{class:'sc-n sc-row'+(S.brush!=null?' paint':''),role:'rowheader',title:st.name,onclick:S.brush!=null?()=>scPaint(st,[0,1,2,3,4,5,6]):null},avatar(st,'sc-av'),el('span',{class:'sc-nm'},el('b',{text:st.name.split(' ')[0]}),el('small',{text:roleName(st.role)||''}))));
       DS.forEach((_,i)=>{const v=dayValue(st.id,i);const parts=shiftParts(v);parts.forEach(p=>tot+=hrs(p));
@@ -7827,9 +7864,9 @@ function viewSchedule(){
         const kids=parts.length?parts.map(p=>{const ty=typ(p);const [a,b]=fmt(p);return el('span',{class:'sc-p t-'+ty},el('span',{class:'sc-pi'},svg(SIC[ty])),el('span',{class:'sc-pt'},el('b',{text:a+(b?'–'+b:'')}),el('em',{text:(Math.round(hrs(p)*10)/10+'').replace('.',',')+' год'})));}):[el('span',{class:'sc-off',text:'—'})];
         const cls='sc-c'+(i===tIdx?' now':'')+(i>=5?' we':'');
         tb.append(edit?el('button',{class:cls,type:'button','aria-label':lbl,onclick:()=>editShift(st,i)},kids):el('div',{class:cls,role:'cell','aria-label':lbl},kids));});
-      tb.append(el('div',{class:'sc-c sc-sum'},el('b',{text:String(Math.round(tot*10)/10).replace('.',',')}),el('small',{text:'год'}),el('span',{class:'sc-hb'},el('i',{style:'width:'+Math.min(100,tot/45*100)+'%'}))));});
+      if(showHrs)tb.append(el('div',{class:'sc-c sc-sum'},el('b',{text:String(Math.round(tot*10)/10).replace('.',',')}),el('small',{text:'год'}),el('span',{class:'sc-hb'},el('i',{style:'width:'+Math.min(100,tot/45*100)+'%'}))));});
     tb.append(el('div',{class:'sc-n sc-foot'},el('b',{text:'На змінах'})));
-    DS.forEach((_,i)=>tb.append(el('div',{class:'sc-c sc-foot'+(i===tIdx?' now':'')},el('b',{text:String(cnt(i))}))));tb.append(el('div',{class:'sc-c sc-foot sc-sum'}));
+    DS.forEach((_,i)=>tb.append(el('div',{class:'sc-c sc-foot'+(i===tIdx?' now':'')},el('b',{text:String(cnt(i))}))));if(showHrs)tb.append(el('div',{class:'sc-c sc-foot sc-sum'}));
     const wrap=el('div',{class:'card sc-card'},el('div',{class:'sc-scroll'},tb),
       el('div',{class:'sc-leg'},[['am','Ранкова до 13:00'],['pm','Вечірня після 13:00'],['full','Повний день'],['mg','Менеджер 8:30–17:30']].map(([k,l])=>el('span',{class:'t-'+k},el('i'),l)),edit?el('span',{class:'muted',text:'· торкніться клітинки, щоб змінити'}):null));
     out.push(wrap);
