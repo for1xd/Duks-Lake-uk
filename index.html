@@ -851,6 +851,51 @@ ul.ip-cl{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 
 .ip-mx td.c-ret,.ip-mx td.c-miss{background:var(--warn-soft);color:var(--warn)}
 .ip-lg .c-sub i{background:var(--accent-soft);color:var(--accent-ink)}.ip-lg .c-rem i{background:var(--amber-soft);color:var(--amber-ink)}.ip-lg .c-empty i{background:var(--surface-2)}
 @media (max-width:639px){.ip-mx col.c-nm{width:120px}.ip-mx:not(.mon){min-width:120px!important}.ip-mx:not(.mon) col.c-d{width:48px}.ip-mx:not(.mon){width:max-content}.ip-mx td.nm small{max-width:110px}}
+
+/* ===== Зміни колективу (керівник) ===== */
+.sh-sum{border:0;text-align:left;display:flex;flex-direction:column;gap:4px;color:inherit;font:inherit;min-height:72px}
+.sh-sum b{font-family:var(--display);font-size:26px}.sh-sum.ok b{color:var(--ok)}.sh-sum.warn b{color:var(--warn)}
+.sh-sum[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--accent),var(--shadow)}
+.tl{display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.tl-lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:700}.tl-lg i{display:inline-block;width:18px;height:8px;border-radius:4px}
+.tl-row{display:grid;grid-template-columns:120px minmax(0,1fr);align-items:center;gap:10px;min-height:28px}
+.tl-n{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-tr{position:relative;height:22px;border-radius:6px;background:var(--surface-2)}.tl-tr.ax{background:none;height:18px}
+.tl-t{position:absolute;transform:translateX(-50%);font-size:11px;color:var(--muted);font-weight:700;white-space:nowrap}
+.tl-t:first-child{transform:none}.tl-t:last-of-type{transform:translateX(-100%)}
+.tl-plan{position:absolute;top:3px;bottom:3px;border-radius:4px;background:color-mix(in srgb,var(--accent) 22%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 45%,transparent)}
+.tl-fact{position:absolute;top:7px;bottom:7px;border-radius:3px;background:var(--ok)}.tl-fact.live{background:var(--ok);box-shadow:0 0 0 2px color-mix(in srgb,var(--ok) 35%,transparent)}
+.tl-lg .tl-plan,.tl-lg .tl-fact{position:static}
+.tl-now{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--warn);border-radius:1px}.tl-now span{position:absolute;top:-16px;left:4px;font-size:10px;font-weight:800;color:var(--warn);white-space:nowrap;background:var(--surface);padding:0 3px;border-radius:4px}
+.tl-tr.ax .tl-now{top:12px;bottom:-4px}
+.sh-grp{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.sh-grp h3{display:flex;align-items:center;gap:8px;font-size:14px;margin:0;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.sh-grp h3 em{font-style:normal;background:var(--surface-2);color:var(--fg);border-radius:999px;padding:0 8px;font-size:12px}
+.sh-grp.g-late h3{color:var(--warn)}.sh-grp.g-on h3{color:var(--ok)}
+.sh-cards{display:flex;flex-direction:column;gap:8px}
+.sh-card{display:grid;grid-template-columns:44px minmax(140px,1.2fr) minmax(0,1fr) minmax(0,1.4fr) auto;align-items:center;gap:12px;background:var(--surface);border-radius:16px;padding:10px 12px;box-shadow:var(--shadow);cursor:pointer}
+.sh-card:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sh-who{display:flex;flex-direction:column;min-width:0}.sh-who b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-parts{display:flex;flex-wrap:wrap;gap:6px}.sh-pt{font-size:13px;font-weight:800;padding:4px 8px;border-radius:8px;background:var(--surface-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sh-stw{display:flex;align-items:center;gap:10px;min-width:0;flex-wrap:wrap}
+.sh-st{font-size:13px;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.sh-st.late{background:var(--warn-soft);color:var(--warn)}.sh-st.on{background:var(--ok-soft);color:var(--ok)}.sh-st.done{background:var(--accent-soft);color:var(--accent-ink)}
+.sh-acts{display:flex;gap:6px}.sh-a{width:44px!important;height:44px!important;display:inline-flex;align-items:center;justify-content:center;color:var(--fg);text-decoration:none}
+.sh-off summary{cursor:pointer;font-weight:800;min-height:28px}
+.linkbtn{border:0;background:none;color:var(--accent);font:inherit;font-weight:800;padding:0;cursor:pointer;text-decoration:underline}
+.shx-h{margin-top:12px;flex-wrap:wrap;gap:10px}.shx-per{min-width:110px;text-align:center;font-variant-numeric:tabular-nums}.shx-note{margin:0 4px}
+.shx{padding:6px!important;display:flex;flex-direction:column}
+.shx-r{display:grid;grid-template-columns:minmax(180px,1.6fr) repeat(6,minmax(0,1fr));align-items:center;gap:8px;padding:10px;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;text-align:left;font-variant-numeric:tabular-nums}
+.shx-r.hd{font-size:12px;font-weight:800;color:var(--muted);cursor:default}.shx-r:not(.hd){cursor:pointer;border-radius:10px}.shx-r:not(.hd):hover{background:var(--surface-2)}.shx-r.open{background:var(--surface-2)}
+.shx-n{display:flex;align-items:center;gap:10px;min-width:0}.shx-n .av{width:34px;height:34px;font-size:13px}.shx-nm{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}.shx-nm b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shx-bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden}.shx-bar i{display:block;height:100%;background:var(--accent)}
+.shx-d{font-weight:800}.shx .pos{color:var(--ok)}.shx .amber{color:var(--amber-ink)}.shx .neg{color:var(--warn)}
+.shx-det{display:flex;flex-direction:column;gap:4px;padding:8px 12px 12px 56px;border-bottom:1px solid var(--line)}
+.shx-dr{display:grid;grid-template-columns:90px repeat(4,minmax(0,1fr));gap:8px;font-size:13px;font-variant-numeric:tabular-nums}
+@media (max-width:899px){.sh-card{grid-template-columns:44px minmax(0,1fr) auto;grid-template-areas:'av who acts' 'av parts parts' 'av st st'}.sh-card>.avwrap{grid-area:av;align-self:start}.sh-who{grid-area:who}.sh-parts{grid-area:parts}.sh-stw{grid-area:st}.sh-acts{grid-area:acts}}
+@media (max-width:640px){.tl-row{grid-template-columns:76px minmax(0,1fr);gap:6px}.tl-t{font-size:10px}.tl-t:nth-child(even){display:none}
+  .shx-r.hd{display:none}.shx-r{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 10px}.shx-r>.shx-n{grid-column:1/-1}.shx-r>span[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--muted);font-weight:700}.shx-r>.shx-d{font-size:20px;font-family:var(--display)}
+  .shx-det{padding-left:12px}.shx-dr{grid-template-columns:72px repeat(2,minmax(0,1fr))}.shx-dr span:nth-child(n+4){grid-column:2/-1}}
 /* ===== header glass bar ===== */
 header.top{position:sticky;top:8px!important;z-index:15;margin:-6px -6px 14px!important;padding:10px 10px 10px 16px!important;border-radius:24px;
   background:var(--glass)!important;border:1px solid var(--glass-brd);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
@@ -3878,21 +3923,22 @@ function shiftEdit(x,preset){const isNew=!x;const plan=canPlan();preset=preset||
   const dt=el('input',{id:'shDate',type:'date',value:x?x.date:(preset.date||ymd(new Date()))});
   const st=el('input',{id:'shSt',type:'time',value:x?hm(x.startAt):'08:00'});
   const en=el('input',{id:'shEn',type:'time',value:x&&x.endAt?hm(x.endAt):(x?'':'13:00')});
-  const sum=el('span',{class:'muted small'});
+  const sum=el('span',{class:'muted small'});const needRsn=isNew&&plan;const rsn=el('textarea',{id:'shRsn',placeholder:'напр. «забув телефон, підтвердив по дзвінку»',maxlength:'300'});
   const calc=()=>{if(!st.value||!en.value){sum.textContent=en.value?'':'Без часу завершення зміна вважатиметься відкритою';return;}let a=tsOf(dt.value,st.value),b=tsOf(dt.value,en.value);if(b<=a)b+=864e5;sum.textContent='Разом: '+fmtH((b-a)/3600e3)+(b-a>864e5/2?' (через північ)':'');};
   [dt,st,en].forEach(i=>i.addEventListener('input',calc));calc();
-  const save=el('button',{class:'btn',type:'button',style:'flex:1',onclick:()=>{if(!dt.value||!st.value){toast('Вкажіть дату й час початку');return;}
+  const save=el('button',{class:'btn',type:'button',style:'flex:1',onclick:()=>{if(!dt.value||!st.value){toast('Вкажіть дату й час початку');return;}if(needRsn&&!rsn.value.trim()){toast('Вкажіть причину ручної відмітки');rsn.focus();return;}
     const a=tsOf(dt.value,st.value);let b=en.value?tsOf(dt.value,en.value):null;if(b!=null&&b<=a)b+=864e5;
     if(b!=null&&b-a>20*3600e3){toast('Зміна довша за 20 годин — перевірте час');return;}
     const data={date:dt.value,startAt:a,endAt:b,edited:true,editedBy:S.myId,editedAt:Date.now()};
     closeSheet();
-    if(isNew)write(()=>S.db.collection('shifts').add({...data,staffId:who.value,by:S.myId,manual:true,startPhoto:null,endPhoto:null}),'Відмітку додано');
+    if(isNew)write(()=>S.db.collection('shifts').add({...data,staffId:who.value,by:S.myId,manual:true,reason:rsn.value.trim()||null,startPhoto:null,endPhoto:null}),'Відмітку додано вручну');
     else write(()=>S.db.doc('shifts/'+x.id).update(data),'Відмітку змінено');}},isNew?'Додати':'Зберегти');
   const w=x&&staffById(x.staffId);
   openSheet(el('h2',{text:isNew?'Додати відмітку':'Редагувати відмітку'}),
     isNew?el('label',{for:'shWho'},'Працівник',who):el('p',{class:'muted',style:'margin:0',text:(w?w.name+' · ':'')+(x.manual?'додано вручну':'відмітка з фото')+(x.edited?' · уже змінювалась':'')}),
     x?el('div',{class:'sh-ths'},thumbBtn(x.startPhoto,'Фото початку'),thumbBtn(x.endPhoto,'Фото завершення')):null,
     el('label',{for:'shDate'},'Дата',dt),
+    needRsn?el('label',{for:'shRsn'},'Причина ручної відмітки (обов’язково)',rsn):null,
     el('div',{class:'row',style:'gap:10px;flex-wrap:nowrap'},el('label',{for:'shSt',style:'flex:1'},'Початок',st),el('label',{for:'shEn',style:'flex:1'},'Кінець',en)),
     sum,
     el('div',{class:'row'},save,!isNew&&(plan||x.by===S.myId)?el('button',{class:'btn danger',type:'button',onclick:()=>confirmSheet('Видалити цю відмітку зміни?','Видалити',()=>write(async()=>{await S.db.doc('shifts/'+x.id).delete();for(const ph of [x.startPhoto,x.endPhoto])if(ph)await S.db.doc('photos/'+ph.id).delete().catch(()=>{});},'Відмітку видалено'))},'Видалити'):null),
@@ -3960,9 +4006,108 @@ function workerWeek(w,wk0){const days=Array.from({length:7},(_,i)=>addDays(wk0,i
     el('div',{class:'sh-stats'},el('div',{class:'card'},el('span',{class:'muted small',text:'Факт'}),el('b',{text:fmtH(fact)})),el('div',{class:'card'},el('span',{class:'muted small',text:'За графіком'}),el('b',{text:ph==null?'—':fmtH(ph)}))),
     el('div',{class:'stack',style:'gap:8px'},rows),
     el('div',{class:'row'},el('button',{class:'btn ghost',type:'button',style:'flex:1',onclick:()=>{closeSheet();setTimeout(()=>previewAs(w),60);}},svg(IC.eye),' Як бачить працівник'),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Закрити')));}
+/* SHX:BEGIN — «Зміни колективу» для керівника: облік з дати початку (settings/main.trackingStartDate),
+   відхилення лише по змінах, що вже минули; зведення дня, шкала дня, групи за станом, дії; таблиця тиждень/місяць */
+function trackStart(){const v=S.cfg&&S.cfg.trackingStartDate;return v&&/^\d{4}-\d{2}-\d{2}$/.test(v)?v:null;}
+function canTrackCfg(){return isDev()||hasAny(['director']);}
+function fmtHM(m){return pad(Math.floor(m/60))+':'+pad(m%60);}
+function fmtPart(p){const r=partRange(p);return r?fmtHM(r[0])+'–'+fmtHM(r[1]):p;}
+/* план на будь-який тиждень: поточний S.week або підписка на weeks/<пн> */
+function planAny(sid,date){const ws=mondayOf(parseYmd(date));const i=(parseYmd(date).getDay()+6)%7;
+  if(S.week&&S.weekStart===ws){return dayValue(sid,i);}S.wkC=S.wkC||{};
+  if(!(ws in S.wkC)){S.wkC[ws]=null;try{S.db.doc('weeks/'+ws).onSnapshot(d=>{S.wkC[ws]=d.exists?(d.data()||{}):{};if(S.tab==='shift')render();},()=>{});}catch(e){}return null;}
+  const c=S.wkC[ws];if(!c)return null;const d=c.days&&c.days[sid];return d?(d[i]||''):'';}
+/* показники одного дня: due — план, що вже мав бути відпрацьований (хв), rest — ще заплановано (хв) */
+function shDay(w,date){const z={due:0,all:0,rest:0,fact:0,lateN:0,lateM:0,miss:0,v:null,xs:[]};const ts=trackStart();if(ts&&date<ts)return z;
+  const today=ymd(new Date());const v=planAny(w.id,date);const rs=planMins(v);const xs=S.shifts.filter(x=>x.staffId===w.id&&x.date===date).sort((a,b)=>a.startAt-b.startAt);
+  const now=new Date();const nm=now.getHours()*60+now.getMinutes();const all=rs.reduce((a,r)=>a+r[1]-r[0],0);
+  let due=date<today?all:date>today?0:rs.reduce((a,r)=>a+Math.max(0,Math.min(r[1],nm)-r[0]),0);
+  const fact=xs.reduce((a,x)=>a+shiftHours(x),0);let lateN=0,lateM=0;xs.forEach(x=>{const l=lateMin(x,v);if(l!=null&&l>5){lateN++;lateM+=l;}});
+  const ended=date<today||(date===today&&rs.length&&nm>=rs[rs.length-1][1]);const miss=rs.length&&isWorking(v)&&ended&&!xs.length?1:0;
+  return {due,all,rest:all-due,fact,lateN,lateM,miss,v,xs};}
+function shRange(w,from,to){const t={due:0,all:0,rest:0,fact:0,lateN:0,lateM:0,miss:0,days:[]};for(let d=from;d<=to;d=addDays(d,1)){const x=shDay(w,d);['due','all','rest','fact','lateN','lateM','miss'].forEach(k=>t[k]+=x[k]);t.days.push([d,x]);}return t;}
+/* зведення дня */
+function shGroups(D){const sts=sortedStaff().filter(earns).map(w=>[w,dayStatus(w,D)]);const g={late:[],on:[],later:[],done:[],off:[],plan:[]};
+  sts.forEach(([w,s])=>{const k=s.k==='nochk'||s.k==='miss'?'late':s.k==='on'?'on':s.k==='wait'||(s.k==='done'&&s.part)?'later':s.k==='done'?'done':s.k==='plan'?'plan':'off';g[k].push([w,s]);});return g;}
+function shLateTxt(st,D){const rs=planMins(st.v);const today=ymd(new Date());if(st.k==='miss'||D<today)return 'Не вийшов на зміну';const now=new Date();const nm=now.getHours()*60+now.getMinutes();
+  const nx=st.xs.length;const r=rs[Math.min(nx,rs.length-1)]||rs[0];if(nm>=r[1]){const nxt=rs.find(q=>q[0]>nm);return 'Пропустив зміну '+fmtHM(r[0])+'–'+fmtHM(r[1])+(nxt?' · далі о '+fmtHM(nxt[0]):'');}const m=Math.max(0,nm-r[0]);return 'Запізнюється на '+fmtH(m/60)+' · зміна з '+fmtHM(r[0]);}
+function shNextTxt(st){const rs=planMins(st.v);const nx=st.xs.length;const r=rs[Math.min(nx,rs.length-1)]||rs[0];return r?'Зміна о '+fmtHM(r[0]):'Пізніше сьогодні';}
+function shRemind(w,st){const m=myStaff();if(!m)return;const rs=planMins(st.v);const r=rs[Math.min(st.xs.length,rs.length-1)]||rs[0];
+  const text='@'+w.name+' нагадування: ваша зміна '+(r?'з '+fmtHM(r[0]):'')+' — відмітьтесь у розділі «Моя зміна», будь ласка.';
+  confirmSheet('Надіслати нагадування в чат для '+w.name+'?','Надіслати нагадування',()=>write(()=>S.db.collection('chat').add({by:S.myId,staffId:m.id,text,mentions:[w.id],at:Date.now(),photoId:null,thumb:null,att:null,replyTo:null}),'Нагадування надіслано · '+w.name));}
+function shActs(w,st,D){if(!canPlan())return null;const tel=normPhone(w.phone||'');const b=(lbl,ic,fn,href)=>href?el('a',{class:'iconbtn sm sh-a',href,'aria-label':lbl,title:lbl},svg(ic)):el('button',{type:'button',class:'iconbtn sm sh-a','aria-label':lbl,title:lbl,onclick:e=>{e.stopPropagation();fn();}},svg(ic));
+  return el('div',{class:'sh-acts'},tel?b('Подзвонити '+w.name,'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',null,'tel:'+tel):null,
+    (st.k==='nochk'||st.k==='wait'||(st.k==='done'&&st.part))?b('Нагадати в чаті','<path d="M4 5h16v11H9l-5 4z"/><path d="M12 8v3M12 13h.01"/>',()=>shRemind(w,st)):null,
+    b('Відмітити вручну','<path d="M4 20h4L19 9l-4-4L4 16z"/>',()=>shiftEdit(null,{staffId:w.id,date:D,manualReason:true})),
+    b('Відкрити графік','<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/>',()=>go('schedule')));}
+function shCard(w,st,D,grp){const parts=st.v&&isWorking(st.v)?shiftParts(st.v):[];const first=st.xs[0],last=st.xs[st.xs.length-1];
+  const status=grp==='late'?el('span',{class:'sh-st late',text:shLateTxt(st,D)}):grp==='on'?el('span',{class:'sh-st on'},'На зміні з '+hm(st.xs.find(x=>!x.endAt).startAt)+' · ',liveH(st.xs.find(x=>!x.endAt).startAt)):
+    grp==='later'?el('span',{class:'sh-st',text:shNextTxt(st)}):grp==='done'?el('span',{class:'sh-st done',text:'Відпрацював '+fmtH(st.xs.reduce((a,x)=>a+shiftHours(x),0))}):el('span',{class:'sh-st',text:st.t});
+  return el('div',{class:'sh-card',role:'button',tabindex:'0','aria-label':w.name+': '+st.t,onclick:()=>workerWeek(w,mondayOf(parseYmd(D))),onkeydown:e=>{if(e.key==='Enter')workerWeek(w,mondayOf(parseYmd(D)));}},
+    avatarP(w),el('div',{class:'sh-who'},el('b',{text:w.name}),el('small',{class:'muted',text:roleName(w.role)||''})),
+    el('div',{class:'sh-parts'},parts.length?parts.map(p=>el('span',{class:'sh-pt',text:fmtPart(p)})):el('span',{class:'muted small',text:'без зміни'})),
+    el('div',{class:'sh-stw'},status,first?el('div',{class:'sh-ths'},thumbBtn(first.startPhoto,'Фото початку'),thumbBtn(last.endPhoto,'Фото завершення')):null),shActs(w,st,D));}
+/* шкала дня 07:00–21:00 */
+function shTimeline(D,rows){const H0=7*60,H1=21*60,span=H1-H0;const pct=m=>Math.max(0,Math.min(100,(m-H0)/span*100));const today=ymd(new Date());const now=new Date();const nm=now.getHours()*60+now.getMinutes();
+  const showNow=D===today&&nm>=H0&&nm<=H1;const nowI=lbl=>showNow?el('i',{class:'tl-now',style:'left:'+pct(nm)+'%','aria-hidden':'true'},lbl?el('span',{text:'зараз '+fmtHM(nm)}):null):null;
+  const axis=el('div',{class:'tl-row ax'},el('span',{class:'tl-n'}),el('div',{class:'tl-tr ax'},[7,9,11,13,15,17,19,21].map(h=>el('span',{class:'tl-t',style:'left:'+pct(h*60)+'%',text:pad(h)+':00'})),nowI(true)));
+  const body=rows.map(([w,st])=>{const rs=planMins(st.v);const tr=el('div',{class:'tl-tr'});
+    rs.forEach(r=>tr.append(el('i',{class:'tl-plan',style:'left:'+pct(r[0])+'%;width:'+(pct(r[1])-pct(r[0]))+'%',title:'План '+fmtHM(r[0])+'–'+fmtHM(r[1])})));
+    st.xs.forEach(x=>{const a=new Date(x.startAt);const am=a.getHours()*60+a.getMinutes();let bm;if(x.endAt){const b=new Date(x.endAt);bm=b.getHours()*60+b.getMinutes();if(bm<am)bm=H1;}else bm=D===today?nm:am;
+      tr.append(el('i',{class:'tl-fact'+(x.endAt?'':' live'),style:'left:'+pct(am)+'%;width:'+Math.max(.8,pct(bm)-pct(am))+'%',title:'Факт '+hm(x.startAt)+'–'+(x.endAt?hm(x.endAt):'зараз')}));});
+    const ni=nowI(false);if(ni)tr.append(ni);
+    return el('div',{class:'tl-row'},el('span',{class:'tl-n',text:w.name}),tr);});
+  return el('div',{class:'card tl'},el('div',{class:'row between'},el('b',{text:'Шкала дня'}),el('span',{class:'tl-lg'},el('i',{class:'tl-plan'}),'план',el('i',{class:'tl-fact'}),'факт')),axis,...body);}
+/* таблиця тиждень / місяць */
+function shTable(){const mode=S.shP||'week',off=S.shO||0;const t0=new Date();let from,to;
+  if(mode==='month'){const a=new Date(t0.getFullYear(),t0.getMonth()+off,1);from=ymd(a);to=ymd(new Date(a.getFullYear(),a.getMonth()+1,0));}else{from=addDays(mondayOf(t0),off*7);to=addDays(from,6);}
+  const ws=sortedStaff().filter(earns);const ts=trackStart();
+  const cls=d=>d>=0?'pos':d>=-1?'amber':'neg';
+  const head=el('div',{class:'row between shx-h'},el('div',{class:'row',style:'gap:10px'},el('h2',{text:mode==='month'?'Місяць':'Тиждень'}),
+      el('div',{class:'seg'},[['week','Тиждень'],['month','Місяць']].map(([k,l])=>el('button',{type:'button','aria-pressed':String(mode===k),onclick:()=>{S.shP=k;S.shO=0;render();}},l)))),
+    el('div',{class:'row',style:'gap:6px'},el('button',{class:'iconbtn sm',type:'button','aria-label':'Попередній період',onclick:()=>{S.shO=off-1;render();}},svg('<path d="M15 5l-7 7 7 7"/>')),el('b',{class:'shx-per',text:mode==='month'?perLabel(from.slice(0,7)):dm(from)+'–'+dm(to)}),el('button',{class:'iconbtn sm',type:'button','aria-label':'Наступний період',onclick:()=>{S.shO=off+1;render();}},svg('<path d="m9 5 7 7-7 7"/>'))));
+  const note=el('p',{class:'muted small shx-note'},ts?'Облік ведеться з '+dm(ts)+'.'+ts.slice(0,4)+'. Різниця — лише по змінах, що вже минули; майбутні — у «Ще заплановано».':'Дату початку обліку не задано — рахуються всі відмітки.',canTrackCfg()?el('button',{type:'button',class:'linkbtn',onclick:shCfgSheet},' Змінити дату'):null);
+  const hdr=el('div',{class:'shx-r hd'},['Працівник','План (на сьогодні)','Факт','Різниця','Запізнень','Пропусків','Ще заплановано'].map(x=>el('span',{text:x})));
+  const rows=ws.map(w=>{const r=shRange(w,from,to);const plan=r.due/60,diff=r.fact-plan,all=r.all/60;const open=S.shExp===w.id;
+    const row=el('button',{type:'button',class:'shx-r'+(open?' open':''),'aria-expanded':String(open),onclick:()=>{S.shExp=open?null:w.id;render();}},
+      el('span',{class:'shx-n'},avatar(w),el('span',{class:'shx-nm'},el('b',{text:w.name}),el('span',{class:'shx-bar',title:'факт / план періоду'},el('i',{style:'width:'+(all?Math.min(100,r.fact/all*100):0)+'%'})))),
+      el('span',{'data-l':'План','text':fmtH(plan)}),el('span',{'data-l':'Факт'},el('b',{text:fmtH(r.fact)})),
+      el('span',{'data-l':'Різниця',class:'shx-d '+cls(diff),text:(diff>=0?'+':'−')+fmtH(Math.abs(diff))}),
+      el('span',{'data-l':'Запізнень',class:r.lateN?'amber':'',text:r.lateN?r.lateN+' / '+r.lateM+' хв':'0'}),el('span',{'data-l':'Пропусків',class:r.miss?'neg':'',text:String(r.miss)}),
+      el('span',{'data-l':'Ще заплановано',class:'muted',text:r.rest?fmtH(r.rest/60):'—'}));
+    const det=open?el('div',{class:'shx-det'},r.days.filter(([,x])=>x.all||x.fact||x.miss).map(([d,x])=>el('div',{class:'shx-dr'},el('b',{text:DS[(parseYmd(d).getDay()+6)%7]+' '+dm(d)}),
+      el('span',{text:'план '+(x.all?fmtH(x.all/60):'—')}),el('span',{text:'факт '+fmtH(x.fact)}),el('span',{class:x.lateN?'amber':'',text:x.lateN?'запізн. '+x.lateM+' хв':''}),el('span',{class:x.miss?'neg':'',text:x.miss?'пропуск':(x.rest?'ще '+fmtH(x.rest/60):'')}))).concat(ts&&from<ts?[el('p',{class:'muted small',style:'margin:0',text:'Дні до '+dm(ts)+' не враховуються.'})]:[])):null;
+    return [row,det];});
+  return [head,note,el('div',{class:'card shx'},hdr,...rows.flat().filter(Boolean))];}
+function shCfgSheet(){const i=el('input',{id:'tsD',type:'date',value:trackStart()||ymd(new Date())});
+  openSheet(el('h2',{text:'Дата початку обліку'}),el('p',{class:'muted',style:'margin:0',text:'Відмітки, план і пропуски до цієї дати не рахуються в статистиці. Самі дані не видаляються.'}),el('label',{for:'tsD'},'Облік з',i),
+    el('div',{class:'btn-pair end'},el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'),el('button',{class:'btn',type:'button',onclick:()=>{if(!i.value){toast('Оберіть дату');return;}closeSheet();
+      write(()=>S.db.doc('settings/main').set({...(S.cfg||{}),trackingStartDate:i.value,updatedAt:Date.now(),updatedBy:S.myId||''}),'Облік змін ведеться з '+dm(i.value));}},'Зберегти')));}
+function shManagerView(){const out=[];const today=ymd(new Date());const D=S.shDay||today;const setDay=d=>{S.shDay=d;S.shF=null;render();};const dl=parseYmd(D);const lbl=DAYS[(dl.getDay()+6)%7]+', '+dm(D);
+  out.push(el('div',{class:'sh-nav card'},el('button',{class:'iconbtn',type:'button','aria-label':'Попередній день',onclick:()=>setDay(addDays(D,-1))},svg('<path d="M15 5l-7 7 7 7"/>')),
+    el('div',{class:'sh-nav-c'},el('b',{text:lbl}),el('span',{class:'muted small',text:D===today?'сьогодні':(D<today?'минулий день':'майбутній день')})),
+    D!==today?el('button',{class:'btn ghost sm',type:'button',onclick:()=>setDay(today)},'Сьогодні'):null,
+    el('button',{class:'iconbtn',type:'button','aria-label':'Наступний день',onclick:()=>setDay(addDays(D,1))},svg('<path d="m9 5 7 7-7 7"/>'))));
+  const g=shGroups(D);const F=S.shF||null;
+  const card=(k,lbl,n,cls)=>el('button',{type:'button',class:'card sh-sum'+(cls?' '+cls:''),'aria-pressed':String(F===k),onclick:()=>{S.shF=F===k?null:k;render();}},el('span',{class:'muted small',text:lbl}),el('b',{text:String(n)}));
+  out.push(el('div',{class:'sh-stats four'},card('on','На зміні зараз',g.on.length,'ok'),card('late','Запізнюються',g.late.length,g.late.length?'warn':''),card('later',D>today?'Заплановано':'Пізніше сьогодні',(D>today?g.plan:g.later).length,''),card('off','Вихідні',g.off.length,'')));
+  out.push(el('div',{class:'sh-tools'},canPlan()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>shiftEdit(null,{date:D,manualReason:true})},'+ Додати відмітку'):null,
+    el('button',{class:'btn ghost sm',type:'button',onclick:()=>pickWorker('Чий екран показати?',previewAs)},svg(IC.eye),' Як бачить працівник')));
+  const stale=S.shifts.filter(x=>!x.endAt&&Date.now()-x.startAt>=20*3600e3);
+  if(stale.length)out.push(el('div',{class:'card stack sh-list'},el('span',{class:'t-lbl',style:'padding-top:8px;color:var(--warn)',text:'Не завершені вчасно · '+stale.length}),stale.map(x=>shiftRow(x,true))));
+  const tlRows=[...g.late,...g.on,...g.later,...g.done,...g.plan].filter(([,s])=>planMins(s.v).length||s.xs.length);if(tlRows.length)out.push(shTimeline(D,tlRows));
+  const G=[['late','Запізнюються / не відмітились'],['on','На зміні зараз'],['later','Пізніше сьогодні'],['plan','Заплановано'],['done','Відпрацювали']];
+  G.forEach(([k,lbl])=>{if(F&&F!==k)return;const L=g[k];if(!L.length)return;out.push(el('section',{class:'sh-grp g-'+k},el('h3',{},el('span',{text:lbl}),el('em',{text:String(L.length)})),el('div',{class:'sh-cards'},L.map(([w,st])=>shCard(w,st,D,k)))));});
+  if((!F||F==='off')&&g.off.length)out.push(el('details',{class:'card sh-off',open:F==='off'?true:null},el('summary',{},'Вихідні · '+g.off.length),el('p',{style:'margin:8px 0 0',text:g.off.map(([w])=>w.name).join(', ')})));
+  if(!G.some(([k])=>g[k].length)&&!g.off.length)out.push(el('div',{class:'card empty'},el('p',{class:'muted',text:'На цей день у графіку нікого немає.'}),el('button',{class:'btn ghost',type:'button',onclick:()=>go('schedule')},'Відкрити графік')));
+  out.push(...shTable());
+  return out;}
+/* SHX:END */
+
 function viewShift(){const m=myStaff();const out=[];
   if(!m){out.push(claimCard());return out;}
   if(earns(m))return earnerView(m,false);
+  if(!S.shOld)return shManagerView();
   const today=ymd(new Date());const D=S.shDay||today;const wk0=mondayOf(parseYmd(D));const wk1=addDays(wk0,6);
   const earners=sortedStaff().filter(earns);const sts=earners.map(w=>[w,dayStatus(w,D)]);
   const setDay=d=>{S.shDay=d;render();};
