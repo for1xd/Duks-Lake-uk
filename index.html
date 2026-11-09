@@ -369,7 +369,7 @@ textarea{min-height:72px;resize:vertical}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (max-width:480px){.grid2{grid-template-columns:minmax(0,1fr)}}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding-bottom:var(--sab,0px);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
-nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+nav.tabs .in{max-width:760px;margin:0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
 nav.tabs button{border:0;background:transparent;min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:12px;font-weight:700;color:var(--muted)}
 nav.tabs button svg{width:22px;height:22px}
 nav.tabs button[aria-current="page"]{color:var(--accent)}
@@ -486,7 +486,7 @@ body.kb .composer{bottom:8px!important}
   nav.tabs{transition:left .35s cubic-bezier(.2,.8,.2,1),right .35s cubic-bezier(.2,.8,.2,1),padding .3s ease}
   nav.tabs button{transition:min-height .3s ease}
   nav.tabs .lbl{transition:opacity .2s ease}
-  body.chatmode nav.tabs{left:calc(50% - 128px)!important;right:calc(50% - 128px)!important;padding:4px!important;border-radius:24px}
+  body.chatmode nav.tabs{left:calc(50% - 160px)!important;right:calc(50% - 160px)!important;padding:4px!important;border-radius:24px}
   body.chatmode nav.tabs button{min-height:42px!important;border-radius:20px;position:relative;gap:0}
   body.chatmode nav.tabs .lbl{display:none}
   body.chatmode nav.tabs .tl .badge{position:absolute;top:2px;left:calc(50% + 6px);min-width:16px;height:16px;font-size:10px}
@@ -896,6 +896,61 @@ ul.ip-cl{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 
 @media (max-width:640px){.tl-row{grid-template-columns:76px minmax(0,1fr);gap:6px}.tl-t{font-size:10px}.tl-t:nth-child(even){display:none}
   .shx-r.hd{display:none}.shx-r{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 10px}.shx-r>.shx-n{grid-column:1/-1}.shx-r>span[data-l]::before{content:attr(data-l);display:block;font-size:11px;color:var(--muted);font-weight:700}.shx-r>.shx-d{font-size:20px;font-family:var(--display)}
   .shx-det{padding-left:12px}.shx-dr{grid-template-columns:72px repeat(2,minmax(0,1fr))}.shx-dr span:nth-child(n+4){grid-column:2/-1}}
+
+/* ===== Карта (MZ2) ===== */
+.mz-top{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap}
+.mz-lays{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.mz-tools{display:flex;gap:8px;margin-left:auto}
+.mz-chip{border:1.5px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;font-weight:700;font-size:13px;border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer;opacity:1}
+.mz-chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.mz-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-top:12px}
+.mz-wrap.side{grid-template-columns:minmax(0,1fr) 400px;align-items:start}
+.mz-card{padding:8px!important;display:flex;flex-direction:column;gap:8px}
+.mz-box{position:relative}
+.mz-stage{aspect-ratio:3/2;width:100%;max-height:calc(100vh - 220px);border-radius:12px;overflow:hidden;background:#0d1b20;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.mz-stage:active{cursor:grabbing}
+.mz-svg{width:100%;height:100%;display:block;min-width:0!important}
+.mz-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}.mz-zoom .iconbtn{background:var(--surface);box-shadow:var(--shadow);width:44px!important;height:44px!important}
+.mz-z{cursor:pointer}
+.mz-z polygon{stroke-width:calc(2px * var(--k));stroke-linejoin:round;fill-opacity:.25}
+.mz-z.t-g polygon{fill:#2fd06a;stroke:#3dff7a}.mz-z.t-s polygon{fill:#c3ccd1;stroke:#ffffff}.mz-z.t-w polygon{fill:#2bb3c9;stroke:#5fe3f5}
+.mz-z.t-p polygon{fill:#4a9cf0;stroke:#7ab8ff}.mz-z.t-b polygon{fill:#56636e;stroke:#cfd8df}.mz-z.t-poi polygon{fill:#f2a33a;fill-opacity:.1;stroke:#ffc370;stroke-dasharray:calc(4px * var(--k)) calc(3px * var(--k))}
+.mz-z:hover polygon{fill-opacity:.45}.mz-z.sel polygon{fill-opacity:.5;stroke:#fff;stroke-width:calc(3.5px * var(--k))}
+.mz-z.dim,.mz-n.dim{opacity:.28}
+.mz-svg.edit .mz-z polygon{fill-opacity:.18}
+.mz-n{cursor:pointer}.mz-n rect{fill:#fff;filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))}.mz-n text{font:800 11px Manrope,system-ui,sans-serif;fill:#0F2A33;text-anchor:middle}
+.mz-n .mz-ring{fill:none;stroke-width:3;filter:none}.mz-n.s-open .mz-ring{stroke:#F2A33A}.mz-n.s-over .mz-ring{stroke:#E5484D}.mz-n.s-done .mz-ring{stroke:#2FBF71}
+.mz-n .mz-ok{fill:#2FBF71;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px}
+.mz-n.sel rect:not(.mz-ring){fill:#0F2A33}.mz-n.sel text{fill:#fff}
+@media (prefers-reduced-motion:no-preference){.mz-n.s-over .mz-ring{animation:mzPulse 1.4s ease-in-out infinite}}
+@keyframes mzPulse{50%{opacity:.25}}
+.mz-poi text,.mz-st text{font:800 10px Manrope,system-ui,sans-serif;fill:#fff;text-anchor:middle;paint-order:stroke;stroke:rgba(0,0,0,.75);stroke-width:3px;pointer-events:none}
+.mz-st text{font-size:12px;letter-spacing:.08em;text-transform:uppercase;fill:#ffe9b3}
+.mz-v{fill:#fff;stroke:#0F2A33;stroke-width:calc(2px * var(--k));cursor:move}.mz-v.on{fill:#F2A33A}.mz-mid{fill:#fff;fill-opacity:.7;stroke:#0F2A33;stroke-width:calc(1px * var(--k));cursor:copy}
+.mz-draft{fill:rgba(242,163,58,.2);stroke:#F2A33A;stroke-width:calc(2px * var(--k));stroke-dasharray:calc(5px * var(--k))}
+.mz-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;font-weight:700;color:var(--muted);padding:2px 4px}
+.mz-leg span{display:inline-flex;align-items:center;gap:6px}.mz-leg i{width:14px;height:10px;border-radius:3px;background:var(--zc);opacity:.85}
+.mz-ls i{width:12px;height:12px;border-radius:50%;background:none;border:3px solid}.mz-ls i.s-open{border-color:#F2A33A}.mz-ls i.s-over{border-color:#E5484D}.mz-ls i.s-done{border-color:#2FBF71}
+.mz-pan{display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 140px);overflow-y:auto;position:sticky;top:96px}
+.mz-sheet .mz-pan{box-shadow:none;padding:0;max-height:none;position:static}
+.mz-ph{display:flex;align-items:flex-start;gap:12px}.mz-ph h2{margin:0;font-size:18px}
+.mz-badge{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 8px;border-radius:999px;background:#fff;color:#0F2A33;font-weight:800;box-shadow:inset 0 0 0 3px var(--zc,#2fd06a);flex:none;font-variant-numeric:tabular-nums}
+.mz-sub{font-size:13px;margin:4px 0 0;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.mz-done{display:flex;flex-direction:column;gap:8px}.mz-dr{display:flex;align-items:center;justify-content:space-between;gap:10px}.mz-dr span{display:flex;flex-direction:column;min-width:0}.mz-th{display:flex;gap:6px}.mz-th .thumb{width:48px;height:48px}
+.mz-go{min-height:48px}
+.mz-chipsel{display:flex;flex-wrap:wrap;gap:6px}.mz-cz{border:0;background:var(--surface-2);border-radius:999px;padding:6px 12px;min-height:36px;font:inherit;font-weight:700;color:var(--fg);cursor:pointer}
+.mz-edbar{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;margin-top:12px;box-shadow:inset 0 0 0 2px var(--amber),var(--shadow)}
+.mz-tpl{display:flex;flex-wrap:wrap;gap:6px}
+.mz-who{display:flex;flex-wrap:wrap;gap:8px}.mz-who .pk.off{opacity:.55}.mz-who small{font-weight:700}.mz-on{color:var(--ok)}
+.mz-my{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.mz-mt{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:14px;background:var(--surface-2)}
+.mz-mtz{display:flex;align-items:center;gap:12px;border:0;background:none;color:inherit;font:inherit;text-align:left;padding:0;cursor:pointer}.mz-mtz span:last-child{display:flex;flex-direction:column}
+.mz-ma{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.mz-ma .btn{min-height:44px}
+.mz-tl{display:flex;flex-direction:column;gap:10px}.mz-ql{max-width:420px}
+.mz-tbl{min-width:0!important;width:100%;border-collapse:collapse}.mz-tbl th{text-transform:none;letter-spacing:0;text-align:left}.mz-tbl td{text-align:left}
+.mz-tbl tbody tr{cursor:pointer}.mz-tbl tbody tr:hover,.mz-tbl tbody tr.sel{background:var(--surface-2)}.mz-tbl tbody tr:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}.mz-open{font-weight:800;color:var(--amber-ink)}
+@media (max-width:899px){.mz-wrap.side{grid-template-columns:minmax(0,1fr)}.mz-tools{margin-left:0}.mz-lays{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex-basis:100%}.mz-lays::-webkit-scrollbar{display:none}.mz-chip{flex:none}
+  .mz-stage{aspect-ratio:auto;height:calc(100dvh - 330px);min-height:320px;max-height:none}}
 /* ===== header glass bar ===== */
 header.top{position:sticky;top:8px!important;z-index:15;margin:-6px -6px 14px!important;padding:10px 10px 10px 16px!important;border-radius:24px;
   background:var(--glass)!important;border:1px solid var(--glass-brd);-webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
@@ -3455,8 +3510,8 @@ const TABS=[
   {id:'today',name:'Сьогодні',icon:'<path d="M3 10.5 12 3l9 7.5V21h-6v-6H9v6H3z"/>'},
   {id:'shift',name:'Моя зміна',short:'Зміна',icon:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/>'},
   {id:'schedule',name:'Графік',icon:'<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/>'},
-  {id:'map',name:'Карта',icon:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'},
   {id:'tasks',name:'Задачі',icon:'<path d="m4 12 4 4 12-12"/><path d="M4 20h16"/>'},
+  {id:'map',name:'Карта',icon:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'},
   {id:'chat',name:'Чат',icon:'<path d="M4 5h16v11H9l-5 4z"/>'},
   {id:'team',name:'Колектив',icon:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c1.8.7 3 2.4 3.5 5.2"/>'},
   {id:'uk',name:'Facility відділ',icon:'<path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-5h6v5"/><path d="M9 11h.01M15 11h.01"/>'},
@@ -3467,9 +3522,9 @@ const TABS=[
   {id:'support',name:'Підтримка',icon:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m5.6 5.6 3.6 3.6M14.8 14.8l3.6 3.6M14.8 9.2l3.6-3.6M5.6 18.4l3.6-3.6"/>'}
 ];
 const IS_TOUCH=window.matchMedia('(pointer:coarse)').matches;
-const BAR=['today','schedule','tasks','chat'];
-const NAV_GROUPS=[['Робота',['today','shift','schedule','tasks']],['Facility',['uk','meet','sos','pm']],['Спілкування',['chat','team','fun']],['Допомога',['support']]];
-function updBar(){const arr=earns(myStaff())?['today','shift','schedule','tasks','chat']:['today','schedule','tasks','chat'];BAR.splice(0,BAR.length,...arr);}
+const BAR=['today','schedule','tasks','map','chat'];
+const NAV_GROUPS=[['Робота',['today','shift','schedule','tasks','map']],['Facility',['uk','meet','sos','pm']],['Спілкування',['chat','team','fun']],['Допомога',['support']]];
+function updBar(){const arr=earns(myStaff())?['today','shift','tasks','map','chat']:['today','schedule','tasks','map','chat'];BAR.splice(0,BAR.length,...arr);}
 function isUK(){return hasAny(['manager','senior','engineer','director','ceo','dev']);}
 function tabVisible(id){if(id==='shift')return !!myStaff();if(id==='pm')return pmCan();if(id==='uk')return isUK()||inspIsWalker();if(id==='sos')return isUK();if(id==='meet')return canMeet();return true;}
 function tabName(t){return t.id==='shift'?(earns(myStaff())?'Моя зміна':'Зміни колективу'):t.name;}
@@ -3550,6 +3605,7 @@ async function boot(){
   if(!db){renderNoDb();return;}
   db.collection('staff').onSnapshot(q=>{S.staff=q.docs.map(d=>({id:d.id,...d.data()}));const first=!S.loaded.staff;S.loaded.staff=true;if(first)beat();render();},e=>fail(e));
   db.collection('tasks').onSnapshot(q=>{S.tasks=q.docs.map(d=>({id:d.id,...d.data()}));S.loaded.tasks=true;render();},e=>fail(e));
+  db.collection('map_zones').onSnapshot(q=>{S.mzDb=q.docs.map(d=>({id:d.id,...d.data()})).filter(z=>Array.isArray(z.polygon)&&z.polygon.length);if(S.tab==='map'&&!S.mzEdit)render();},()=>{});
   db.collection('inspections').onSnapshot(q=>{S.insp={};q.docs.forEach(d=>{S.insp[d.id]={id:d.id,...d.data()};});S.inspLoaded=true;if(S.tab==='uk')render();renderTabs();},()=>{S.inspLoaded=true;});
   db.collection('buildings_assignments').onSnapshot(q=>{S.inspAs={};q.docs.forEach(d=>{S.inspAs[d.id]=d.data()||{};});if(S.tab==='uk')render();renderTabs();},()=>{});
   db.collection('inspection_exports').onSnapshot(q=>{S.inspEx=q.docs.map(d=>({id:d.id,...d.data()}));},()=>{});
@@ -3628,7 +3684,7 @@ function pageSubText(){const m=myStaff();const t=S.tab;const today=ymd(new Date(
   if(t==='meet')return 'Облік, SOS і планове ТО · звіт у PDF';
   if(t==='pm'){const u=pmUrgent().length,s10=pmSoon().length;return u?u+' ТО потребують уваги':s10?s10+' ТО найближчі 10 днів':'Графік обслуговування систем';}
   if(t==='sos'){const o=(S.sos||[]).filter(x=>x.status!=='done').length;return o?o+' відкритих ситуацій':'Відкритих ситуацій немає';}
-  if(t==='map')return 'Зони території · '+MZ.length+' зон';
+  if(t==='map')return 'Зони території · '+mzAll().filter(mzTaskable).length+' зон';
   if(t==='tasks'){const n=S.tasks.filter(x=>!isDone(x)).length;const k=n%10,h=n%100;return n?n+(k===1&&h!==11?' відкрита задача':(k>=2&&k<=4&&(h<12||h>14)?' відкриті задачі':' відкритих задач')):'Усі задачі виконано';}
   if(t==='chat'){if(S.room&&!WIDE2.matches)return roomMeta(S.room).desc||'';const n=sortedStaff().filter(x=>x.userId&&isOnline(x.id)).length;return myRooms().length+' чатів · '+n+' у мережі';}
   if(t==='team')return S.staff.length+' людей у колективі';
@@ -5954,31 +6010,161 @@ const MZ=[
  ['b','КР','Креденс / Культура',[[120,397],[202,397],[202,462],[120,462]]],
  ['b','РБ','Реберня',[[120,307],[200,307],[200,382],[120,382]]]
 ].map(([t,n,name,pts])=>({id:t+'-'+n,t,n,name,pts}));
-function mzById(id){return MZ.find(z=>z.id===id);}
-function mzC(z){const n=z.pts.length;let x=0,y=0;z.pts.forEach(p=>{x+=p[0];y+=p[1];});return [x/n,y/n];}
-function mzTasks(id){return S.tasks.filter(t=>t.zone===id&&!isDone(t));}
-function zoneTag(t){const z=t.zone&&mzById(t.zone);if(!z)return null;return el('button',{type:'button',class:'zone-tag t-'+z.t,onclick:e=>{e.stopPropagation();S.mzSel=z.id;go('map');}},el('i'),z.name);}
-function mapView(){const out=[];const types=S.mzT||{g:1,s:1,p:1,b:1};S.mzT=types;const z=S.mzZoom||1;const can=canPlan();
-  out.push(el('div',{class:'mz-bar'},el('div',{class:'mz-chips'},Object.entries(MZ_T).map(([k,v])=>el('button',{type:'button',class:'mz-chip','aria-pressed':String(!!types[k]),style:'--zc:'+v.c,onclick:()=>{types[k]=!types[k];render();}},el('i'),v.n,el('b',{text:String(MZ.filter(x=>x.t===k).length)})))),
-    el('div',{class:'pk-zoom'},el('button',{class:'iconbtn',type:'button','aria-label':'Зменшити',onclick:()=>{S.mzZoom=Math.max(1,z-.5);render();}},svg('<path d="M5 12h14"/>')),el('span',{text:Math.round(z*100)+'%'}),el('button',{class:'iconbtn',type:'button','aria-label':'Збільшити',onclick:()=>{S.mzZoom=Math.min(3,z+.5);render();}},svg('<path d="M12 5v14M5 12h14"/>')))));
-  let sv='<svg viewBox="0 0 960 640" xmlns="http://www.w3.org/2000/svg" class="mz-svg"><image href="'+SITE_IMG+'" width="960" height="640"/>';
-  MZ.forEach(q=>{if(!types[q.t])return;const n=mzTasks(q.id).length;const [cx,cy]=mzC(q);const small=q.t!=='b'&&q.t!=='p';
-    sv+='<g class="mz-z t-'+q.t+(S.mzSel===q.id?' sel':'')+(n?' has':'')+'" data-id="'+q.id+'"><polygon points="'+q.pts.map(p=>p.join(',')).join(' ')+'"/>'+
-      '<text x="'+cx.toFixed(1)+'" y="'+(cy+3.5).toFixed(1)+'" class="'+(small?'sm':'')+'">'+q.n+'</text>'+(n?'<circle cx="'+(cx+10).toFixed(1)+'" cy="'+(cy-8).toFixed(1)+'" r="6.5" class="mz-b"/><text x="'+(cx+10).toFixed(1)+'" y="'+(cy-5.3).toFixed(1)+'" class="mz-bt">'+n+'</text>':'')+'</g>';});
-  sv+='</svg>';const stage=el('div',{class:'mz-stage'});stage.innerHTML=sv;stage.firstChild.style.width=(z*100)+'%';
-  stage.addEventListener('click',e=>{const g=e.target.closest('.mz-z');if(!g)return;S.mzSel=g.dataset.id;mzSheet(g.dataset.id);render();});
-  stage.addEventListener('pointermove',e=>{const g=e.target.closest('.mz-z');if(!g||e.pointerType!=='mouse'){dzTipOff();return;}const q=mzById(g.dataset.id);const n=mzTasks(q.id).length;dzTip(e,[el('b',{text:q.name}),el('div',{text:MZ_T[q.t].n}),el('div',{class:'muted',text:n?n+' відкритих задач':'задач немає'})]);});
-  stage.addEventListener('pointerleave',dzTipOff);
-  out.push(el('div',{class:'card mz-card'},el('div',{class:'mz-scroll'},stage),el('p',{class:'muted small',style:'margin:0',text:'Натисніть на зону — побачите її задачі'+(can?' і зможете призначити нову.':'.')+' Червоний кружечок — кількість відкритих задач.'})));
-  const withT=MZ.filter(q=>mzTasks(q.id).length).sort((a,b)=>mzTasks(b.id).length-mzTasks(a.id).length);
-  if(withT.length)out.push(el('div',{class:'card mz-list'},el('b',{text:'Зони із задачами'}),el('div',{class:'mz-li-g'},withT.map(q=>el('button',{type:'button',class:'mz-li t-'+q.t,onclick:()=>{S.mzSel=q.id;mzSheet(q.id);render();}},el('i'),el('span',{text:q.name}),el('b',{text:String(mzTasks(q.id).length)}))))));
-  if(S.mzSel)setTimeout(()=>{const sc=document.querySelector('.mz-scroll'),g=document.querySelector('.mz-z.sel');if(sc&&g&&sc.scrollWidth>sc.clientWidth){const r=g.getBoundingClientRect(),s=sc.getBoundingClientRect();sc.scrollLeft+=r.left-s.left-s.width/2+r.width/2;}},60);
+/* MZ2:BEGIN — карта території: зони з db (map_zones), запасний варіант — розмітка MZ у коді.
+   Координати — простір фото 960×640. Масштаб/переміщення через viewBox; шари; статуси; панель зони; кілька зон; редактор; вигляд працівника; список */
+const MZ_TY={g:{n:'Газон / клумба',c:'#2fd06a',l:'zones'},s:{n:'Доріжка / плитка',c:'#c3ccd1',l:'zones'},w:{n:'Берег / озеро',c:'#2bb3c9',l:'zones'},p:{n:'Паркінг',c:'#4a9cf0',l:'park'},b:{n:'Будівля',c:'#8a97a3',l:'bld'},poi:{n:'Заклад / орієнтир',c:'#f2a33a',l:'poi'},street:{n:'Вулиця',c:'#ffffff',l:'poi'}};
+const MZ_POI_DEF=[['poi','РБ','Реберня'],['poi','КР','Креденс / Культура'],['poi','КН','Книгарня / Спіро паста / Імперо / Ультра шоп'],['poi','БЕ','Бедбой / Егерзунд']];
+const MZ_EXTRA=[{id:'poi-lake',type:'poi',number:'',name:'Озеро',polygon:[[560,296]]},{id:'poi-fountain',type:'poi',number:'',name:'Фонтан',polygon:[[552,362]]},{id:'poi-bridge',type:'poi',number:'',name:'Міст',polygon:[[446,372]]},
+  {id:'st-stryiska',type:'street',number:'',name:'вул. Стрийська',polygon:[[180,632],[420,632]]},{id:'st-naukova',type:'street',number:'',name:'вул. Наукова',polygon:[[884,180],[884,330]]}];
+function mzDefaults(){const poi=new Set(MZ_POI_DEF.map(x=>x[1]));return MZ.map(z=>({id:z.id,number:z.n,name:z.name,type:z.t==='b'&&poi.has(z.n)?'poi':z.t,polygon:z.pts})).concat(MZ_EXTRA);}
+function mzAll(){return (S.mzDb&&S.mzDb.length)?S.mzDb:mzDefaults();}
+function mzGet(id){return mzAll().find(z=>z.id===id);}
+function mzById(id){const z=mzGet(id);return z?{id:z.id,t:z.type,n:z.number,name:z.name,pts:z.polygon}:null;}
+function mzCen(z){const p=z.labelPos||null;if(p)return p;const pts=z.polygon||[];if(pts.length<3){const a=pts[0]||[0,0],b=pts[pts.length-1]||a;return [(a[0]+b[0])/2,(a[1]+b[1])/2];}
+  let A=0,x=0,y=0;for(let i=0;i<pts.length;i++){const [x0,y0]=pts[i],[x1,y1]=pts[(i+1)%pts.length];const f=x0*y1-x1*y0;A+=f;x+=(x0+x1)*f;y+=(y0+y1)*f;}if(Math.abs(A)<1e-6){const n=pts.length;return [pts.reduce((a,p)=>a+p[0],0)/n,pts.reduce((a,p)=>a+p[1],0)/n];}return [x/(3*A),y/(3*A)];}
+function mzC(z){return mzCen({polygon:z.pts||z.polygon,labelPos:z.labelPos});}
+function mzTaskable(z){return z&&z.type!=='poi'&&z.type!=='street';}
+function tZones(t){return (t.zones&&t.zones.length)?t.zones:(t.zone?[t.zone]:[]);}
+function mzTasksAll(id){return S.tasks.filter(t=>tZones(t).includes(id));}
+function mzTasks(id){return mzTasksAll(id).filter(t=>!isDone(t));}
+function mzStatus(id){const today=ymd(new Date());const L=mzTasksAll(id);const open=L.filter(t=>!isDone(t));
+  if(open.some(t=>t.due&&t.due<today))return 'over';if(open.length)return 'open';if(L.some(t=>isDone(t)&&t.doneAt&&ymd(new Date(t.doneAt))===today))return 'done';return 'none';}
+function canZoneEdit(){return isDev()||hasAny(['director']);}
+function zoneTag(t){const zs=tZones(t).map(mzById).filter(Boolean);if(!zs.length)return null;const z=zs[0];
+  return el('button',{type:'button',class:'zone-tag t-'+z.t,title:'Показати на карті',onclick:e=>{e.stopPropagation();S.mzSel=z.id;S.mzMulti=null;S.mzFocus=z.id;go('map');}},el('i'),zs.length>1?'Зони '+zs.map(x=>x.n).join(', '):z.name,' · на карті');}
+/* --- стан карти --- */
+function mzVB(){return S.mzVB||(S.mzVB=[0,0,960,640]);}
+function mzFit(){S.mzVB=[0,0,960,640];mzApply();}
+function mzApply(){const sv=document.querySelector('.mz-svg');if(!sv)return;const v=mzVB();sv.setAttribute('viewBox',v.join(' '));const k=v[2]/960;sv.style.setProperty('--k',k);
+  sv.querySelectorAll('[data-lx]').forEach(g=>g.setAttribute('transform','translate('+g.dataset.lx+' '+g.dataset.ly+') scale('+k+')'));}
+function mzZoomAt(f,px,py){const v=mzVB();let w=Math.max(80,Math.min(960,v[2]/f));const h=w*640/960;const x=px-(px-v[0])*(w/v[2]),y=py-(py-v[1])*(h/v[3]);S.mzVB=[Math.max(-200,Math.min(960-w+200,x)),Math.max(-200,Math.min(640-h+200,y)),w,h];mzApply();}
+function mzFocusOn(id){const z=mzGet(id);if(!z)return;const xs=z.polygon.map(p=>p[0]),ys=z.polygon.map(p=>p[1]);const cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2;
+  const w=Math.max(220,Math.min(960,(Math.max(...xs)-Math.min(...xs))*3));S.mzVB=[cx-w/2,cy-w*640/960/2,w,w*640/960];mzApply();}
+function mzPt(sv,e){const pt=sv.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const m=sv.getScreenCTM();if(!m)return [0,0];const r=pt.matrixTransform(m.inverse());return [r.x,r.y];}
+/* --- рендер SVG --- */
+function mzSvg(opt){const L=S.mzL||(S.mzL={zones:1,bld:1,park:1,poi:1,only:0});const zs=mzAll();const me=myStaff();const worker=opt.worker;
+  const mine=worker&&me?new Set(S.tasks.filter(t=>!isDone(t)&&asg(t).includes(me.id)).flatMap(tZones)):null;const multi=S.mzMulti;const k=mzVB()[2]/960;
+  const img=(S.cfg&&S.cfg.mapImg&&S.cfg.mapImg.id)?'/_blob/'+S.cfg.mapImg.id:SITE_IMG;
+  let sv='<svg class="mz-svg'+(S.mzEdit?' edit':'')+'" viewBox="'+mzVB().join(' ')+'" style="--k:'+k+'" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Карта території з зонами"><image href="'+img+'" width="960" height="640" preserveAspectRatio="none"/>';
+  const lbls=[];
+  zs.forEach(z=>{const ty=MZ_TY[z.type]||MZ_TY.g;if(!L[ty.l])return;const st=mzTaskable(z)?mzStatus(z.id):'none';if(L.only&&st==='none'&&S.mzSel!==z.id)return;
+    const [cx,cy]=mzCen(z);const dim=mine&&!mine.has(z.id);const sel=S.mzSel===z.id||(multi&&multi.has(z.id));
+    if(z.type==='street'){const a=z.polygon[0],b=z.polygon[z.polygon.length-1];const ang=Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;lbls.push('<g class="mz-st" data-lx="'+cx.toFixed(1)+'" data-ly="'+cy.toFixed(1)+'" transform="translate('+cx.toFixed(1)+' '+cy.toFixed(1)+') scale('+k+')"><text transform="rotate('+(Math.abs(ang)>90?ang-180:ang).toFixed(1)+')">'+esc(z.name)+'</text></g>');return;}
+    if(z.type==='poi'&&z.polygon.length<3){lbls.push('<g class="mz-poi" data-lx="'+cx.toFixed(1)+'" data-ly="'+cy.toFixed(1)+'" transform="translate('+cx.toFixed(1)+' '+cy.toFixed(1)+') scale('+k+')"><text>'+esc(z.name)+'</text></g>');return;}
+    sv+='<g class="mz-z t-'+z.type+(sel?' sel':'')+(dim?' dim':'')+' s-'+st+'" data-id="'+z.id+'"><polygon points="'+z.polygon.map(p=>p.join(',')).join(' ')+'"/></g>';
+    if(z.type==='poi')lbls.push('<g class="mz-poi" data-lx="'+cx.toFixed(1)+'" data-ly="'+cy.toFixed(1)+'" transform="translate('+cx.toFixed(1)+' '+cy.toFixed(1)+') scale('+k+')"><text>'+esc(z.name)+'</text></g>');
+    else{const n=String(z.number||'');const wd=Math.max(18,8+n.length*7);lbls.push('<g class="mz-n s-'+st+(dim?' dim':'')+(sel?' sel':'')+'" data-id="'+z.id+'" data-lx="'+cx.toFixed(1)+'" data-ly="'+cy.toFixed(1)+'" transform="translate('+cx.toFixed(1)+' '+cy.toFixed(1)+') scale('+k+')">'+
+      (st!=='none'?'<rect class="mz-ring" x="'+(-wd/2-3)+'" y="-12" width="'+(wd+6)+'" height="24" rx="12"/>':'')+'<rect x="'+(-wd/2)+'" y="-9" width="'+wd+'" height="18" rx="9"/><text y="4">'+esc(n)+'</text>'+(st==='done'?'<text class="mz-ok" x="'+(wd/2+5)+'" y="-6">✓</text>':'')+'</g>');}});
+  sv+=lbls.join('');
+  if(S.mzEdit&&S.mzSel){const z=mzGet(S.mzSel);if(z&&z.polygon.length>=2){const r=6*k;z.polygon.forEach((p,i)=>{const q=z.polygon[(i+1)%z.polygon.length];sv+='<circle class="mz-mid" data-i="'+i+'" cx="'+((p[0]+q[0])/2)+'" cy="'+((p[1]+q[1])/2)+'" r="'+(r*.7)+'"/>';});
+    z.polygon.forEach((p,i)=>{sv+='<circle class="mz-v'+(S.mzVi===i?' on':'')+'" data-i="'+i+'" cx="'+p[0]+'" cy="'+p[1]+'" r="'+r+'"/>';});}}
+  if(S.mzNew&&S.mzNew.length){const r=5*k;sv+='<polyline class="mz-draft" points="'+S.mzNew.map(p=>p.join(',')).join(' ')+'"/>'+S.mzNew.map(p=>'<circle class="mz-v" cx="'+p[0]+'" cy="'+p[1]+'" r="'+r+'"/>').join('');}
+  return sv+'</svg>';}
+function esc(t){return String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+/* --- взаємодія: клік, масштаб, переміщення, редагування вершин --- */
+function mzBind(stage){const sv=stage.querySelector('svg');let pts=new Map(),drag=null,moved=false,pinch=null,last=0;
+  stage.addEventListener('wheel',e=>{e.preventDefault();const [x,y]=mzPt(sv,e);mzZoomAt(e.deltaY<0?1.2:1/1.2,x,y);},{passive:false});
+  stage.addEventListener('pointerdown',e=>{stage.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;
+    const v=e.target.closest&&e.target.closest('.mz-v');const mid=e.target.closest&&e.target.closest('.mz-mid');if(v||mid)e.stopPropagation();
+    if(S.mzEdit&&S.mzSel&&mid){const z=mzGet(S.mzSel);const i=+mid.dataset.i;const p=z.polygon[i],q=z.polygon[(i+1)%z.polygon.length];z.polygon.splice(i+1,0,[(p[0]+q[0])/2,(p[1]+q[1])/2]);S.mzVi=i+1;S.mzDirty=1;drag={vert:i+1};mzRedraw();return;}
+    if(S.mzEdit&&S.mzSel&&v&&v.dataset.i!=null){drag={vert:+v.dataset.i};S.mzVi=+v.dataset.i;return;}
+    if(pts.size===2){const a=[...pts.values()];pinch={d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y),vb:mzVB().slice()};drag=null;return;}
+    drag={pan:true,x:e.clientX,y:e.clientY,vb:mzVB().slice()};});
+  stage.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId)){const g=e.target.closest&&e.target.closest('[data-id]');if(g&&e.pointerType==='mouse'&&!S.mzEdit){const z=mzGet(g.dataset.id);if(z){const n=mzTasks(z.id).length;dzTip(e,[el('b',{text:(z.number?'Зона '+z.number+' · ':'')+z.name}),el('div',{text:(MZ_TY[z.type]||{}).n||''}),mzTaskable(z)?el('div',{class:'muted',text:n?n+' '+plural(n,'задача','задачі','задач'):'без відкритих задач'}):null]);}}else dzTipOff();return;}
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pinch&&pts.size===2){const a=[...pts.values()];const d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);const f=d/pinch.d;const c={clientX:(a[0].x+a[1].x)/2,clientY:(a[0].y+a[1].y)/2};S.mzVB=pinch.vb.slice();const [x,y]=mzPt(sv,c);mzZoomAt(f,x,y);moved=true;return;}
+    if(!drag)return;if(drag.vert!=null){const [x,y]=mzPt(sv,e);const z=mzGet(S.mzSel);z.polygon[drag.vert]=[Math.round(x*10)/10,Math.round(y*10)/10];S.mzDirty=1;moved=true;mzRedraw();return;}
+    if(drag.pan){const r=sv.getBoundingClientRect();const v=drag.vb;const s=Math.max(v[2]/r.width,v[3]/r.height);const dx=(e.clientX-drag.x)*s,dy=(e.clientY-drag.y)*s;if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>4)moved=true;S.mzVB=[v[0]-dx,v[1]-dy,v[2],v[3]];mzApply();}});
+  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;const was=drag;drag=null;if(moved){if(was&&was.vert!=null)mzSaveSoon();return;}
+    if(was&&was.vert!=null)return;const now=Date.now();const hit=document.elementFromPoint(e.clientX,e.clientY);
+    if(S.mzNew){const [x,y]=mzPt(sv,e);S.mzNew.push([Math.round(x),Math.round(y)]);mzRedraw();return;}
+    const g=hit&&hit.closest&&hit.closest('.mz-stage [data-id]');
+    if(now-last<300&&!g){const [x,y]=mzPt(sv,e);mzZoomAt(1.8,x,y);last=0;return;}last=now;
+    if(!g){if(!S.mzMulti&&S.mzSel&&!S.mzEdit){S.mzSel=null;render();}return;}const id=g.dataset.id;const z=mzGet(id);
+    if(S.mzMulti){if(mzTaskable(z)){S.mzMulti.has(id)?S.mzMulti.delete(id):S.mzMulti.add(id);render();}return;}
+    S.mzSel=id;S.mzVi=null;if(!WIDE.matches&&!S.mzEdit){render();mzPanelSheet(id);}else render();};
+  stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',e=>{pts.delete(e.pointerId);drag=null;pinch=null;});stage.addEventListener('pointerleave',dzTipOff);}
+function mzRedraw(){const st=document.querySelector('.mz-stage');if(!st)return render();st.innerHTML=mzSvg({worker:S.mzWorker});}
+let _mzSaveT=null;function mzSaveSoon(){clearTimeout(_mzSaveT);_mzSaveT=setTimeout(()=>{const z=mzGet(S.mzSel);if(z&&S.mzDb&&S.mzDb.length)S.db.doc('map_zones/'+z.id).update({polygon:z.polygon,updatedBy:S.myId,updatedAt:Date.now()}).then(()=>{S.mzDirty=0;}).catch(()=>toast('Не вдалося зберегти зону — перевірте зв’язок'));},500);}
+/* --- панель зони --- */
+function mzPanel(id){const z=mzGet(id);if(!z)return el('div',{class:'mz-pan card'},el('p',{class:'muted',text:'Зону не знайдено.'}));const ty=MZ_TY[z.type]||MZ_TY.g;
+  if(S.mzEdit)return mzEditPanel(z);
+  const all=mzTasksAll(id);const open=all.filter(t=>!isDone(t)).sort(byDue);const d30=Date.now()-30*864e5;const done=all.filter(t=>isDone(t)&&(t.doneAt||0)>=d30).sort((a,b)=>(b.doneAt||0)-(a.doneAt||0));
+  const def=z.defaultAssigneeId&&staffById(z.defaultAssigneeId);const can=canPlan()&&mzTaskable(z);
+  return el('div',{class:'mz-pan card'},el('div',{class:'mz-ph'},el('span',{class:'mz-badge',style:'--zc:'+ty.c,text:z.number||'•'}),el('div',{style:'min-width:0;flex:1'},el('h2',{text:z.name}),el('span',{class:'muted small',text:ty.n+(z.area?' · '+z.area+' м²':'')+(def?' · відповідальний: '+def.name:'')})),
+      el('button',{type:'button',class:'iconbtn sm','aria-label':'Закрити панель зони',onclick:()=>{S.mzSel=null;closeSheet();render();}},svg('<path d="M6 6l12 12M18 6 6 18"/>'))),
+    mzTaskable(z)?[el('h3',{class:'mz-sub',text:'Відкриті задачі · '+open.length}),open.length?el('div',{class:'stack',style:'gap:6px'},open.map(taskRow)):el('p',{class:'muted small',style:'margin:0',text:'Відкритих задач немає.'}),
+      el('h3',{class:'mz-sub',text:'Виконано за 30 днів · '+done.length}),done.length?el('div',{class:'mz-done'},done.slice(0,8).map(t=>el('div',{class:'mz-dr'},el('span',{},el('b',{text:t.title}),el('small',{class:'muted',text:dm(ymd(new Date(t.doneAt)))})),
+        el('div',{class:'mz-th'},(t.photos||[]).slice(-2).map(p=>el('button',{type:'button',class:'thumb','aria-label':'Фото «після»',onclick:()=>viewPhoto(p.id)},el('img',{src:p.thumb,alt:''}))))))):el('p',{class:'muted small',style:'margin:0',text:'Ще нічого не виконано.'}),
+      can?el('button',{class:'btn mz-go',type:'button',onclick:()=>{closeSheet();newTask({zones:[id]});}},'Призначити задачу'):null]:el('p',{class:'muted small',style:'margin:0',text:'Орієнтир на карті — задачі сюди не ставляться.'}));}
+function mzPanelSheet(id){openSheet(mzPanel(id));const sh=document.querySelector('#sheetRoot .sheet');if(sh)sh.classList.add('mz-sheet');mzFocusOn(id);}
+function mzMultiPanel(){const ids=[...S.mzMulti];const zs=ids.map(mzGet).filter(Boolean);
+  return el('div',{class:'mz-pan card'},el('div',{class:'mz-ph'},el('div',{style:'flex:1'},el('h2',{text:'Вибрано зон: '+zs.length}),el('span',{class:'muted small',text:'Натискайте зони на карті, щоб додати або прибрати.'}))),
+    zs.length?el('div',{class:'mz-chipsel'},zs.map(z=>el('button',{type:'button',class:'mz-cz',onclick:()=>{S.mzMulti.delete(z.id);render();},'aria-label':'Прибрати зону '+z.number},(z.number||'')+' · '+z.name,' ×'))):null,
+    el('div',{class:'btn-pair'},el('button',{class:'btn ghost',type:'button',onclick:()=>{S.mzMulti=null;render();}},'Скасувати'),el('button',{class:'btn',type:'button',disabled:zs.length?null:true,onclick:()=>newTask({zones:ids})},'Призначити на '+zs.length)));}
+/* --- редактор зон --- */
+function mzEditPanel(z){const nm=el('input',{id:'mzN',value:z.name||''}),no=el('input',{id:'mzNo',value:z.number||''});const ty=el('select',{id:'mzT'},Object.entries(MZ_TY).map(([k,v])=>el('option',{value:k,text:v.n})));ty.value=z.type;
+  const ar=el('input',{id:'mzA',type:'number',inputmode:'decimal',value:z.area||''});const df=el('select',{id:'mzD'},el('option',{value:'',text:'— не призначено —'}),sortedStaff().filter(earns).map(s=>el('option',{value:s.id,text:s.name})));df.value=z.defaultAssigneeId||'';
+  const save=()=>{if(!(S.mzDb&&S.mzDb.length)){toast('Спершу перенесіть зони в базу');return;}write(()=>S.db.doc('map_zones/'+z.id).update({name:nm.value.trim()||z.name,number:no.value.trim(),type:ty.value,area:ar.value?+ar.value:null,defaultAssigneeId:df.value||null,polygon:z.polygon,updatedBy:S.myId,updatedAt:Date.now()}),'Карта: зону «'+(no.value||nm.value)+'» збережено');};
+  return el('div',{class:'mz-pan card'},el('div',{class:'mz-ph'},el('h2',{style:'flex:1',text:'Редагування зони'}),el('button',{type:'button',class:'iconbtn sm','aria-label':'Зняти вибір',onclick:()=>{S.mzSel=null;S.mzVi=null;render();}},svg('<path d="M6 6l12 12M18 6 6 18"/>'))),
+    el('p',{class:'muted small',style:'margin:0',text:'Тягніть білі точки, щоб змінити контур. Маленька точка посередині сторони додає вершину. Вибрану вершину можна видалити.'}),
+    el('div',{class:'grid2'},el('label',{for:'mzNo'},'Номер',no),el('label',{for:'mzT'},'Тип',ty)),el('label',{for:'mzN'},'Назва',nm),el('div',{class:'grid2'},el('label',{for:'mzA'},'Площа, м² (необов’язково)',ar),el('label',{for:'mzD'},'Відповідальний',df)),
+    el('div',{class:'btn-pair'},el('button',{class:'btn ghost',type:'button',disabled:S.mzVi!=null&&z.polygon.length>3?null:true,onclick:()=>{z.polygon.splice(S.mzVi,1);S.mzVi=null;mzSaveSoon();render();}},'Видалити вершину'),el('button',{class:'btn',type:'button',onclick:save},'Зберегти зону')),
+    el('button',{class:'btn danger sm',type:'button',onclick:()=>confirmSheet('Видалити зону «'+(z.number?z.number+' · ':'')+z.name+'» з карти?','Видалити зону',()=>write(()=>S.db.doc('map_zones/'+z.id).delete(),'Карта: зону видалено').then(()=>{S.mzSel=null;render();}))},'Видалити зону'));}
+async function mzSeed(){const zs=mzDefaults();confirmSheet('Перенести '+zs.length+' зон із поточної розмітки в базу, щоб їх можна було редагувати?','Перенести зони',async()=>{toast('Переношу…');
+  await write(async()=>{for(const z of zs)await S.db.doc('map_zones/'+z.id).set({number:z.number||'',name:z.name,type:z.type,polygon:z.polygon,updatedBy:S.myId,updatedAt:Date.now()});},'Карта: зони перенесено в базу');});}
+function mzNewFinish(){const p=S.mzNew||[];if(p.length<3){toast('Поставте хоча б 3 точки');return;}const n=el('input',{id:'mzNN'}),no=el('input',{id:'mzNNo'});const ty=el('select',{id:'mzNT'},Object.entries(MZ_TY).map(([k,v])=>el('option',{value:k,text:v.n})));
+  openSheet(el('h2',{text:'Нова зона'}),el('div',{class:'grid2'},el('label',{for:'mzNNo'},'Номер',no),el('label',{for:'mzNT'},'Тип',ty)),el('label',{for:'mzNN'},'Назва',n),
+    el('div',{class:'btn-pair'},el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'),el('button',{class:'btn',type:'button',onclick:()=>{if(!n.value.trim()){toast('Вкажіть назву зони');n.focus();return;}const id='z'+Date.now().toString(36);closeSheet();
+      write(()=>S.db.doc('map_zones/'+id).set({number:no.value.trim(),name:n.value.trim(),type:ty.value,polygon:p,updatedBy:S.myId,updatedAt:Date.now()}),'Карта: створено зону «'+n.value.trim()+'»').then(()=>{S.mzNew=null;S.mzSel=id;render();});}},'Створити')));}
+async function mzReplaceImg(){const A=await inspAssetsNs();if(!A){toast('Замінити фото можуть люди з доступом «Редактор»');return;}const i=el('input',{type:'file',accept:'image/*',style:'position:fixed;left:-999px'});document.body.append(i);
+  i.addEventListener('change',async()=>{const f=i.files&&i.files[0];i.remove();if(!f)return;try{const im=await inspDecode(f);const [w,h]=inspDims(im);if(Math.abs(w/h-1.5)>0.08)toast('Увага: пропорції фото не 3:2 — зони можуть зміститись');
+      const c=inspCanvas(im,3840);const b=await new Promise(r=>c.toBlob(r,'image/jpeg',.86));const up=await A.upload(b,{type:'image/jpeg'});
+      write(()=>S.db.doc('settings/main').set({...(S.cfg||{}),mapImg:{id:up.id,w:c.width,h:c.height},updatedAt:Date.now(),updatedBy:S.myId||''}),'Карта: фото замінено');}catch(e){toast('Не вдалося завантажити фото. Спробуйте інший файл.');}});i.click();}
+/* --- вигляд працівника: мої задачі сьогодні --- */
+function mzMyTasks(){const me=myStaff();if(!me)return [];const today=ymd(new Date());return S.tasks.filter(t=>!isDone(t)&&asg(t).includes(me.id)&&tZones(t).length&&(!t.due||t.due<=today))
+  .sort((a,b)=>{const za=mzGet(tZones(a)[0]),zb=mzGet(tZones(b)[0]);return String(za&&za.number||'').localeCompare(String(zb&&zb.number||''),'uk',{numeric:true});});}
+function mzProblem(t){const n=el('textarea',{id:'mzPr',placeholder:'напр. «Шланг пошкоджений, полити не можу»',maxlength:'400'});const files=[];const prev=el('div',{class:'thumbs'});const inp=el('input',{type:'file',accept:'image/*',capture:'environment',class:'iw-file'});
+  inp.addEventListener('change',()=>{for(const f of inp.files){if(files.length<3)files.push(f);}inp.value='';prev.replaceChildren(...files.map(f=>el('span',{class:'thumb'},el('img',{src:URL.createObjectURL(f),alt:''}))));});
+  openSheet(el('h2',{text:'Проблема із задачею'}),el('p',{class:'muted',style:'margin:0',text:t.title}),el('label',{for:'mzPr'},'Що сталося (обов’язково)',n),prev,el('label',{class:'btn ghost filebtn'},'Додати фото',inp),
+    el('div',{class:'btn-pair'},el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'),el('button',{class:'btn',type:'button',onclick:async()=>{if(!n.value.trim()){toast('Опишіть проблему');n.focus();return;}const m=myStaff();const ph=[];
+      for(const f of files){const im=await loadImg(f);const r=await S.db.collection('photos').add({taskId:t.id,img:shrinkFit(im),by:S.myId,at:Date.now()});ph.push({id:r.id,thumb:shrink(im,220,.6)});}
+      closeSheet();write(()=>S.db.doc('tasks/'+t.id).update({issues:[...(t.issues||[]),{by:m?m.id:'',at:Date.now(),text:n.value.trim(),photos:ph}]}),'Повідомлено про проблему');}},'Надіслати')));}
+function mzWorkerList(){const L=mzMyTasks();const me=myStaff();
+  return el('div',{class:'card mz-my'},el('h3',{class:'mz-sub',text:'Мої задачі сьогодні · '+L.length}),L.length?L.map(t=>{const z=mzGet(tZones(t)[0]);const started=me&&(t.startedMap||{})[me.id];
+    return el('div',{class:'mz-mt'},el('button',{type:'button',class:'mz-mtz',onclick:()=>{S.mzSel=z&&z.id;mzFocusOn(z&&z.id);render();},'aria-label':'Показати зону на карті'},el('span',{class:'mz-badge',style:'--zc:'+((MZ_TY[z&&z.type]||MZ_TY.g).c),text:z&&z.number||'•'}),el('span',{},el('b',{text:t.title}),el('small',{class:'muted',text:(z?z.name:'')+(t.priority==='high'?' · терміново':'')+(t.dueTime?' · до '+t.dueTime:'')}))),
+      el('div',{class:'mz-ma'},started?el('span',{class:'sh-st on',text:'в роботі'}):el('button',{class:'btn ghost sm',type:'button',onclick:()=>write(()=>S.db.doc('tasks/'+t.id).update({startedMap:{[me.id]:Date.now()}}),'Задачу розпочато')},'Почав'),
+        el('button',{class:'btn sm',type:'button',onclick:()=>reportSheet(t,true)},'Виконано'),el('button',{class:'btn ghost sm',type:'button',onclick:()=>mzProblem(t)},'Проблема')));}):el('p',{class:'muted small',style:'margin:0',text:'На сьогодні задач на карті немає.'}));}
+/* --- список зон --- */
+function mzListView(){const q=(S.mzQ||'').toLowerCase();const zs=mzAll().filter(mzTaskable).filter(z=>!q||(String(z.number)+' '+z.name+' '+(MZ_TY[z.type]||{}).n).toLowerCase().includes(q))
+  .sort((a,b)=>String(a.number).localeCompare(String(b.number),'uk',{numeric:true}));const s=el('input',{id:'mzQ',type:'search',placeholder:'Пошук: номер або назва',value:S.mzQ||''});s.addEventListener('input',()=>{S.mzQ=s.value;const p=s.selectionStart;render();const n=document.getElementById('mzQ');if(n){n.focus();n.setSelectionRange(p,p);}});
+  return el('div',{class:'card mz-tl'},el('label',{for:'mzQ',class:'mz-ql'},'Пошук зони',s),el('div',{class:'tbl-x'},el('table',{class:'mz-tbl'},el('thead',{},el('tr',{},['№','Назва','Тип','Відкрито','Остання робота'].map(h=>el('th',{scope:'col',text:h})))),
+    el('tbody',{},zs.map(z=>{const all=mzTasksAll(z.id);const open=all.filter(t=>!isDone(t)).length;const lastDone=all.filter(isDone).reduce((a,t)=>Math.max(a,t.doneAt||0),0);
+      return el('tr',{tabindex:'0',class:S.mzSel===z.id?'sel':'',onclick:()=>{S.mzSel=z.id;if(!WIDE.matches)mzPanelSheet(z.id);render();},onkeydown:e=>{if(e.key==='Enter'){S.mzSel=z.id;if(!WIDE.matches)mzPanelSheet(z.id);render();}}},
+        el('td',{},el('span',{class:'mz-badge',style:'--zc:'+(MZ_TY[z.type]||MZ_TY.g).c,text:z.number||'•'})),el('td',{text:z.name}),el('td',{class:'muted',text:(MZ_TY[z.type]||{}).n||''}),el('td',{class:open?'mz-open':'muted',text:String(open)}),el('td',{class:'muted',text:lastDone?dm(ymd(new Date(lastDone))):'—'}));})))));}
+/* --- сторінка --- */
+function mapView(){const out=[];const me=myStaff();const worker=!!(me&&earns(me)&&!canPlan());S.mzWorker=worker;const L=S.mzL||(S.mzL={zones:1,bld:1,park:1,poi:1,only:0});const list=S.mzMode==='list';
+  const lay=[['zones','Зони'],['bld','Будівлі'],['park','Паркінги'],['poi','Підписи закладів'],['only','Лише з задачами']];
+  out.push(el('div',{class:'mz-top'},el('div',{class:'seg'},[['map','Карта'],['list','Список']].map(([k,l])=>el('button',{type:'button','aria-pressed':String((S.mzMode||'map')===k),onclick:()=>{S.mzMode=k;render();}},l))),
+    !list?el('div',{class:'mz-lays',role:'group','aria-label':'Шари карти'},lay.map(([k,l])=>el('button',{type:'button',class:'mz-chip','aria-pressed':String(!!L[k]),onclick:()=>{L[k]=L[k]?0:1;render();}},l))):null,
+    el('div',{class:'mz-tools'},canPlan()&&!S.mzEdit?el('button',{class:'btn ghost sm',type:'button','aria-pressed':String(!!S.mzMulti),onclick:()=>{S.mzMulti=S.mzMulti?null:new Set();S.mzSel=null;render();}},S.mzMulti?'Готово з вибором':'Вибрати кілька'):null,
+      canZoneEdit()?el('button',{class:'btn ghost sm',type:'button','aria-pressed':String(!!S.mzEdit),onclick:()=>{S.mzEdit=!S.mzEdit;S.mzMulti=null;S.mzNew=null;S.mzVi=null;render();}},S.mzEdit?'Вийти з редагування':'Редагувати зони'):null)));
+  if(S.mzEdit){const noDb=!(S.mzDb&&S.mzDb.length);out.push(el('div',{class:'card mz-edbar'},el('b',{text:'Режим редагування зон'}),noDb?el('span',{class:'muted small',text:'Зони зараз з розмітки в коді — перенесіть їх у базу, щоб змінювати.'}):el('span',{class:'muted small',text:'Натисніть зону, щоб змінити контур, номер, назву чи тип.'}),
+    el('div',{class:'row',style:'gap:8px'},noDb?el('button',{class:'btn sm',type:'button',onclick:mzSeed},'Перенести зони в базу'):null,!noDb?(S.mzNew?[el('button',{class:'btn sm',type:'button',onclick:mzNewFinish},'Завершити зону ('+S.mzNew.length+' т.)'),el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.mzNew=null;render();}},'Скасувати')]:el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.mzNew=[];S.mzSel=null;render();toast('Ставте точки на карті кліками');}},'+ Нова зона')):null,
+      el('button',{class:'btn ghost sm',type:'button',onclick:mzReplaceImg},'Замінити фото карти'))));}
+  if(list){out.push(el('div',{class:'mz-wrap'+(S.mzSel&&WIDE.matches?' side':'')},mzListView(),S.mzSel&&WIDE.matches?mzPanel(S.mzSel):null));return out;}
+  const stage=el('div',{class:'mz-stage'});stage.innerHTML=mzSvg({worker});mzBind(stage);
+  const ctr=el('div',{class:'mz-zoom'},el('button',{type:'button',class:'iconbtn sm','aria-label':'Наблизити',onclick:()=>{const v=mzVB();mzZoomAt(1.4,v[0]+v[2]/2,v[1]+v[3]/2);}},svg('<path d="M12 5v14M5 12h14"/>')),
+    el('button',{type:'button',class:'iconbtn sm','aria-label':'Віддалити',onclick:()=>{const v=mzVB();mzZoomAt(1/1.4,v[0]+v[2]/2,v[1]+v[3]/2);}},svg('<path d="M5 12h14"/>')),
+    el('button',{type:'button',class:'iconbtn sm','aria-label':'Вмістити все',onclick:mzFit},svg('<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>')));
+  const leg=el('div',{class:'mz-leg'},Object.entries(MZ_TY).filter(([k])=>k!=='street').map(([k,v])=>el('span',{},el('i',{style:'--zc:'+v.c}),v.n)),el('span',{class:'mz-ls'},el('i',{class:'s-open'}),'є задача'),el('span',{class:'mz-ls'},el('i',{class:'s-over'}),'прострочено'),el('span',{class:'mz-ls'},el('i',{class:'s-done'}),'виконано сьогодні'));
+  const side=WIDE.matches&&(S.mzSel||S.mzMulti)?(S.mzMulti?mzMultiPanel():mzPanel(S.mzSel)):null;
+  out.push(el('div',{class:'mz-wrap'+(side?' side':'')},el('div',{class:'card mz-card'},el('div',{class:'mz-box'},stage,ctr),leg),side));
+  if(!WIDE.matches&&S.mzMulti)out.push(mzMultiPanel());
+  if(worker)out.push(mzWorkerList());
+  if(S.mzFocus){const f=S.mzFocus;S.mzFocus=null;setTimeout(()=>mzFocusOn(f),30);}
   return out;}
-function mzSheet(id){const q=mzById(id);if(!q)return;const ts=mzTasks(id).sort(byDue);const done=S.tasks.filter(t=>t.zone===id&&isDone(t)).length;
-  openSheet(el('div',{class:'mz-sh'},el('span',{class:'mz-badge t-'+q.t,text:q.n}),el('div',{},el('h2',{style:'margin:0',text:q.name}),el('span',{class:'muted small',text:MZ_T[q.t].n+' · '+ts.length+' відкритих'+(done?' · '+done+' виконано':'')}))),
-    ts.length?el('div',{class:'stack',style:'gap:6px'},ts.map(taskRow)):el('p',{class:'muted',style:'margin:0',text:'Відкритих задач у цій зоні немає.'}),
-    canPlan()?el('button',{class:'btn',type:'button',onclick:()=>{closeSheet();setTimeout(()=>newTask({zone:id}),200);}},'+ Призначити задачу в цій зоні'):el('p',{class:'muted small',style:'margin:0',text:'Призначати задачі можуть менеджери та директор.'}),
-    el('button',{class:'btn ghost',type:'button',onclick:()=>{S.mzSel=null;closeSheet();render();}},'Закрити'));}
+/* MZ2:END */
 
 /* ---------- Dev-журнал ---------- */
 let _logQ=[],_logT=null,_errSeen={};
@@ -8412,6 +8598,9 @@ function loadImg(file){return new Promise((res,rej)=>{const u=URL.createObjectUR
 function shrinkFit(img){let max=1280,q=.72,u=shrink(img,max,q);let n=0;while(u.length>260000&&n<8){if(q>.5)q-=.07;else max=Math.round(max*.85);u=shrink(img,max,q);n++;}return u;}
 function shrink(img,max,q){const k=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*k);c.height=Math.round(img.naturalHeight*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);
   let d=c.toDataURL('image/jpeg',q);while(d.length>230000&&q>0.3){q-=0.1;d=c.toDataURL('image/jpeg',q);}return d;}
+function taskRepeatNext(t){const base=t.due||ymd(new Date());let nx=null;if(t.repeat==='daily')nx=addDays(base,1);else if(t.repeat==='weekly')nx=addDays(base,7);
+  else if(t.repeat==='days'&&(t.repeatDays||[]).length){for(let i=1;i<=7;i++){const d=addDays(base,i);if(t.repeatDays.includes((parseYmd(d).getDay()+6)%7)){nx=d;break;}}}if(!nx)return Promise.resolve();
+  const ids=asg(t);return S.db.collection('tasks').add({title:t.title,zone:t.zone||null,zones:t.zones||null,priority:t.priority||null,repeat:t.repeat,repeatDays:t.repeatDays||null,note:t.note||'',refPhotos:t.refPhotos||[],assignees:ids,assignee:ids[0],doneMap:{},due:nx,dueTime:t.dueTime||null,remind:t.remind||null,done:false,doneAt:null,createdBy:t.createdBy||S.myId,createdAt:Date.now(),repeatOf:t.repeatOf||t.id}).then(()=>devLog('Задача повториться '+dm(nx)+': '+t.title));}
 function reportSheet(t,completing){
   const files=[];const prev=el('div',{class:'thumbs'});
   const inp=el('input',{id:'repFiles',type:'file',accept:'image/*',multiple:true,style:'padding:8px'});
@@ -8421,6 +8610,7 @@ function reportSheet(t,completing){
   const go=el('button',{class:'btn',type:'button',style:'flex:1'},completing?'Завершити задачу':'Зберегти фото');
   go.addEventListener('click',async()=>{
     if(!completing&&!files.length){toast('Додайте хоча б одне фото');return;}
+    if(completing&&tZones(t).length&&!files.length&&!(t.photos||[]).length){toast('Додайте фото «після» — для задач на карті це обов’язково');return;}
     go.disabled=true;go.textContent='Завантаження…';
     try{
       const added=[];
@@ -8434,6 +8624,7 @@ function reportSheet(t,completing){
         else{patch.done=true;patch.doneAt=Date.now();}
         patch.doneBy=S.myId;}
       await S.db.doc('tasks/'+t.id).update(patch);
+      if(patch.done&&t.repeat)await taskRepeatNext(t);
       closeSheet();toast(completing?(isDone(Object.assign({},t,{doneMap:Object.assign({},t.doneMap,patch.doneMap)}))?'Задачу виконано':'Вашу частину позначено. Чекаємо інших'):'Фото додано');
     }catch(e){go.disabled=false;go.textContent=completing?'Завершити задачу':'Зберегти фото';toast(e&&e.code==='quota_exceeded'?'Місце для фото закінчилось: видаліть старі задачі.':'Не вдалося зберегти фото. Спробуйте ще раз.');}
   });
@@ -8573,11 +8764,17 @@ function whenPicker(d,tm,rm){const today=ymd(new Date());
       el('span',{class:'muted small rm-hint',text:'Щоб поставити нагадування, оберіть час'})),
     sum);
   setTimeout(sync,0);return node;}
-function newTask(pre){pre=pre||{};const zq=pre.zone&&mzById(pre.zone);
-  const t=el('input',{id:'tTitle',placeholder:'Напр.: Замінити пакети в урнах біля входу',maxlength:'140'});if(pre.title)t.value=pre.title;
-  const picked=new Set();
-  const who=assignPicker(picked);
-  const d=el('input',{id:'tDue',type:'date',value:ymd(new Date())});
+function newTask(pre){pre=pre||{};const zl=(pre.zones||(pre.zone?[pre.zone]:[])).filter(Boolean);const zq=zl.length===1&&mzById(zl[0]);const isZ=zl.length>0;
+  const t=el('input',{id:'tTitle',placeholder:isZ?'напр. «Покосити газон»':'Напр.: Замінити пакети в урнах біля входу',maxlength:'140'});if(pre.title)t.value=pre.title;
+  const picked=new Set();const z0=isZ&&mzGet(zl[0]);if(isZ&&z0&&z0.defaultAssigneeId)picked.add(z0.defaultAssigneeId);
+  let who;const prio={v:'normal'},rep={v:'none',days:new Set()};
+  const TPL=['Покосити газон','Прибрати листя','Полити','Обрізати кущі','Прибрати сміття','Помити плитку','Розчистити сніг','Посипати проти ожеледиці'];
+  const tpl=isZ?el('div',{class:'mz-tpl',role:'group','aria-label':'Шаблони'},TPL.map(x=>el('button',{type:'button',class:'mz-chip','aria-pressed':'false',onclick:e=>{t.value=x;e.currentTarget.parentNode.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===e.currentTarget)));}},x))):null;
+  const zPick=()=>{const box=el('div',{class:'mz-who',role:'group','aria-label':'Виконавець'});const draw=()=>{const date=(document.getElementById('tDue')||{}).value||ymd(new Date());
+      const ws=sortedStaff().filter(x=>['cleaner','gardener'].some(r=>[x.role,x.extraRole].includes(r))).map(x=>{const v=planAny(x.id,date);return {x,on:!!(v&&isWorking(v)),known:v!=null};}).sort((a,b)=>(b.on-a.on));
+      box.replaceChildren(...ws.map(({x,on,known})=>{const off=known&&!on;const b=el('button',{type:'button',class:'pk'+(off?' off':''),'aria-pressed':String(picked.has(x.id)),onclick:()=>{picked.has(x.id)?picked.delete(x.id):picked.add(x.id);b.setAttribute('aria-pressed',String(picked.has(x.id)));}},avatar(x),el('span',{},x.name,el('small',{class:on?'mz-on':'muted',text:on?' · на зміні':off?' · вихідний':''})));return b;}));};box._draw=draw;return box;};
+  who=isZ?zPick():assignPicker(picked);
+  const d=el('input',{id:'tDue',type:'date',value:ymd(new Date())});if(isZ)d.addEventListener('change',()=>who._draw&&who._draw());
   const tm=el('input',{id:'tTime',type:'time',step:'300'});
   const rm=el('select',{id:'tRem'},el('option',{value:'',text:'Без нагадування'}),Object.entries(REMIND).map(([k,v])=>el('option',{value:k,text:'Нагадати '+v})));
   const n=el('textarea',{id:'tNote',placeholder:'Деталі (необов’язково)',maxlength:'1000'});if(pre.note)n.value=pre.note;
@@ -8586,7 +8783,11 @@ function newTask(pre){pre=pre||{};const zq=pre.zone&&mzById(pre.zone);
   const drawPrev=()=>prev.replaceChildren(...files.map((f,i)=>el('span',{class:'thumb rm'},el('img',{src:URL.createObjectURL(f),alt:''}),el('button',{type:'button',class:'x','aria-label':'Прибрати фото',onclick:()=>{files.splice(i,1);drawPrev();}},'×'))));
   fin.addEventListener('change',()=>{for(const f of fin.files){if(files.length>=4)break;files.push(f);}fin.value='';drawPrev();});
   const picBtn=el('span',{class:'btn ghost sm filebtn',style:'align-self:flex-start'},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),' Додати фото (до 4)',fin);
-  openSheet(el('h2',{text:'Нова задача'}),zq?el('div',{class:'zone-tag t-'+zq.t+' big'},el('i'),'Зона: '+zq.name):null,el('label',{for:'tTitle'},'Що зробити',t),el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Кому (можна кількох)'}),who),whenPicker(d,tm,rm),el('label',{for:'tNote'},'Коментар',n),el('div',{class:'stack',style:'gap:8px'},el('span',{class:'flabel',text:'Фото: де і що зробити'}),prev,picBtn),
+  const prSeg=isZ?el('div',{class:'iw-seg',role:'radiogroup','aria-label':'Пріоритет'},[['normal','Звичайний'],['high','Терміновий']].map(([k,l])=>{const b=el('button',{type:'button',role:'radio',class:'iw-sb'+(k==='high'?' pr-high':''),'aria-checked':String(prio.v===k),onclick:()=>{prio.v=k;prSeg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-checked',String(x===b)));}},l);return b;})):null;
+  const rpSel=isZ?el('select',{id:'tRep'},[['none','Не повторювати'],['daily','Щодня'],['weekly','Щотижня'],['days','По днях тижня']].map(([k,l])=>el('option',{value:k,text:l}))):null;
+  const rpDays=isZ?el('div',{class:'iw-seg seven',role:'group','aria-label':'Дні тижня',hidden:true},DS.map((x,i)=>{const b=el('button',{type:'button',class:'iw-sb','aria-checked':'false',onclick:()=>{rep.days.has(i)?rep.days.delete(i):rep.days.add(i);b.setAttribute('aria-checked',String(rep.days.has(i)));}},x);return b;})):null;
+  if(rpSel)rpSel.addEventListener('change',()=>{rep.v=rpSel.value;rpDays.hidden=rep.v!=='days';});
+  openSheet(el('h2',{text:isZ?'Задача на карті':'Нова задача'}),isZ?el('div',{class:'mz-chipsel'},zl.map(id=>{const z=mzGet(id);return z?el('span',{class:'zone-tag big t-'+z.type},el('i'),(z.number?z.number+' · ':'')+z.name):null;})):null,tpl?el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:'Шаблони'}),tpl):null,el('label',{for:'tTitle'},'Що зробити',t),el('div',{class:'stack',style:'gap:6px'},el('span',{class:'flabel',text:isZ?'Виконавець (клінери й садівники)':'Кому (можна кількох)'}),who),whenPicker(d,tm,rm),prSeg?el('fieldset',{class:'iw-fs'},el('legend',{class:'flabel',text:'Пріоритет'}),prSeg):null,rpSel?el('label',{for:'tRep'},'Повторювати',rpSel):null,rpDays,el('label',{for:'tNote'},'Коментар',n),el('div',{class:'stack',style:'gap:8px'},el('span',{class:'flabel',text:isZ?'Фото «до» (необов’язково)':'Фото: де і що зробити'}),prev,picBtn),
     el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:async(ev)=>{const title=t.value.trim();if(!title){toast('Напишіть, що треба зробити');t.focus();return;}
       if(!picked.size){toast('Оберіть, кому призначити');return;}
       const ids=sortedStaff().map(x=>x.id).filter(id=>picked.has(id));
@@ -8594,9 +8795,10 @@ function newTask(pre){pre=pre||{};const zq=pre.zone&&mzById(pre.zone);
       const ref=[];await write(async()=>{ref.length=0;
         for(const th of (pre.refThumbs||[])){const r=await S.db.collection('photos').add({taskId:null,img:th,by:S.myId,at:Date.now()});ref.push({id:r.id,thumb:th});}
         for(const f of files){const img=await loadImg(f);const r=await S.db.collection('photos').add({taskId:null,img:shrinkFit(img),by:S.myId,at:Date.now()});ref.push({id:r.id,thumb:shrink(img,220,0.6)});}
-        await S.db.collection('tasks').add({title,insp:pre.insp||null,zone:pre.zone||null,note:n.value.trim(),refPhotos:ref,assignees:ids,assignee:ids[0],doneMap:{},due:d.value||null,dueTime:tm.value||null,remind:rm.value||null,done:false,doneAt:null,createdBy:S.myId,createdAt:Date.now()});},'Задачу призначено');
+        await S.db.collection('tasks').add({title,insp:pre.insp||null,zone:zl[0]||null,zones:zl.length?zl:null,priority:isZ?prio.v:null,repeat:isZ&&rep.v!=='none'?rep.v:null,repeatDays:isZ&&rep.v==='days'?[...rep.days]:null,note:n.value.trim(),refPhotos:ref,assignees:ids,assignee:ids[0],doneMap:{},due:d.value||null,dueTime:tm.value||null,remind:rm.value||null,done:false,doneAt:null,createdBy:S.myId,createdAt:Date.now()});},'Задачу призначено');
       closeSheet();notifyTask({title,note:n.value.trim(),due:d.value||null,photos:ref.length},ids);}},'Призначити'),
       el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));
+  if(isZ&&who._draw)who._draw();
   if(!IS_TOUCH)t.focus();
 }
 
