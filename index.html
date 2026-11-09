@@ -6016,15 +6016,16 @@ const MZ_TY={g:{n:'Газон / клумба',c:'#2fd06a',l:'zones'},s:{n:'До�
 const MZ_POI_DEF=[['poi','РБ','Реберня'],['poi','КР','Креденс / Культура'],['poi','КН','Книгарня / Спіро паста / Імперо / Ультра шоп'],['poi','БЕ','Бедбой / Егерзунд']];
 const MZ_EXTRA=[{id:'poi-lake',type:'poi',number:'',name:'Озеро',polygon:[[560,296]]},{id:'poi-fountain',type:'poi',number:'',name:'Фонтан',polygon:[[552,362]]},{id:'poi-bridge',type:'poi',number:'',name:'Міст',polygon:[[446,372]]},
   {id:'st-stryiska',type:'street',number:'',name:'вул. Стрийська',polygon:[[180,632],[420,632]]},{id:'st-naukova',type:'street',number:'',name:'вул. Наукова',polygon:[[884,180],[884,330]]}];
-function mzDefaults(){const poi=new Set(MZ_POI_DEF.map(x=>x[1]));return MZ.map(z=>({id:z.id,number:z.n,name:z.name,type:z.t==='b'&&poi.has(z.n)?'poi':z.t,polygon:z.pts})).concat(MZ_EXTRA);}
+const MZ_TR={'К':'K','П':'P','Л':'L','Б':'B','Е':'E','Н':'N','Р':'R'};function mzAid(id){return String(id||'').replace(/[^A-Za-z0-9_\-.~:@+]/g,c=>MZ_TR[c]||'x');}
+function mzDefaults(){const poi=new Set(MZ_POI_DEF.map(x=>x[1]));return MZ.map(z=>({id:mzAid(z.id),number:z.n,name:z.name,type:z.t==='b'&&poi.has(z.n)?'poi':z.t,polygon:z.pts})).concat(MZ_EXTRA);}
 function mzAll(){return (S.mzDb&&S.mzDb.length)?S.mzDb:mzDefaults();}
-function mzGet(id){return mzAll().find(z=>z.id===id);}
+function mzGet(id){const a=mzAid(id);return mzAll().find(z=>z.id===a);}
 function mzById(id){const z=mzGet(id);return z?{id:z.id,t:z.type,n:z.number,name:z.name,pts:z.polygon}:null;}
 function mzCen(z){const p=z.labelPos||null;if(p)return p;const pts=z.polygon||[];if(pts.length<3){const a=pts[0]||[0,0],b=pts[pts.length-1]||a;return [(a[0]+b[0])/2,(a[1]+b[1])/2];}
   let A=0,x=0,y=0;for(let i=0;i<pts.length;i++){const [x0,y0]=pts[i],[x1,y1]=pts[(i+1)%pts.length];const f=x0*y1-x1*y0;A+=f;x+=(x0+x1)*f;y+=(y0+y1)*f;}if(Math.abs(A)<1e-6){const n=pts.length;return [pts.reduce((a,p)=>a+p[0],0)/n,pts.reduce((a,p)=>a+p[1],0)/n];}return [x/(3*A),y/(3*A)];}
 function mzC(z){return mzCen({polygon:z.pts||z.polygon,labelPos:z.labelPos});}
 function mzTaskable(z){return z&&z.type!=='poi'&&z.type!=='street';}
-function tZones(t){return (t.zones&&t.zones.length)?t.zones:(t.zone?[t.zone]:[]);}
+function tZones(t){return ((t.zones&&t.zones.length)?t.zones:(t.zone?[t.zone]:[])).map(mzAid);}
 function mzTasksAll(id){return S.tasks.filter(t=>tZones(t).includes(id));}
 function mzTasks(id){return mzTasksAll(id).filter(t=>!isDone(t));}
 function mzStatus(id){const today=ymd(new Date());const L=mzTasksAll(id);const open=L.filter(t=>!isDone(t));
