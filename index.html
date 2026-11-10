@@ -6398,6 +6398,17 @@ function mzVisible(z,L0,mine){const ty=MZ_TY[z.type]||MZ_TY.g;if(!L0[ty.l])retur
 function mzLabelHtml(z,st,cls){const ty=z.type;if(ty==='street'||ty==='lm'||ty==='poi')return '<span class="mzl-t '+ty+'">'+esc(z.name)+'</span>';
   if(ty==='b')return '<span class="mzl-t b">'+esc(z.label||({'Пав':'Павільйон','Л':'Лялюче'})[z.number]||(z.number?'Буд '+z.number:z.name))+'</span>';
   return '<span class="mzl-n s-'+st+cls+'">'+esc(z.label||z.number||'•')+(st==='done'?'<i aria-hidden="true">✓</i>':'')+'</span>';}
+/* візуальний центр полігона (алгоритм polylabel): найглибша точка всередині фігури — для міток на вузьких і вигнутих зонах */
+function mzPip(pt,rings){let ins=false;for(const r of rings){for(let i=0,j=r.length-1;i<r.length;j=i++){const a=r[i],b=r[j];if((a[1]>pt[1])!==(b[1]>pt[1])&&pt[0]<(b[0]-a[0])*(pt[1]-a[1])/(b[1]-a[1])+a[0])ins=!ins;}}return ins;}
+function mzSegD2(p,a,b){let x=a[0],y=a[1],dx=b[0]-x,dy=b[1]-y;if(dx||dy){const t=((p[0]-x)*dx+(p[1]-y)*dy)/(dx*dx+dy*dy);if(t>1){x=b[0];y=b[1];}else if(t>0){x+=dx*t;y+=dy*t;}}dx=p[0]-x;dy=p[1]-y;return dx*dx+dy*dy;}
+function mzSd(pt,rings){let m=Infinity;for(const r of rings)for(let i=0,j=r.length-1;i<r.length;j=i++)m=Math.min(m,mzSegD2(pt,r[i],r[j]));return (mzPip(pt,rings)?1:-1)*Math.sqrt(m);}
+function mzPolylabel(rings,prec){prec=prec||0.5;const o=rings[0];if(!o||o.length<3)return o&&o[0]?o[0].slice():[0,0];let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;o.forEach(p=>{x0=Math.min(x0,p[0]);y0=Math.min(y0,p[1]);x1=Math.max(x1,p[0]);y1=Math.max(y1,p[1]);});
+  const w=x1-x0,h=y1-y0,cs=Math.min(w,h);if(!cs)return [x0,y0];const C=(x,y,hh)=>{const d=mzSd([x,y],rings);return {x,y,h:hh,d,max:d+hh*Math.SQRT2};};const Q=[];
+  for(let x=x0;x<x1;x+=cs)for(let y=y0;y<y1;y+=cs)Q.push(C(x+cs/2,y+cs/2,cs/2));
+  const c0=mzCen({polygon:o});let best=C(c0[0],c0[1],0);const bb=C(x0+w/2,y0+h/2,0);if(bb.d>best.d)best=bb;let n=0;
+  while(Q.length&&n<4000){n++;let bi=0;for(let i=1;i<Q.length;i++)if(Q[i].max>Q[bi].max)bi=i;const c=Q.splice(bi,1)[0];if(c.d>best.d)best=c;if(c.max-best.d<=prec)continue;const hh=c.h/2;Q.push(C(c.x-hh,c.y-hh,hh),C(c.x+hh,c.y-hh,hh),C(c.x-hh,c.y+hh,hh),C(c.x+hh,c.y+hh,hh));}
+  return [Math.round(best.x*10)/10,Math.round(best.y*10)/10];}
+function mzLabelPos(z){if(!z.polygon||z.polygon.length<3)return mzCen(z);const rings=[z.polygon,...(z.holes||[])];if(z.labelPos&&mzPip(z.labelPos,rings)&&mzSd(z.labelPos,rings)>1.5)return z.labelPos;return z._lp||(z._lp=mzPolylabel(rings));}
 function mzSync(){if(!MZM)return;const {zl,lb,layers}=MZM;const L0=S.mzL||(S.mzL={zones:1,bld:1,park:1,poi:1,only:0});const me=myStaff();
   const mine=S.mzWorker&&me?new Set(S.tasks.filter(t=>!isDone(t)&&asg(t).includes(me.id)).flatMap(tZones)):null;const multi=S.mzMulti;const conf=new Set(PEN&&PEN.mode==='edit'?[]:(S.mzConf||[]).map(c=>c.z.id));
   layers.forEach((ly,id)=>{if(ly!==MZM.editLayer)zl.removeLayer(ly);});layers.clear();if(MZM.editLayer)layers.set(MZM.editLayer._mzId,MZM.editLayer);lb.clearLayers();
@@ -6408,7 +6419,7 @@ function mzSync(){if(!MZM)return;const {zl,lb,layers}=MZM;const L0=S.mzL||(S.mzL
       ly.on('click',e=>{L.DomEvent.stop(e);mzClick(z.id);});
       if(!IS_TOUCH&&!S.mzEdit)ly.bindTooltip(()=>{const n=mzTasks(z.id).length;return '<b>'+esc((z.number?(z.type==='b'?'Буд ':'Зона ')+z.number+' · ':'')+z.name)+'</b><br>'+esc((MZ_TY[z.type]||{}).n||'')+(mzTaskable(z)?'<br>'+(n?n+' '+plural(n,'задача','задачі','задач'):'без відкритих задач'):'');},{sticky:true,direction:'top',offset:[0,-8],className:'mz-tip'});
       ly.addTo(zl);layers.set(z.id,ly);}
-    const p=z.type==='street'?mzCen(z):(z.labelPos||mzCen(z));const minor=z.type==='st'||(z.polygon&&z.polygon.length>=3&&mzArea(z.polygon)<260&&z.type!=='b');
+    const p=z.type==='street'?mzCen(z):mzLabelPos(z);const minor=z.type==='st'||(z.polygon&&z.polygon.length>=3&&mzArea(z.polygon)<260&&z.type!=='b');
     let rot='';if(z.type==='street'){const a=z.polygon[0],b=z.polygon[z.polygon.length-1];let ang=Math.atan2(b[1]-a[1],b[0]-a[0])*180/Math.PI;if(Math.abs(ang)>90)ang-=180;rot=' style="transform:rotate('+ang.toFixed(1)+'deg)"';}
     const ic=L.divIcon({className:'mzl'+(minor?' minor':'')+(['poi','lm','street','b'].includes(z.type)?' name':'')+(dim?' dim':''),html:'<div'+rot+'>'+mzLabelHtml(z,st,sel?' sel':'')+'</div>',iconSize:null});
     const mk=L.marker(LL(p),{icon:ic,keyboard:mzTaskable(z)||z.type==='b',title:(z.number?z.number+' · ':'')+z.name,riseOnHover:true,pmIgnore:true,interactive:!['street','lm'].includes(z.type)});
@@ -6443,7 +6454,7 @@ async function mzSaveEdit(extra){const ly=MZM&&MZM.editLayer;const z=mzGet(S.mzS
   let cutBy=[];const newType=(extra&&extra.props&&extra.props.type)||z.type;if(pe){await mzTurfLib().catch(()=>{});const r=penClipG(g,z.id,newType);cutBy=r.cut;Object.assign(g,r.g,{pen:pe});}let carved=[],healed={};
   const conf=pe?[]:ly?await mzCheck():[];if(conf.length&&!(extra&&extra.force)){toast('Зона налазить на сусідні — обріжте або збережіть все одно');mzEdPanelRefresh();return;}
   const before={polygon:z.polygon,holes:z.holes||[],extra:z.extra||[],name:z.name,number:z.number,type:z.type};
-  const upd={polygon:g.polygon,holes:g.holes,extra:g.extra,...(g.pen?{pen:g.pen}:{}),...(extra&&extra.props||{}),updatedBy:S.myId||'',updatedAt:Date.now()};
+  const upd={polygon:g.polygon,holes:g.holes,extra:g.extra,labelPos:mzPolylabel([g.polygon,...(g.holes||[])]),...(g.pen?{pen:g.pen}:{}),...(extra&&extra.props||{}),updatedBy:S.myId||'',updatedAt:Date.now()};
   await write(async()=>{await S.db.doc('map_zones/'+z.id).update(upd);if(window.turf&&!MZ_BG.includes(newType)){const ng={polygon:g.polygon,holes:g.holes,extra:g.extra,type:newType},og={polygon:z.polygon,extra:z.extra};healed=await mzHealPen(z.id,ng,og);carved=await mzCarveBg(z.id,ng,og,healed);}
     await S.db.collection('map_zones_hist').add({zoneId:z.id,before,after:{polygon:g.polygon,holes:g.holes,extra:g.extra,...(extra&&extra.props||{})},by:S.myId||'',at:Date.now()});},'Карта: зону «'+((extra&&extra.props&&extra.props.number)||z.number||z.name)+'» збережено'+(cutBy.length?' (обрізано по зонах '+cutBy.map(c=>c.z.number||c.z.name).join(', ')+')':''));
   {const hn=Object.keys(healed).map(id=>(mzGet(id)||{}).number||id);if(carved.length||hn.length)setTimeout(()=>toast([carved.length?'Під зону вирізано: '+carved.map(b=>b.name||b.number).join(', '):'',hn.length?'Сусідні зони підправлено: '+hn.join(', '):''].filter(Boolean).join(' · ')),900);}
@@ -6462,7 +6473,7 @@ async function mzNewFinish(g,pen){await mzTurfLib().catch(()=>{});const conf=win
     el('div',{class:'grid2'},el('label',{for:'mzNT'},'Що це',ty),el('label',{for:'mzNG'},'Належить до',grp,grpL)),el('label',{for:'mzNN'},'Назва',n),el('div',{class:'grid2'},el('label',{for:'mzNNo'},'Номер',no),el('label',{for:'mzNL'},'Підпис на карті',lb)),
     el('div',{class:'btn-pair'},el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'),el('button',{class:'btn',type:'button',onclick:()=>{if(!n.value.trim()){toast('Вкажіть назву зони');n.focus();return;}
       let gg=g;let usePen=pen;if(conf.length&&clip.checked&&window.turf){gg=penClipG(g,null,ty.value).g;}
-      const id='z'+Date.now().toString(36);closeSheet();const doc={number:no.value.trim(),name:n.value.trim(),type:ty.value,group:grp.value.trim()||null,label:lb.value.trim()||null,polygon:gg.polygon,holes:gg.holes||[],extra:gg.extra||[],...(usePen?{pen:usePen}:{}),updatedBy:S.myId||'',updatedAt:Date.now()};
+      const id='z'+Date.now().toString(36);closeSheet();const doc={number:no.value.trim(),name:n.value.trim(),type:ty.value,group:grp.value.trim()||null,label:lb.value.trim()||null,polygon:gg.polygon,holes:gg.holes||[],extra:gg.extra||[],labelPos:mzPolylabel([gg.polygon,...(gg.holes||[])]),...(usePen?{pen:usePen}:{}),updatedBy:S.myId||'',updatedAt:Date.now()};
       write(async()=>{await S.db.doc('map_zones/'+id).set(doc);await S.db.collection('map_zones_hist').add({zoneId:id,before:null,after:doc,by:S.myId||'',at:Date.now()});if(window.turf&&!MZ_BG.includes(doc.type)){const cv=await mzCarveBg(id,{polygon:doc.polygon,holes:doc.holes,extra:doc.extra,type:doc.type},null);if(cv.length)toast('Під зону вирізано: '+cv.map(b=>b.name||b.number).join(', '));}},'Карта: створено зону «'+n.value.trim()+'»').then(()=>{S.mzSel=id;setTimeout(()=>{if(mzGet(id))penEdit(id);},300);});}},'Створити зону')));}
 async function mzSeed(){const zs=MZ3;confirmSheet('Записати '+zs.length+' зон нової розмітки в базу, щоб їх можна було редагувати?','Записати зони',async()=>{toast('Записую…');
   await write(async()=>{for(const z of zs)await S.db.doc('map_zones/'+z.id).set({...z,updatedBy:S.myId||'',updatedAt:Date.now()});},'Карта: зони записано в базу');});}
@@ -6602,7 +6613,7 @@ async function mzHealPen(selfId,newG,oldG){const over={};if(!window.turf)return 
       try{const d=turf.difference(turf.featureCollection([f,mzFeat(o)]));if(d)f=d;else{gone=true;break;}}catch(e){}}
     if(gone)continue;const ng=mzFromFeat(f);if(!ng)continue;
     if(Math.abs(mzGArea(ng)-mzGArea({polygon:N.polygon,holes:N.holes||[],extra:N.extra||[]}))<0.5&&(N.extra||[]).length===ng.extra.length&&(N.holes||[]).length===ng.holes.length)continue;
-    await S.db.doc('map_zones/'+N.id).update({polygon:ng.polygon,holes:ng.holes||[],extra:ng.extra||[],updatedBy:S.myId||'',updatedAt:Date.now()});
+    await S.db.doc('map_zones/'+N.id).update({polygon:ng.polygon,holes:ng.holes||[],extra:ng.extra||[],labelPos:mzPolylabel([ng.polygon,...(ng.holes||[])]),updatedBy:S.myId||'',updatedAt:Date.now()});
     await S.db.collection('map_zones_hist').add({zoneId:N.id,before:{polygon:N.polygon,holes:N.holes||[],extra:N.extra||[]},after:ng,by:S.myId||'',at:Date.now(),note:'перераховано після зміни зони '+selfId});over[N.id]=ng;}
   return over;}
 async function mzCarveBg(selfId,newG,oldG,over){over=over||{};if(!window.turf)return [];const all=mzAll().map(z=>over[z.id]?{...z,...over[z.id]}:(z.id===selfId?{...z,...newG}:z));const bx=[mzBox(newG)].concat(oldG&&oldG.polygon&&oldG.polygon.length>=3?[mzBox(oldG)]:[]);const hit=c=>bx.some(b=>!(c[0]>b[2]||c[2]<b[0]||c[1]>b[3]||c[3]<b[1]));const done=[];
