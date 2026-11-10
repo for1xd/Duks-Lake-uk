@@ -971,18 +971,40 @@ body.mz-lock .wrap{padding-bottom:0!important}
 @media (prefers-reduced-motion:no-preference){.mzp.s-over{animation:mzPulse 1.4s ease-in-out infinite}}
 @keyframes mzPulse{50%{stroke-opacity:.35}}
 .mz-map.pen-on{cursor:crosshair}.mz-map.pen-on .mzp,.mz-map.pen-on .mzl{pointer-events:none!important}
-.pen-path{stroke:#F2A33A;stroke-width:2.5px;fill:none;stroke-linejoin:round;stroke-linecap:round}
-.pen-rubber{stroke:#F2A33A;stroke-width:1.5px;stroke-dasharray:5 5;fill:none}
-.pen-shape{stroke:#F2A33A!important;stroke-width:2.5px!important}
-.pen-hl{stroke:#F2A33A;stroke-width:1.2px;stroke-opacity:.9;fill:none}
+.mz-map.pen-edit .mzp:not(.pen-shape){opacity:.38}.mz-map.pen-edit .mzl{opacity:.3}.mz-map.pen-on .mzp{opacity:.55}
+.pen-path{stroke:#F2A33A;stroke-width:2.5px;fill:none;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.6))}
+.pen-rubber{stroke:#F2A33A;stroke-width:1.5px;stroke-dasharray:4 4;fill:none}
+.pen-shape{stroke:#F2A33A!important;stroke-width:2.5px!important;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.55));opacity:1!important}
+.pen-hl{stroke:#fff;stroke-width:1px;stroke-opacity:.95;fill:none;stroke-dasharray:3 2;filter:drop-shadow(0 0 1px rgba(0,0,0,.8))}
 .pen-a,.pen-h,.pen-m{background:none;border:0}
-.pen-a i{position:absolute;left:-6px;top:-6px;width:12px;height:12px;background:#fff;border:2px solid #F2A33A;box-sizing:border-box;box-shadow:0 1px 3px rgba(0,0,0,.45);cursor:move}
+.pen-a i{position:absolute;left:-6px;top:-6px;width:12px;height:12px;background:#fff;border:2px solid #F2A33A;border-radius:3px;box-sizing:border-box;box-shadow:0 1px 3px rgba(0,0,0,.5);cursor:move;transition:transform .1s}
 .pen-a.smooth i{border-radius:50%}
-.pen-a.on i{background:#F2A33A}
-.pen-a.first i{width:18px;height:18px;left:-9px;top:-9px;background:#F2A33A;border-color:#fff;cursor:pointer}
-.pen-h i{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:#F2A33A;border:2px solid #fff;box-sizing:border-box;cursor:grab}
-.pen-m i{position:absolute;left:-5px;top:-5px;width:10px;height:10px;transform:rotate(45deg);background:rgba(255,255,255,.75);border:1.5px solid #F2A33A;box-sizing:border-box;cursor:copy}
-@media (pointer:coarse){.pen-a i{left:-8px;top:-8px;width:16px;height:16px}.pen-a i::after{content:'';position:absolute;inset:-10px}.pen-a.first i{width:22px;height:22px;left:-11px;top:-11px}.pen-h i{left:-7px;top:-7px;width:14px;height:14px}.pen-h i::after{content:'';position:absolute;inset:-10px}.pen-m i{left:-6px;top:-6px;width:12px;height:12px}.pen-m i::after{content:'';position:absolute;inset:-10px}}
+.pen-a:hover i{transform:scale(1.25)}
+.pen-a.on i{background:#F2A33A;border-color:#fff;box-shadow:0 0 0 3px rgba(242,163,58,.45),0 1px 3px rgba(0,0,0,.5);transform:scale(1.2)}
+.pen-a.first i{width:18px;height:18px;left:-9px;top:-9px;background:#F2A33A;border-color:#fff;border-radius:50%;cursor:pointer;box-shadow:0 0 0 4px rgba(242,163,58,.35)}
+.pen-h i{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid #F2A33A;box-sizing:border-box;cursor:grab;box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.pen-m i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;transform:rotate(45deg);background:rgba(255,255,255,.55);border:1.5px solid rgba(242,163,58,.85);box-sizing:border-box;cursor:grab;transition:transform .1s,background .1s}
+.pen-m:hover i{background:#fff;transform:rotate(45deg) scale(1.4)}
+@media (pointer:coarse){.pen-a i{left:-8px;top:-8px;width:16px;height:16px}.pen-a i::after,.pen-h i::after,.pen-m i::after{content:'';position:absolute;inset:-10px}.pen-a.first i{width:22px;height:22px;left:-11px;top:-11px}.pen-h i{left:-7px;top:-7px;width:14px;height:14px}.pen-m i{left:-6px;top:-6px;width:12px;height:12px}}
+@media (prefers-reduced-motion:reduce){.pen-a i,.pen-m i{transition:none}}
+.pen-tbw{position:absolute;top:10px;left:10px;right:10px;z-index:650;display:flex;justify-content:center;pointer-events:none}
+.pen-tb{pointer-events:auto;display:flex;align-items:center;gap:2px;padding:4px;border-radius:14px;max-width:100%;overflow-x:auto;scrollbar-width:none;background:color-mix(in srgb,var(--surface) 94%,transparent);border:1px solid var(--line);box-shadow:0 4px 16px rgba(0,0,0,.16);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.pen-tb::-webkit-scrollbar{display:none}
+.ptb-t{display:flex;flex-direction:column;padding:0 10px 0 8px;line-height:1.15;white-space:nowrap}.ptb-t b{font-size:13px}.ptb-t small{font-size:11px;color:var(--muted)}
+.ptb-sep{width:1px;align-self:stretch;margin:6px 2px;background:var(--line);flex:none}
+.ptb{position:relative;flex:none;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 10px;border:0;border-radius:10px;background:none;color:var(--fg);font:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.ptb.ico{width:40px;padding:0;justify-content:center}
+.ptb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ptb:hover:not(:disabled){background:var(--surface-2)}
+.ptb.pri{background:var(--accent);color:var(--on-accent,#fff)}.ptb.pri:hover:not(:disabled){filter:brightness(1.08);background:var(--accent)}
+.ptb:disabled{opacity:.38;cursor:default}
+.ptb:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.ptb[data-tip]::after{content:attr(data-tip);position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--fg);color:var(--bg);font-size:12px;font-weight:700;padding:6px 8px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .12s;z-index:5}
+@media (hover:hover){.ptb[data-tip]:hover::after{opacity:1}}.ptb[data-tip]:focus-visible::after{opacity:1}
+@media (pointer:coarse){.ptb{min-height:44px}.ptb.ico{width:44px}}
+.pen-hint{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:640;max-width:calc(100% - 140px);text-align:center;font-size:12px;font-weight:600;color:#fff;background:rgba(15,25,30,.78);padding:6px 12px;border-radius:999px;pointer-events:none}
+@media (max-width:899px){.pen-hint{bottom:64px;max-width:calc(100% - 120px)}}
+.pen-tb.mob{flex-direction:column;align-items:stretch;gap:4px;overflow:visible}.ptb-row{display:flex;align-items:center;gap:2px;justify-content:space-between}.ptb-row.r2 .ptb.pri{flex:1;justify-content:center}.pen-tb.mob .ptb[data-tip]::after{display:none}
 .mz-edbar .btn svg{width:16px;height:16px;margin-right:6px;vertical-align:-3px}
 /* підписи */
 .mzl{background:none;border:0}
@@ -6115,8 +6137,8 @@ function mzFit(){if(!MZM)return;const m=MZM.map;m.invalidateSize(false);const z=
 /* стартовий вигляд: на портретному екрані фото заповнює всю рамку (без порожніх смуг), інакше — вміщується цілком */
 function mzHome(anim){const m=MZM.map;const sz=m.getSize();if(sz.y>sz.x*0.8&&sz.x<900){const z=Math.log2(Math.max(sz.x/MZ_W,sz.y/MZ_H));m.setView([MZ_H/2,MZ_W*0.56],z,{animate:!!anim});}else m.fitBounds(MZM.B,{animate:!!anim});}
 function mzZoomCls(){if(!MZM)return;const d=MZM.map.getZoom()-MZM.map.getMinZoom();const c=MZM.host.classList;c.toggle('zl-0',d<0.7);c.toggle('zl-1',d>=0.7&&d<1.6);c.toggle('zl-2',d>=1.6);}
-function mzFocusOn(id,padB){if(!MZM)return;const z=mzGet(id);if(!z||!z.polygon||!z.polygon.length)return;const b=L.latLngBounds(z.polygon.map(LL));const mn=MZM.map.getMinZoom();
-  MZM.map.flyToBounds(b,{paddingTopLeft:[24,24],paddingBottomRight:[24,(padB||0)+24],maxZoom:S.mzEdit?mn+3.5:mn+2.25,duration:matchMedia('(prefers-reduced-motion: reduce)').matches?0:.45,animate:!matchMedia('(prefers-reduced-motion: reduce)').matches});}
+function mzFocusOn(id,padB,padT){if(!MZM)return;const z=mzGet(id);if(!z||!z.polygon||!z.polygon.length)return;const b=L.latLngBounds(z.polygon.map(LL));const mn=MZM.map.getMinZoom();
+  MZM.map.flyToBounds(b,{paddingTopLeft:[24,(padT||0)+24],paddingBottomRight:[24,(padB||0)+24],maxZoom:S.mzEdit?mn+3.5:mn+2.25,duration:matchMedia('(prefers-reduced-motion: reduce)').matches?0:.45,animate:!matchMedia('(prefers-reduced-motion: reduce)').matches});}
 function mzVisible(z,L0,mine){const ty=MZ_TY[z.type]||MZ_TY.g;if(!L0[ty.l])return false;if(L0.only&&mzTaskable(z)&&mzStatus(z.id)==='none'&&S.mzSel!==z.id)return false;if(L0.only&&!mzTaskable(z)&&z.type!=='b')return false;return true;}
 function mzLabelHtml(z,st,cls){const ty=z.type;if(ty==='street'||ty==='lm'||ty==='poi')return '<span class="mzl-t '+ty+'">'+esc(z.name)+'</span>';
   if(ty==='b')return '<span class="mzl-t b">'+esc(z.label||({'Пав':'Павільйон','Л':'Лялюче'})[z.number]||(z.number?'Буд '+z.number:z.name))+'</span>';
@@ -6142,7 +6164,7 @@ function mzClick(id){const z=mzGet(id);if(!z)return;
   if(S.mzEdit){if(S.mzDraw)return;if(S.mzDirty&&S.mzSel&&S.mzSel!==id){toast('Спершу збережіть або скасуйте зміни зони');return;}S.mzSel=id;S.mzConf=null;if(z.polygon&&z.polygon.length>=3)penEdit(id);return;}
   S.mzSel=id;if(!WIDE.matches){render();mzPanelSheet(id);}else{render();mzFocusOn(id);}}
 /* --- редактор (Leaflet-Geoman + Turf) --- */
-function mzEditOff(){if(!MZM)return;if(PEN){penBind(false);if(PEN.lg)PEN.lg.remove();if(PEN.lp)PEN.lp.remove();PEN=null;}if(MZM.editLayer){try{MZM.editLayer.pm.disable();}catch(e){}MZM.zl.removeLayer(MZM.editLayer);MZM.editLayer=null;}S.mzDirty=0;S.mzConf=null;try{MZM.map.pm&&MZM.map.pm.disableDraw();}catch(e){}S.mzDraw=false;}
+function mzEditOff(){if(!MZM)return;MZM.host.classList.remove('pen-edit');setTimeout(penTbRefresh,0);if(PEN){penBind(false);if(PEN.lg)PEN.lg.remove();if(PEN.lp)PEN.lp.remove();PEN=null;}if(MZM.editLayer){try{MZM.editLayer.pm.disable();}catch(e){}MZM.zl.removeLayer(MZM.editLayer);MZM.editLayer=null;}S.mzDirty=0;S.mzConf=null;try{MZM.map.pm&&MZM.map.pm.disableDraw();}catch(e){}S.mzDraw=false;}
 function mzEditOn(id){mzEditOff();const z=mzGet(id);if(!z||!z.polygon||z.polygon.length<3)return;
   mzGeoman().then(()=>{if(S.mzSel!==id||!S.mzEdit)return;const ly=L.polygon(mzLatLngs(z),{className:'mzp t-'+z.type+' editing',smoothFactor:0,bubblingMouseEvents:false});ly._mzId=id;ly.addTo(MZM.zl);MZM.editLayer=ly;
     ly.pm.enable({allowSelfIntersection:false,snappable:true,snapDistance:14,draggable:false,removeLayerBelowMinVertexCount:false,limitMarkersToCount:-1});
@@ -6161,16 +6183,16 @@ function mzSetEdit(g){const ly=MZM.editLayer;const id=ly._mzId;try{ly.pm.disable
   ly.pm.enable({allowSelfIntersection:false,snappable:true,snapDistance:14,draggable:false,limitMarkersToCount:-1});S.mzDirty=1;mzCheck();}
 async function mzSaveEdit(extra){const ly=MZM&&MZM.editLayer;const z=mzGet(S.mzSel);if(!z)return;if(!(S.mzDb&&S.mzDb.length)){toast('Спершу перенесіть зони в базу');return;}
   const pe=PEN&&PEN.mode==='edit'&&PEN.id===z.id?PEN.a.map(a=>({p:a.p,i:a.i||null,o:a.o||null,s:!!a.s})):null;
-  const g=pe?{polygon:penPoly(pe,true),holes:[],extra:z.extra||[]}:ly?mzFromLayer(ly):{polygon:z.polygon,holes:z.holes||[],extra:z.extra||[]};if(!g){toast('Контур має містити хоча б 3 точки');return;}
+  const g=pe?{polygon:penPoly(pe,true),holes:[],extra:[]}:ly?mzFromLayer(ly):{polygon:z.polygon,holes:z.holes||[],extra:z.extra||[]};if(!g){toast('Контур має містити хоча б 3 точки');return;}
   if(pe)g.pen=pe;
-  let cutBy=[];const newType=(extra&&extra.props&&extra.props.type)||z.type;if(pe){await mzTurfLib().catch(()=>{});const r=penClipG(g,z.id,newType);cutBy=r.cut;Object.assign(g,r.g,{pen:pe});}let carved=[];
+  let cutBy=[];const newType=(extra&&extra.props&&extra.props.type)||z.type;if(pe){await mzTurfLib().catch(()=>{});const r=penClipG(g,z.id,newType);cutBy=r.cut;Object.assign(g,r.g,{pen:pe});}let carved=[],healed={};
   const conf=pe?[]:ly?await mzCheck():[];if(conf.length&&!(extra&&extra.force)){toast('Зона налазить на сусідні — обріжте або збережіть все одно');mzEdPanelRefresh();return;}
   const before={polygon:z.polygon,holes:z.holes||[],extra:z.extra||[],name:z.name,number:z.number,type:z.type};
   const upd={polygon:g.polygon,holes:g.holes,extra:g.extra,...(g.pen?{pen:g.pen}:{}),...(extra&&extra.props||{}),updatedBy:S.myId||'',updatedAt:Date.now()};
-  await write(async()=>{await S.db.doc('map_zones/'+z.id).update(upd);if(window.turf&&!MZ_BG.includes(newType))carved=await mzCarveBg(z.id,{polygon:g.polygon,holes:g.holes,extra:g.extra,type:newType},{polygon:z.polygon,extra:z.extra});
+  await write(async()=>{await S.db.doc('map_zones/'+z.id).update(upd);if(window.turf&&!MZ_BG.includes(newType)){const ng={polygon:g.polygon,holes:g.holes,extra:g.extra,type:newType},og={polygon:z.polygon,extra:z.extra};healed=await mzHealPen(z.id,ng,og);carved=await mzCarveBg(z.id,ng,og,healed);}
     await S.db.collection('map_zones_hist').add({zoneId:z.id,before,after:{polygon:g.polygon,holes:g.holes,extra:g.extra,...(extra&&extra.props||{})},by:S.myId||'',at:Date.now()});},'Карта: зону «'+((extra&&extra.props&&extra.props.number)||z.number||z.name)+'» збережено'+(cutBy.length?' (обрізано по зонах '+cutBy.map(c=>c.z.number||c.z.name).join(', ')+')':''));
-  if(carved.length)toast('Під зону вирізано: '+carved.map(b=>b.name||b.number).join(', '));
-  S.mzDirty=0;S.mzConf=null;if(pe)penEdit(z.id);else mzEditOn(z.id);}
+  {const hn=Object.keys(healed).map(id=>(mzGet(id)||{}).number||id);if(carved.length||hn.length)setTimeout(()=>toast([carved.length?'Під зону вирізано: '+carved.map(b=>b.name||b.number).join(', '):'',hn.length?'Сусідні зони підправлено: '+hn.join(', '):''].filter(Boolean).join(' · ')),900);}
+  S.mzConf=null;if(pe){penEdit(z.id,pe.map(a=>({p:a.p.slice(),i:a.i?a.i.slice():null,o:a.o?a.o.slice():null,s:!!a.s})));}else mzEditOn(z.id);S.mzDirty=0;setTimeout(()=>{S.mzDirty=0;penTbRefresh();},60);}
 function mzCancelEdit(){const id=S.mzSel;S.mzDirty=0;S.mzConf=null;const z=id&&mzGet(id);if(z&&z.polygon&&z.polygon.length>=3){if(PEN){penBind(false);if(PEN.lg)PEN.lg.remove();if(PEN.lp)PEN.lp.remove();PEN=null;}penEdit(id);return;}if(id)mzEditOn(id);else{mzEditOff();render();}}
 function mzStartDraw(){mzGeoman().then(()=>{mzEditOff();S.mzSel=null;S.mzDraw=true;render();
   MZM.map.pm.enableDraw('Polygon',{snappable:true,snapDistance:14,allowSelfIntersection:false,finishOn:null,templineStyle:{color:'#F2A33A'},hintlineStyle:{color:'#F2A33A',dashArray:'5,5'},pathOptions:{className:'mzp t-g editing'}});
@@ -6207,7 +6229,7 @@ function penDist(p,q){const a=penScr(p),b=penScr(q);return Math.hypot(a.x-b.x,a.
 function penSnap(p,skip){let best=null,bd=PEN_SNAP;for(const z of mzAll()){if(!z.polygon||z.polygon.length<3||z.id===skip)continue;const b=mzBox(z);const s0=penScr([b[0],b[1]]),s1=penScr([b[2],b[3]]),q=penScr(p);
     if(q.x<Math.min(s0.x,s1.x)-PEN_SNAP||q.x>Math.max(s0.x,s1.x)+PEN_SNAP||q.y<Math.min(s0.y,s1.y)-PEN_SNAP||q.y>Math.max(s0.y,s1.y)+PEN_SNAP)continue;
     for(const v of z.polygon){const d=penDist(p,v);if(d<bd){bd=d;best=v;}}}return best?[best[0],best[1]]:p;}
-function penLayers(){if(!PEN.lg)PEN.lg=L.layerGroup().addTo(MZM.map);if(!PEN.lp)PEN.lp=L.layerGroup().addTo(MZM.map);PEN.lg.clearLayers();return PEN.lg;}
+function penLayers(){setTimeout(penTbRefresh,0);if(!PEN.lg)PEN.lg=L.layerGroup().addTo(MZM.map);if(!PEN.lp)PEN.lp=L.layerGroup().addTo(MZM.map);PEN.lg.clearLayers();return PEN.lg;}
 function penPath(){if(!PEN||!MZM)return;if(!PEN.lp)PEN.lp=L.layerGroup().addTo(MZM.map);const lp=PEN.lp;lp.clearLayers();const A=PEN.a;const draw=PEN.mode==='draw';
   if(A.length){const pts=penPoly(A,!draw);if(draw){if(pts.length>1)L.polyline(pts.map(LL),{className:'pen-path',interactive:false}).addTo(lp);
       if(PEN.cur&&!PEN.down)L.polyline([LL(A[A.length-1].p),LL(PEN.cur)],{className:'pen-rubber',interactive:false}).addTo(lp);}
@@ -6215,15 +6237,15 @@ function penPath(){if(!PEN||!MZM)return;if(!PEN.lp)PEN.lp=L.layerGroup().addTo(M
   A.forEach(a=>{for(const h of ['i','o'])if(a[h])L.polyline([LL(a.p),LL(a[h])],{className:'pen-hl',interactive:false}).addTo(lp);});}
 let _penPR=0;function penPathLater(){if(_penPR)return;_penPR=requestAnimationFrame(()=>{_penPR=0;penPath();});}
 function penIcon(cls){return L.divIcon({className:'pen-'+cls,iconSize:null,html:'<i></i>'});}
-function penDraw(){if(!PEN||!MZM)return;const lg=penLayers();penPath();const A=PEN.a;const draw=PEN.mode==='draw';
+function penDraw(){if(!PEN||!MZM)return;MZM.host.classList.toggle('pen-edit',PEN.mode==='edit');const lg=penLayers();penPath();const A=PEN.a;const draw=PEN.mode==='draw';
   A.forEach((a,k)=>{const on=PEN.sel===k;a._hm={};
     for(const h of ['i','o']){if(!a[h])continue;
       if(draw)continue;const hm=L.marker(LL(a[h]),{icon:penIcon('h'),draggable:true,keyboard:false,pmIgnore:true}).addTo(lg);
-      a._hm[h]=hm;hm.on('drag',e=>{const p=PX(e.target.getLatLng());a[h]=p;if(a.s){const o=h==='i'?'o':'i';const dx=a.p[0]-p[0],dy=a.p[1]-p[1];const L1=Math.hypot(...(a[o]?[a[o][0]-a.p[0],a[o][1]-a.p[1]]:[dx,dy]));const L2=Math.hypot(dx,dy)||1;a[o]=[a.p[0]+dx/L2*L1,a.p[1]+dy/L2*L1];if(a._hm[o])a._hm[o].setLatLng(LL(a[o]));}PEN.dirty=1;penPathLater();});
+      a._hm[h]=hm;hm.on('dragstart',penSave);hm.on('drag',e=>{const p=PX(e.target.getLatLng());a[h]=p;if(a.s){const o=h==='i'?'o':'i';const dx=a.p[0]-p[0],dy=a.p[1]-p[1];const L1=Math.hypot(...(a[o]?[a[o][0]-a.p[0],a[o][1]-a.p[1]]:[dx,dy]));const L2=Math.hypot(dx,dy)||1;a[o]=[a.p[0]+dx/L2*L1,a.p[1]+dy/L2*L1];if(a._hm[o])a._hm[o].setLatLng(LL(a[o]));}PEN.dirty=1;penPathLater();});
       hm.on('dragend',()=>{penDraw();penDirty();});}
     const first=draw&&k===0&&A.length>=3;
     const m=L.marker(LL(a.p),{icon:penIcon('a'+(on?' on':'')+(first?' first':'')+(a.i||a.o?' smooth':'')),draggable:!draw,keyboard:false,pmIgnore:true,interactive:!draw||first,title:draw?(first?'Замкнути контур':''):'Точка '+(k+1)+'. Подвійний клік — крива/кут'}).addTo(lg);
-    if(!draw){m.on('dragstart',()=>{PEN.sel=k;PEN.d0=a.p.slice();PEN.h0=[a.i&&a.i.slice(),a.o&&a.o.slice()];});
+    if(!draw){m.on('dragstart',()=>{penSave();PEN.sel=k;PEN.d0=a.p.slice();PEN.h0=[a.i&&a.i.slice(),a.o&&a.o.slice()];});
       m.on('drag',e=>{const p=penSnap(PX(e.target.getLatLng()),PEN.id);const dx=p[0]-PEN.d0[0],dy=p[1]-PEN.d0[1];a.p=p;if(PEN.h0[0])a.i=[PEN.h0[0][0]+dx,PEN.h0[0][1]+dy];if(PEN.h0[1])a.o=[PEN.h0[1][0]+dx,PEN.h0[1][1]+dy];if(a._hm.i&&a.i)a._hm.i.setLatLng(LL(a.i));if(a._hm.o&&a.o)a._hm.o.setLatLng(LL(a.o));PEN.dirty=1;penPathLater();});
       m.on('dragend',()=>{penDraw();penDirty();});
       m.on('click',e=>{L.DomEvent.stop(e);PEN.sel=k;penDraw();penPanelRefresh();});
@@ -6231,15 +6253,35 @@ function penDraw(){if(!PEN||!MZM)return;const lg=penLayers();penPath();const A=P
   );
   if(!draw&&A.length>=3)A.forEach((a,k)=>{const b=A[(k+1)%A.length];const mid=penPoly([a,b],false);const c=mid[Math.floor(mid.length/2)]||[(a.p[0]+b.p[0])/2,(a.p[1]+b.p[1])/2];
     const mm=L.marker(LL(c),{icon:penIcon('m'),draggable:true,keyboard:false,pmIgnore:true,title:'Тягніть — вигнути сторону. Клік — додати точку'}).addTo(lg);let bent=false;
-    mm.on('click',e=>{L.DomEvent.stop(e);if(bent){bent=false;return;}A.splice(k+1,0,{p:c,i:null,o:null});PEN.sel=k+1;PEN.dirty=1;penDraw();penDirty();});
-    mm.on('dragstart',()=>{bent=true;});mm.on('drag',e=>{const m=PX(e.target.getLatLng());const C=[2*m[0]-(a.p[0]+b.p[0])/2,2*m[1]-(a.p[1]+b.p[1])/2];a.o=[a.p[0]+2/3*(C[0]-a.p[0]),a.p[1]+2/3*(C[1]-a.p[1])];b.i=[b.p[0]+2/3*(C[0]-b.p[0]),b.p[1]+2/3*(C[1]-b.p[1])];a.s=false;b.s=false;PEN.dirty=1;penPathLater();});
+    mm.on('click',e=>{L.DomEvent.stop(e);if(bent){bent=false;return;}penSave();A.splice(k+1,0,{p:c,i:null,o:null});PEN.sel=k+1;PEN.dirty=1;penDraw();penDirty();});
+    mm.on('dragstart',()=>{bent=true;penSave();});mm.on('drag',e=>{const m=PX(e.target.getLatLng());const C=[2*m[0]-(a.p[0]+b.p[0])/2,2*m[1]-(a.p[1]+b.p[1])/2];a.o=[a.p[0]+2/3*(C[0]-a.p[0]),a.p[1]+2/3*(C[1]-a.p[1])];b.i=[b.p[0]+2/3*(C[0]-b.p[0]),b.p[1]+2/3*(C[1]-b.p[1])];a.s=false;b.s=false;PEN.dirty=1;penPathLater();});
     mm.on('dragend',()=>{penDraw();penDirty();setTimeout(()=>{bent=false;},50);});});}
 let _penRaf=0;function penDrawLater(){if(_penRaf)return;_penRaf=requestAnimationFrame(()=>{_penRaf=0;penDraw();});}
-function penToggle(k){if(!PEN)return;if(k==null){toast('Спершу натисніть точку на контурі, потім «Крива/кут»');return;}const A=PEN.a;const a=A[k];if(!a)return;if(a.i||a.o){a.i=null;a.o=null;a.s=false;toast('Точка стала кутом');}else{const pv=A[(k-1+A.length)%A.length].p,nx=A[(k+1)%A.length].p;const tx=nx[0]-pv[0],ty=nx[1]-pv[1],tl=Math.hypot(tx,ty)||1;const l1=Math.hypot(a.p[0]-pv[0],a.p[1]-pv[1])/3,l2=Math.hypot(nx[0]-a.p[0],nx[1]-a.p[1])/3;a.i=[a.p[0]-tx/tl*l1,a.p[1]-ty/tl*l1];a.o=[a.p[0]+tx/tl*l2,a.p[1]+ty/tl*l2];a.s=true;toast('Точка стала кривою — тягніть круглі ручки');}
+function penToggle(k){if(!PEN)return;if(k==null){toast('Спершу натисніть точку на контурі, потім «Крива/кут»');return;}const A=PEN.a;const a=A[k];if(!a)return;penSave();if(a.i||a.o){a.i=null;a.o=null;a.s=false;toast('Точка стала кутом');}else{const pv=A[(k-1+A.length)%A.length].p,nx=A[(k+1)%A.length].p;const tx=nx[0]-pv[0],ty=nx[1]-pv[1],tl=Math.hypot(tx,ty)||1;const l1=Math.hypot(a.p[0]-pv[0],a.p[1]-pv[1])/3,l2=Math.hypot(nx[0]-a.p[0],nx[1]-a.p[1])/3;a.i=[a.p[0]-tx/tl*l1,a.p[1]-ty/tl*l1];a.o=[a.p[0]+tx/tl*l2,a.p[1]+ty/tl*l2];a.s=true;toast('Точка стала кривою — тягніть круглі ручки');}
   PEN.sel=k;PEN.dirty=1;penDraw();penDirty();}
-function penDelPoint(){const k=PEN&&PEN.sel;if(k==null)return;if(PEN.a.length<=3){toast('У контурі має лишитися хоча б 3 точки');return;}PEN.a.splice(k,1);PEN.sel=null;PEN.dirty=1;penDraw();penDirty();}
+function penDelPoint(){const k=PEN&&PEN.sel;if(k==null){toast('Спершу натисніть точку, яку треба видалити');return;}if(PEN.a.length<=3){toast('У контурі має лишитися хоча б 3 точки');return;}penSave();PEN.a.splice(k,1);PEN.sel=null;PEN.dirty=1;penDraw();penDirty();}
 function penDirty(){S.mzDirty=1;clearTimeout(_mzChk);_mzChk=setTimeout(()=>{if(!PEN||PEN.mode!=='edit')return;mzTurfLib().then(()=>{S.mzConf=mzConflicts({polygon:penPoly(PEN.a,true),holes:[],extra:[]},PEN.id);mzSync();mzEdPanelRefresh();penPanelRefresh();}).catch(()=>{});},300);}
-function penPanelRefresh(){document.querySelectorAll('[data-pen-del]').forEach(b=>{b.disabled=!(PEN&&PEN.sel!=null);});document.querySelectorAll('[data-pen-tog]').forEach(b=>{const a=PEN&&PEN.sel!=null&&PEN.a[PEN.sel];b.textContent=a?(a.i||a.o?'Зробити кутом':'Зробити кривою'):'Крива/кут';});
+const PTI={undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/>',redo:'<path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/>',ok:'<path d="m5 12 5 5 9-10"/>',x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  simp:'<path d="M4 18 10 8l4 6 6-10"/>',curve:'<path d="M4 19C4 8 20 16 20 5"/><circle cx="4" cy="19" r="1.6"/><circle cx="20" cy="5" r="1.6"/>',del:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',save:'<path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h8M8 21v-7h8v7"/>',prop:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>'};
+function ptb(label,ic,fn,o){o=o||{};return el('button',{type:'button',class:'ptb'+(o.primary?' pri':'')+(o.icon?' ico':''),'aria-label':label,'data-tip':o.icon?label:null,disabled:o.off?true:null,onclick:fn},svg(ic),o.icon?null:el('span',{text:o.text||label}));}
+function penTb(){const draw=PEN&&PEN.mode==='draw',edit=PEN&&PEN.mode==='edit';if(!draw&&!edit)return null;const u=!(PEN.undo&&PEN.undo.length),r=!(PEN.redo&&PEN.redo.length);
+  const z=edit&&mzGet(PEN.id);const sel=edit&&PEN.sel!=null&&PEN.a[PEN.sel];
+  const kids=[el('span',{class:'ptb-t'},el('b',{text:draw?'Перо':'Зона '+((z&&(z.label||z.number))||'')}),el('small',{text:draw?(PEN.a.length+' '+plural(PEN.a.length,'точка','точки','точок')):(S.mzDirty?'є зміни':PEN.a.length+' точок')})),
+    el('span',{class:'ptb-sep'}),ptb('Скасувати (Ctrl+Z)',PTI.undo,()=>penHist(-1),{icon:1,off:u}),ptb('Повернути (Ctrl+Shift+Z)',PTI.redo,()=>penHist(1),{icon:1,off:r}),el('span',{class:'ptb-sep'})];
+  if(draw)kids.push(ptb('Замкнути контур',PTI.ok,penFinish,{primary:1,off:PEN.a.length<3,text:'Замкнути'}),ptb('Вийти з пера',PTI.x,penCancel,{icon:1}));
+  else kids.push(ptb('Менше точок',PTI.simp,penFewer,{text:'Спростити'}),ptb(sel?(sel.i||sel.o?'Зробити кутом':'Зробити кривою'):'Крива або кут — спершу натисніть точку',PTI.curve,()=>penToggle(PEN.sel),{text:sel?(sel.i||sel.o?'Кут':'Крива'):'Крива/кут',off:!sel}),
+    ptb('Видалити точку',PTI.del,penDelPoint,{icon:1,off:!sel}),WIDE.matches?null:ptb('Властивості зони',PTI.prop,()=>openSheet(mzEditPanel(mzGet(S.mzSel))),{icon:1}),el('span',{class:'ptb-sep'}),
+    ptb('Зберегти (Ctrl+S)',PTI.save,()=>mzSaveEdit({}),{primary:1,text:'Зберегти',off:!S.mzDirty}),ptb('Закрити редагування зони',PTI.x,()=>{if(S.mzDirty){confirmSheet('Скасувати незбережені зміни зони «'+((z&&(z.number||z.name))||'')+'»?','Скасувати зміни',()=>{S.mzSel=null;mzEditOff();render();});return;}S.mzSel=null;mzEditOff();render();},{icon:1}));
+  if(!WIDE.matches){const closeZ=()=>{if(S.mzDirty){confirmSheet('Скасувати незбережені зміни зони «'+((z&&(z.number||z.name))||'')+'»?','Скасувати зміни',()=>{S.mzSel=null;mzEditOff();render();});return;}S.mzSel=null;mzEditOff();render();};
+    const r1=draw?[el('span',{class:'ptb-t'},el('b',{text:'Перо'}),el('small',{text:PEN.a.length+' '+plural(PEN.a.length,'точка','точки','точок')})),ptb('Скасувати',PTI.undo,()=>penHist(-1),{icon:1,off:u}),ptb('Повернути',PTI.redo,()=>penHist(1),{icon:1,off:r})]
+      :[ptb('Скасувати',PTI.undo,()=>penHist(-1),{icon:1,off:u}),ptb('Повернути',PTI.redo,()=>penHist(1),{icon:1,off:r}),ptb('Спростити — менше точок',PTI.simp,penFewer,{icon:1}),ptb(sel?(sel.i||sel.o?'Зробити кутом':'Зробити кривою'):'Крива або кут — спершу торкніться точки',PTI.curve,()=>penToggle(PEN.sel),{icon:1,off:!sel}),ptb('Видалити точку',PTI.del,penDelPoint,{icon:1,off:!sel}),ptb('Властивості зони',PTI.prop,()=>openSheet(mzEditPanel(mzGet(S.mzSel))),{icon:1})];
+    const r2=draw?[ptb('Замкнути контур',PTI.ok,penFinish,{primary:1,off:PEN.a.length<3,text:'Замкнути контур'}),ptb('Вийти з пера',PTI.x,penCancel,{icon:1})]
+      :[ptb('Зберегти зону',PTI.save,()=>mzSaveEdit({}),{primary:1,text:'Зберегти зону '+((z&&(z.label||z.number))||''),off:!S.mzDirty}),ptb('Закрити редагування зони',PTI.x,closeZ,{icon:1})];
+    return el('div',{class:'pen-tb mob',role:'toolbar','aria-label':draw?'Інструменти пера':'Редагування зони'},el('div',{class:'ptb-row'},r1),el('div',{class:'ptb-row r2'},r2));}
+  return el('div',{class:'pen-tb',role:'toolbar','aria-label':draw?'Інструменти пера':'Редагування зони'},kids.filter(Boolean));}
+function penTbRefresh(){const w=document.getElementById('penTbWrap');if(!w)return;const t=penTb();w.replaceChildren(...(t?[t]:[]));const h=document.getElementById('penHint');const hk=PEN?PEN.mode+(PEN.id||''):'';if(h){if(!PEN)h.hidden=true;else if(h.dataset.k!==hk){h.dataset.k=hk;h.hidden=false;clearTimeout(h._t);h._t=setTimeout(()=>{h.hidden=true;},6000);}}
+  if(h&&PEN)h.textContent=PEN.mode==='draw'?(IS_TOUCH?'Торкніться — точка · потягніть — крива · перша точка — замкнути':'Клік — точка · потягніть — крива · перша точка — замкнути'):(IS_TOUCH?'Тягніть точки · ромбик тягніть — вигнути, торкніться — нова точка':'Ромбик: тягніть — вигнути, клік — нова точка · Ctrl+Z — назад');}
+function penPanelRefresh(){penTbRefresh();document.querySelectorAll('[data-pen-del]').forEach(b=>{b.disabled=!(PEN&&PEN.sel!=null);});document.querySelectorAll('[data-pen-tog]').forEach(b=>{const a=PEN&&PEN.sel!=null&&PEN.a[PEN.sel];b.textContent=a?(a.i||a.o?'Зробити кутом':'Зробити кривою'):'Крива/кут';});
   const t=document.getElementById('mzDirtyTag');if(t)t.hidden=!S.mzDirty;}
 /* події малювання */
 function penDown(e){if(!PEN||PEN.mode!=='draw'||e.button>0)return;PEN.ptr=(PEN.ptr||0)+1;if(PEN.ptr>1){if(PEN.pend){PEN.pend=null;}PEN.down=false;return;}
@@ -6251,16 +6293,23 @@ function penMove(e){if(!PEN||PEN.mode!=='draw')return;const p=penPx(e);PEN.cur=p
     const tmp=PEN.a.concat([{p:PEN.pend.p,i:PEN.pend.i||null,o:PEN.pend.o||null}]);const keep=PEN.a;PEN.a=tmp;penPath();PEN.a=keep;return;}
   penPathLater();}
 function penUp(e){if(!PEN||PEN.mode!=='draw')return;PEN.ptr=Math.max(0,(PEN.ptr||1)-1);if(!PEN.down||!PEN.pend){PEN.down=false;return;}const q=PEN.pend;PEN.pend=null;PEN.down=false;
-  PEN.a.push({p:q.p,i:q.drag?q.i:null,o:q.drag?q.o:null,s:!!q.drag});penDraw();penBar();}
-function penKey(e){if(!PEN)return;const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable))return;
-  if(PEN.mode==='draw'){if(e.key==='Enter'){e.preventDefault();penFinish();}else if(e.key==='Escape'){e.preventDefault();penCancel();}else if(e.key==='Backspace'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z')){e.preventDefault();penUndo();}}
-  else if(PEN.mode==='edit'){if((e.key==='Delete'||e.key==='Backspace')&&PEN.sel!=null){e.preventDefault();penDelPoint();}}}
-function penBind(on){const h=MZM.host;if(on){if(PEN._b)return;PEN._b=1;h.addEventListener('pointerdown',penDown,true);h.addEventListener('pointermove',penMove,true);addEventListener('pointerup',penUp,true);addEventListener('pointercancel',penUp,true);document.addEventListener('keydown',penKey);
+  penSave();PEN.a.push({p:q.p,i:q.drag?q.i:null,o:q.drag?q.o:null,s:!!q.drag});penDraw();penBar();}
+function penKey(e){if(!PEN||S.tab!=='map')return;const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable))return;const mod=e.ctrlKey||e.metaKey,k=(e.key||'').toLowerCase();
+  if(mod&&k==='z'){e.preventDefault();penHist(e.shiftKey?1:-1);return;}if(mod&&k==='y'){e.preventDefault();penHist(1);return;}
+  if(PEN.mode==='draw'){if(e.key==='Enter'){e.preventDefault();penFinish();}else if(e.key==='Escape'){e.preventDefault();penCancel();}else if(e.key==='Backspace'){e.preventDefault();penHist(-1);}}
+  else if(PEN.mode==='edit'){if((e.key==='Delete'||e.key==='Backspace')&&PEN.sel!=null){e.preventDefault();penDelPoint();}else if(e.key==='Escape'&&PEN.sel!=null){PEN.sel=null;penDraw();penPanelRefresh();}else if(mod&&k==='s'){e.preventDefault();mzSaveEdit({});}}}
+document.addEventListener('keydown',penKey);
+function penBind(on){const h=MZM.host;if(on){if(PEN._b)return;PEN._b=1;h.addEventListener('pointerdown',penDown,true);h.addEventListener('pointermove',penMove,true);addEventListener('pointerup',penUp,true);addEventListener('pointercancel',penUp,true);
     h.classList.add('pen-on');MZM.map.dragging.disable();MZM.map.doubleClickZoom.disable();}
-  else{h.removeEventListener('pointerdown',penDown,true);h.removeEventListener('pointermove',penMove,true);removeEventListener('pointerup',penUp,true);removeEventListener('pointercancel',penUp,true);document.removeEventListener('keydown',penKey);
+  else{h.removeEventListener('pointerdown',penDown,true);h.removeEventListener('pointermove',penMove,true);removeEventListener('pointerup',penUp,true);removeEventListener('pointercancel',penUp,true);
     h.classList.remove('pen-on');MZM.map.dragging.enable();MZM.map.doubleClickZoom.enable();}}
-function penBar(){const b=document.getElementById('penN');if(b)b.textContent=PEN?String(PEN.a.length):'0';const f=document.getElementById('penFin');if(f)f.disabled=!(PEN&&PEN.a.length>=3);const u=document.getElementById('penUndo');if(u)u.disabled=!(PEN&&PEN.a.length);}
-function penUndo(){if(!PEN||!PEN.a.length)return;PEN.a.pop();penDraw();penBar();}
+/* історія дій пера: скасувати / повернути (Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z або Ctrl+Y) */
+const penSnapA=()=>JSON.stringify(PEN.a.map(a=>({p:a.p,i:a.i||null,o:a.o||null,s:!!a.s})));
+function penSave(){if(!PEN)return;PEN.undo=PEN.undo||[];PEN.undo.push(penSnapA());if(PEN.undo.length>100)PEN.undo.shift();PEN.redo=[];}
+function penHist(dir){if(!PEN)return;PEN.undo=PEN.undo||[];PEN.redo=PEN.redo||[];const from=dir<0?PEN.undo:PEN.redo,to=dir<0?PEN.redo:PEN.undo;
+  if(!from.length){toast(dir<0?'Немає що скасувати':'Немає що повернути');return;}to.push(penSnapA());PEN.a=JSON.parse(from.pop());PEN.sel=null;penDraw();penBar();if(PEN.mode==='edit'){PEN.dirty=1;penDirty();}}
+function penBar(){penTbRefresh();const b=document.getElementById('penN');if(b)b.textContent=PEN?String(PEN.a.length):'0';const f=document.getElementById('penFin');if(f)f.disabled=!(PEN&&PEN.a.length>=3);const u=document.getElementById('penUndo');if(u)u.disabled=!(PEN&&PEN.a.length);}
+function penUndo(){penHist(-1);}
 /* нова зона або перемалювати наявну (replaceId) */
 function penStart(replaceId){mzLeaflet().then(()=>{mzEditOff();S.mzSel=null;S.mzDraw=true;PEN={mode:'draw',a:[],replace:replaceId||null};mzTurfLib().catch(()=>{});render();
   requestAnimationFrame(()=>{if(!MZM)return;penBind(true);penDraw();});
@@ -6289,17 +6338,29 @@ function mzBgRecalc(b,over){const outer={polygon:b.polygon,holes:[],extra:(b.ext
   for(const z of over){if(!z.polygon||z.polygon.length<3||z.id===b.id||MZ_BG.includes(z.type)||['lm','street'].includes(z.type))continue;const c=mzBox(z);if(c[0]>ob[2]||c[2]<ob[0]||c[1]>ob[3]||c[3]<ob[1])continue;
     try{const d=turf.difference(turf.featureCollection([f,mzFeat(z)]));if(d)f=d;else return null;}catch(e){}}
   return mzFromFeat(f);}
-async function mzCarveBg(selfId,newG,oldG){if(!window.turf)return [];const all=mzAll().map(z=>z.id===selfId?{...z,...newG}:z);const bx=[mzBox(newG)].concat(oldG&&oldG.polygon&&oldG.polygon.length>=3?[mzBox(oldG)]:[]);const hit=c=>bx.some(b=>!(c[0]>b[2]||c[2]<b[0]||c[1]>b[3]||c[3]<b[1]));const done=[];
+/* сусідні зони, намальовані пером: контур пера мінус усі інші зони; так звільнене місце (старі клаптики) знову заповнюється */
+async function mzHealPen(selfId,newG,oldG){const over={};if(!window.turf)return over;const bx=[mzBox(newG)].concat(oldG&&oldG.polygon&&oldG.polygon.length>=3?[mzBox(oldG)]:[]);const hit=c=>bx.some(b=>!(c[0]>b[2]+2||c[2]<b[0]-2||c[1]>b[3]+2||c[3]<b[1]-2));
+  const cur=()=>mzAll().map(z=>over[z.id]?{...z,...over[z.id]}:(z.id===selfId?{...z,...newG}:z));
+  for(const N of mzAll()){if(N.id===selfId||!N.pen||N.pen.length<3||MZ_BG.includes(N.type)||['lm','street'].includes(N.type))continue;const g0={polygon:penPoly(N.pen,true),holes:[],extra:[]};if(!hit(mzBox(g0)))continue;
+    let f=mzFeat(g0);const nb=mzBox(g0);let gone=false;
+    for(const o of cur()){if(o.id===N.id||MZ_BG.includes(o.type)||['lm','street'].includes(o.type)||!o.polygon||o.polygon.length<3)continue;const c=mzBox(o);if(c[0]>nb[2]||c[2]<nb[0]||c[1]>nb[3]||c[3]<nb[1])continue;
+      try{const d=turf.difference(turf.featureCollection([f,mzFeat(o)]));if(d)f=d;else{gone=true;break;}}catch(e){}}
+    if(gone)continue;const ng=mzFromFeat(f);if(!ng)continue;
+    if(Math.abs(mzGArea(ng)-mzGArea({polygon:N.polygon,holes:N.holes||[],extra:N.extra||[]}))<0.5&&(N.extra||[]).length===ng.extra.length&&(N.holes||[]).length===ng.holes.length)continue;
+    await S.db.doc('map_zones/'+N.id).update({polygon:ng.polygon,holes:ng.holes||[],extra:ng.extra||[],updatedBy:S.myId||'',updatedAt:Date.now()});
+    await S.db.collection('map_zones_hist').add({zoneId:N.id,before:{polygon:N.polygon,holes:N.holes||[],extra:N.extra||[]},after:ng,by:S.myId||'',at:Date.now(),note:'перераховано після зміни зони '+selfId});over[N.id]=ng;}
+  return over;}
+async function mzCarveBg(selfId,newG,oldG,over){over=over||{};if(!window.turf)return [];const all=mzAll().map(z=>over[z.id]?{...z,...over[z.id]}:(z.id===selfId?{...z,...newG}:z));const bx=[mzBox(newG)].concat(oldG&&oldG.polygon&&oldG.polygon.length>=3?[mzBox(oldG)]:[]);const hit=c=>bx.some(b=>!(c[0]>b[2]||c[2]<b[0]||c[1]>b[3]||c[3]<b[1]));const done=[];
   for(const b of all){if(!MZ_BG.includes(b.type)||b.id===selfId||!b.polygon||b.polygon.length<3)continue;if(!hit(mzBox({polygon:b.polygon,extra:(b.extra||[]).map(rs=>[rs[0]])})))continue;
     const ng=mzBgRecalc(b,all);if(!ng)continue;const same=JSON.stringify([ng.polygon,ng.holes,ng.extra])===JSON.stringify([b.polygon,b.holes||[],b.extra||[]]);if(same)continue;
     await S.db.doc('map_zones/'+b.id).update({polygon:ng.polygon,holes:ng.holes||[],extra:ng.extra||[],updatedBy:S.myId||'',updatedAt:Date.now()});
     await S.db.collection('map_zones_hist').add({zoneId:b.id,before:{polygon:b.polygon,holes:b.holes||[],extra:b.extra||[]},after:{polygon:ng.polygon,holes:ng.holes||[],extra:ng.extra||[]},by:S.myId||'',at:Date.now(),note:'вирізано під зону '+selfId});done.push(b);}
   return done;}
 function penClipG(g,selfId,selfType){if(!window.turf)return {g,cut:[]};const bgSelf=MZ_BG.includes(selfType);let cf=mzConflicts(g,selfId);if(!bgSelf)cf=cf.filter(c=>!MZ_BG.includes(c.z.type));if(!cf.length)return {g,cut:[]};let f=mzFeat(g);for(const c of cf){try{const d=turf.difference(turf.featureCollection([f,mzFeat(c.z)]));if(d)f=d;}catch(e){}}const ng=mzFromFeat(f);return ng?{g:{...ng,extra:(ng.extra||[]).concat(g.extra||[])},cut:cf}:{g,cut:cf};}
-function penFewer(){if(!PEN||PEN.mode!=='edit')return;const n=PEN.a.length;if(n<=4){toast('Менше вже не можна — лишилось 4 точки');return;}const z=mzGet(PEN.id)||{};PEN.a=penFromPoly(penPoly(PEN.a,true),z.type,Math.max(4,Math.round(n*0.7)));PEN.sel=null;PEN.dirty=1;penDraw();penDirty();toast('Точок: '+PEN.a.length);}
+function penFewer(){if(!PEN||PEN.mode!=='edit')return;const n=PEN.a.length;if(n<=4){toast('Менше вже не можна — лишилось 4 точки');return;}const z=mzGet(PEN.id)||{};penSave();PEN.a=penFromPoly(penPoly(PEN.a,true),z.type,Math.max(4,Math.round(n*0.7)));PEN.sel=null;PEN.dirty=1;penDraw();penDirty();toast('Точок: '+PEN.a.length);}
 /* редагування зони пером (будь-яка зона: якщо контур автоматичний — спрощується до кількох точок) */
 function penEdit(id,A){const z=mzGet(id);if(!z)return;mzEditOff();const src=A||((z.pen&&z.pen.length>=3)?z.pen.map(a=>({p:a.p.slice(),i:a.i?a.i.slice():null,o:a.o?a.o.slice():null,s:!!a.s})):penFromPoly(z.polygon||[],z.type));const conv=!A&&!(z.pen&&z.pen.length>=3);
-  PEN={mode:'edit',id,a:src,type:z.type,sel:null,extra:z.extra||[]};if(conv){S.mzDirty=1;setTimeout(penDirty,50);}render();requestAnimationFrame(()=>{if(!MZM||!PEN)return;penBind(false);MZM.map.dragging.enable();mzSync();penDraw();if(!MZM._edFocus||MZM._edFocus!==id){MZM._edFocus=id;mzFocusOn(id,WIDE.matches?0:200);}});}
+  PEN={mode:'edit',id,a:src,type:z.type,sel:null,extra:z.extra||[]};if(conv){S.mzDirty=1;setTimeout(penDirty,50);}render();requestAnimationFrame(()=>{if(!MZM||!PEN)return;penBind(false);MZM.map.dragging.enable();mzSync();penDraw();if(!MZM._edFocus||MZM._edFocus!==id){MZM._edFocus=id;mzFocusOn(id,WIDE.matches?20:40,WIDE.matches?50:110);}});}
 function penZoneGroups(){const s=new Set();mzAll().forEach(z=>{if(z.group)s.add(z.group);if(['b','poi'].includes(z.type))s.add(z.type==='b'?(({'Пав':'Павільйон біля озера','Л':'Лялюче'})[z.number]||('Буд '+z.number)):z.name);});return [...s].sort((a,b)=>a.localeCompare(b,'uk',{numeric:true}));}
 function penGroupInput(id,v){const dl='dl-'+id;return [el('input',{id,list:dl,value:v||'',autocomplete:'off',placeholder:'напр. Буд 1.2 або «Парк біля озера»'}),el('datalist',{id:dl},penZoneGroups().map(g=>el('option',{value:g})))];}
 /* --- панелі --- */
@@ -6323,9 +6384,9 @@ function mzEditPanel(z){const nm=el('input',{id:'mzN',value:z.name||'',autocompl
   const ar=el('input',{id:'mzA',type:'number',inputmode:'decimal',value:z.area||''});const df=el('select',{id:'mzD'},el('option',{value:'',text:'— не призначено —'}),sortedStaff().filter(earns).map(s=>el('option',{value:s.id,text:s.name})));df.value=z.defaultAssigneeId||'';
   const props=()=>({name:nm.value.trim()||z.name,number:no.value.trim(),type:ty.value,group:grp.value.trim()||null,label:lb.value.trim()||null,area:ar.value?+ar.value:null,defaultAssigneeId:df.value||null});
   return el('div',{class:'mz-pan card mz-edp'},el('div',{class:'mz-ph'},el('h2',{style:'flex:1',text:'Зона '+(z.number||'')}),el('button',{type:'button',class:'iconbtn sm','aria-label':'Зняти вибір',onclick:()=>{if(S.mzDirty){confirmSheet('Скасувати незбережені зміни зони «'+(z.number||z.name)+'»?','Скасувати зміни',()=>{S.mzSel=null;mzEditOff();render();});return;}S.mzSel=null;mzEditOff();closeSheet();render();}},svg('<path d="M6 6l12 12M18 6 6 18"/>'))),
-    el('p',{class:'muted small',style:'margin:0',text:isPen?'Тягніть квадратні точки й круглі ручки кривих. Подвійний клік по точці — крива або кут. Ромбик посередині сторони додає точку. Delete — видалити вибрану точку.':'Тягніть точки, щоб змінити контур. Напівпрозора точка посередині сторони додає вершину, правий клік або довгий тап по точці — видаляє. Або перемалюйте зону пером.'}),
+    el('p',{class:'muted small',style:'margin:0',text:isPen?'Інструменти — на панелі над картою. Тут — назва, тип і належність зони.':'Тягніть точки, щоб змінити контур. Напівпрозора точка посередині сторони додає вершину, правий клік або довгий тап по точці — видаляє. Або перемалюйте зону пером.'}),
     el('div',{id:'mzConfBox'},mzConfBox()),
-    isPen?el('div',{class:'mz-edact'},el('button',{class:'btn ghost sm',type:'button',onclick:penFewer},'Менше точок'),el('button',{class:'btn ghost sm',type:'button','data-pen-tog':'1',onclick:()=>PEN&&penToggle(PEN.sel)},'Крива / кут'),el('button',{class:'btn ghost sm',type:'button','data-pen-del':'1',disabled:true,onclick:penDelPoint},'Видалити точку')):null,
+    
     el('div',{class:'mz-edact'},isPen?null:el('button',{class:'btn ghost sm',type:'button',onclick:mzSmooth},'Згладити кути'),el('button',{class:'btn ghost sm',type:'button',onclick:()=>{closeSheet();penStart(z.id);}},'Перемалювати пером'),el('button',{class:'btn ghost sm',type:'button',disabled:S.mzDirty?null:true,onclick:mzCancelEdit},'Скасувати зміни')),
     el('div',{class:'grid2'},el('label',{for:'mzT'},'Що це',ty),el('label',{for:'mzG'},'Належить до',grp,grpL)),el('label',{for:'mzN'},'Назва',nm),el('div',{class:'grid2'},el('label',{for:'mzNo'},'Номер',no),el('label',{for:'mzL'},'Підпис на карті',lb)),el('div',{class:'grid2'},el('label',{for:'mzA'},'Площа, м² (необов’язково)',ar),el('label',{for:'mzD'},'Відповідальний',df)),
     el('button',{class:'btn',type:'button',onclick:()=>mzSaveEdit({props:props()})},'Зберегти зону'),
@@ -6387,26 +6448,23 @@ function mapView(){if(!mapOpen()){document.body.classList.remove('mz-lock');retu
     el('div',{class:'mz-tools'},narrow?mzIBtn('Дії з картою',MZI.more,e=>mzMoreMenu(e.currentTarget)):[
       canPlan()&&!S.mzEdit?mzIBtn(S.mzMulti?'Завершити вибір кількох':'Вибрати кілька зон',MZI.multi,()=>{S.mzMulti=S.mzMulti?null:new Set();S.mzSel=null;render();},!!S.mzMulti):null,
       canZoneEdit()?mzIBtn(S.mzEdit?'Вийти з редагування':'Редагувати зони',MZI.edit,mzToggleEdit,!!S.mzEdit):null])));
-  if(S.mzEdit){const noDb=!(S.mzDb&&S.mzDb.length);out.push(el('div',{class:'mz-edbar'},el('span',{class:'mz-devtag',text:'DEV'}),el('b',{text:S.mzDraw?'Перо: точок ':'Редагування зон'},S.mzDraw?el('span',{id:'penN',text:String(PEN?PEN.a.length:0)}):null),
+  if(S.mzEdit){const noDb=!(S.mzDb&&S.mzDb.length);out.push(el('div',{class:'mz-edbar'},el('span',{class:'mz-devtag',text:'DEV'}),el('b',{text:S.mzDraw?'Малювання пером':'Редагування зон'}),
     el('div',{class:'mz-edbtns'},noDb?el('button',{class:'btn sm',type:'button',onclick:mzSeed},'Записати зони в базу'):null,
-      !noDb?(S.mzDraw?[el('button',{class:'btn ghost sm',type:'button',id:'penUndo',disabled:!(PEN&&PEN.a.length),onclick:penUndo},'Скасувати точку'),el('button',{class:'btn sm',type:'button',id:'penFin',disabled:!(PEN&&PEN.a.length>=3),onclick:penFinish},'Замкнути контур'),el('button',{class:'btn ghost sm',type:'button',onclick:penCancel},'Вийти з пера')]:el('button',{class:'btn sm',type:'button',onclick:()=>penStart()},svg('<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/>'),'Перо — нова зона')):null,
+      !noDb?(S.mzDraw?null:el('button',{class:'btn sm',type:'button',onclick:()=>penStart()},svg('<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/>'),'Перо — нова зона')):null,
       el('button',{class:'btn ghost sm',type:'button',onclick:mzReplaceImg},'Замінити фото'))));}
   if(list){out.push(el('div',{class:'mz-wrap'},mzListView()));return out;}
   const box=el('div',{class:'mz-stagebox'},el('div',{class:'mz-loading',role:'status',text:'Завантажую карту…'}));
   const side=WIDE.matches&&(S.mzSel||S.mzMulti)?(S.mzMulti?mzMultiPanel():mzPanel(S.mzSel)):null;
   out.push(el('div',{class:'mz-wrap'+(side?' side':'')},box,side));
   if(!WIDE.matches&&S.mzMulti)out.push(el('div',{class:'mz-float'},mzMultiPanel()));
-  if(!WIDE.matches&&S.mzEdit&&S.mzSel)out.push(el('div',{class:'mz-float'},el('div',{class:'mz-pan card mz-edmini'},
-    el('div',{class:'mz-emh'},el('b',{text:'Зона '+((mzGet(S.mzSel)||{}).number||'')}),el('span',{id:'mzDirtyTag',class:'muted small',hidden:!S.mzDirty,text:'змінено'}),el('button',{class:'btn sm',type:'button',onclick:()=>mzSaveEdit({})},'Зберегти'),el('button',{type:'button',class:'iconbtn sm','aria-label':'Закрити редагування зони',onclick:()=>{S.mzSel=null;mzEditOff();render();}},svg('<path d="M6 6l12 12M18 6 6 18"/>'))),
-    el('div',{id:'mzConfBox'},(S.mzConf&&S.mzConf.length)?mzConfBox():null),
-    el('div',{class:'mz-emb'},el('button',{class:'btn ghost sm',type:'button','aria-label':'Менше точок',onclick:penFewer},'Спростити'),el('button',{class:'btn ghost sm',type:'button','data-pen-tog':'1',onclick:()=>PEN&&penToggle(PEN.sel)},'Крива/кут'),el('button',{class:'btn ghost sm',type:'button','data-pen-del':'1',disabled:true,'aria-label':'Видалити вибрану точку',onclick:penDelPoint},'Видалити'),el('button',{class:'btn ghost sm',type:'button',onclick:()=>openSheet(mzEditPanel(mzGet(S.mzSel)))},'Ще…')))));
+  /* редагування на телефоні — панель інструментів на карті (penTb) */
   if(worker)out.push(mzWorkerList());
   mzLeaflet().then(()=>{if(S.tab!=='map'||S.mzMode==='list')return;const M=mzInit();if(!box.isConnected)return;
     const ctr=el('div',{class:'mz-ctl'},mzIBtn('Наблизити',MZI.plus,()=>M.map.zoomIn()),mzIBtn('Віддалити',MZI.minus,()=>M.map.zoomOut()),mzIBtn('Вмістити все',MZI.fit,()=>M.map.fitBounds(M.B)));
     const legOpen=!!S.mzLeg;const leg=el('div',{class:'mz-legw'},legOpen?el('div',{class:'mz-leg',id:'mzLeg',role:'region','aria-label':'Легенда'},MZ_TYLEG.map(k=>el('span',{},el('i',{class:'sw t-'+k}),MZ_TY[k].n)),
         el('span',{class:'mz-ls'},el('i',{class:'s-open'}),'є задача'),el('span',{class:'mz-ls'},el('i',{class:'s-over'}),'прострочено'),el('span',{class:'mz-ls'},el('i',{class:'s-done'}),'виконано сьогодні')):null,
       el('button',{type:'button',class:'mz-legb','aria-expanded':String(legOpen),'aria-controls':'mzLeg',onclick:()=>{S.mzLeg=!S.mzLeg;render();}},svg(MZI.leg),'Легенда'));
-    box.replaceChildren(M.host,ctr,leg);requestAnimationFrame(()=>{mzSize();mzSync();if(S.mzEdit&&S.mzSel&&!M.editLayer&&!PEN){const zz=mzGet(S.mzSel);if(zz&&zz.polygon&&zz.polygon.length>=3)penEdit(S.mzSel);}if(PEN)penDraw();
+    box.replaceChildren(M.host,ctr,leg,el('div',{id:'penTbWrap',class:'pen-tbw'}),el('div',{id:'penHint',class:'pen-hint',hidden:true}));penTbRefresh();requestAnimationFrame(()=>{mzSize();mzSync();if(S.mzEdit&&S.mzSel&&!M.editLayer&&!PEN){const zz=mzGet(S.mzSel);if(zz&&zz.polygon&&zz.polygon.length>=3)penEdit(S.mzSel);}if(PEN)penDraw();penTbRefresh();
       if(S.mzFocus){const f=S.mzFocus;S.mzFocus=null;if(!WIDE.matches&&!S.mzEdit)mzPanelSheet(f);else mzFocusOn(f);}});})
     .catch(()=>box.replaceChildren(el('div',{class:'mz-loading'},el('p',{text:'Не вдалося завантажити карту. Перевірте інтернет.'}),el('button',{class:'btn sm',type:'button',onclick:()=>render()},'Спробувати ще раз'))));
   return out;}
