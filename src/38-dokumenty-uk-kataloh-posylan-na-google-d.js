@@ -56,7 +56,7 @@ async function dkDel(x,msg){try{const sn=await S.db.doc('docs/'+x.id).get();if(s
 function dkMark(text,q){if(!q)return text;const i=text.toLowerCase().indexOf(q);if(i<0)return text;return [text.slice(0,i),el('mark',{text:text.slice(i,i+q.length)}),text.slice(i+q.length)];}
 /* ---------- вигляд ---------- */
 function dkView(){const g=FG.find(x=>x.id==='docs');const ed=dkCanEdit();const edit=ed&&S.dkEdit;const q=(S.dkQ||'').trim().toLowerCase();
-  if(!S.dkLoaded)return [fgHead(g),el('div',{class:'dk-grid'},[1,2,3,4].map(()=>el('div',{class:'card dk-f dk-sk','aria-hidden':'true'})))];
+  if(!S.dkLoaded)return [fgHead(g,dkAccessNote(true)),el('div',{class:'dk-grid'},[1,2,3,4].map(()=>el('div',{class:'card dk-f dk-sk','aria-hidden':'true'})))];
   const folders=dkFolders();const root=dkCfg().rootUrl||'';S.dkOpen=S.dkOpen||{};
   const sea=el('input',{type:'search',class:'dk-q',id:'dkQ',placeholder:'Пошук папки або документа','aria-label':'Пошук по документах УК',value:S.dkQ||'',autocomplete:'off'});
   sea.addEventListener('input',()=>{S.dkQ=sea.value;const p=sea.selectionStart;render();const n=document.getElementById('dkQ');if(n){n.focus();try{n.setSelectionRange(p,p);}catch(e){}}});
@@ -65,7 +65,7 @@ function dkView(){const g=FG.find(x=>x.id==='docs');const ed=dkCanEdit();const e
       root?dkLink(root,'btn ghost dk-root',[svg(DK_EXT),' Відкрити в Google Диску'],'Відкрити папку «УК Документи» в Google Диску'):(edit||ed?el('button',{type:'button',class:'btn ghost dk-root',onclick:()=>dkRootSheet()},'Додати посилання на «УК Документи»'):el('span',{class:'btn ghost dk-root',role:'button','aria-disabled':'true',title:'Посилання ще не додано'},svg(DK_EXT),' Відкрити в Google Диску')),
       ed?el('button',{type:'button',class:'btn dk-add',onclick:()=>dkDocSheet(null,null)},'+ Додати документ'):null,
       ed?el('button',{type:'button',class:'btn ghost'+(edit?' on':''),'aria-pressed':edit?'true':'false',onclick:()=>{S.dkEdit=!S.dkEdit;render();}},edit?'Готово':'Редагувати'):null));
-  const out=[fgHead(g),bar];
+  const out=[fgHead(g,dkAccessNote(true)),bar];
   if(edit)out.push(el('div',{class:'card dk-rootc'},el('span',{class:'dk-fi',style:'--c:#1F6F78'},svg(DK_ICONS.folder[1])),el('span',{class:'dk-rt'},el('b',{text:'Коренева папка «УК Документи»'}),el('small',{class:'muted',text:root||'Посилання ще не додано'})),
     el('button',{type:'button',class:'btn ghost sm',onclick:()=>dkRootSheet()},root?'Змінити посилання':'Додати посилання')));
   const vis=folders.map(f=>{const all=dkDocs(f.id);if(!q)return {f,docs:all,hit:false};const fm=String(f.name).toLowerCase().includes(q);const dm2=all.filter(d=>String(d.name).toLowerCase().includes(q)||String(d.note||'').toLowerCase().includes(q));
@@ -77,7 +77,14 @@ function dkView(){const g=FG.find(x=>x.id==='docs');const ed=dkCanEdit();const e
   out.push(grid);
   out.push(el('p',{class:'muted small dk-note',text:'Файли зберігаються лише на Google Диску — застосунок відкриває посилання. Доступ до файлів налаштовується на Диску.'}));
   return out;}
-function fgHead(g){return el('section',{class:'uk-head',style:'--c1:'+g.c1+';--c2:'+g.c2},el('span',{class:'uk-ic big'},svg(g.ic)),el('div',{},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:g.name}),el('p',{text:g.sub})));}
+function fgHead(g,note){return el('section',{class:'uk-head',style:'--c1:'+g.c1+';--c2:'+g.c2},el('span',{class:'uk-ic big'},svg(g.ic)),el('div',{},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:g.name}),el('p',{text:g.sub}),note||null));}
+/* примітка про доступ до документів (плитка й шапка розділу): підказка при наведенні, на телефоні — довге натискання */
+const DK_ACCESS_TIP='Документи зберігаються на Google Диску й відкриваються за посиланням. Переглянути їх можуть лише учасники відділу Facility, яким надано доступ на Диску.';
+function dkAccessNote(inHead){const lock=svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>');lock.setAttribute('aria-hidden','true');
+  const n=el(inHead?'span':'small',{class:'dk-acc'+(inHead?' head':''),'data-tip2':DK_ACCESS_TIP,tabindex:inHead?'0':null,'aria-label':'Google Диск · доступ лише для відділу Facility. '+DK_ACCESS_TIP},lock,el('span',{text:'Google Диск · доступ лише для відділу Facility'}));
+  let t=null,fired=false;n.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;fired=false;t=setTimeout(()=>{fired=true;toast(DK_ACCESS_TIP);},550);});
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>n.addEventListener(ev,()=>clearTimeout(t)));
+  n.addEventListener('click',e=>{if(fired){fired=false;e.stopPropagation();e.preventDefault();}});n.addEventListener('contextmenu',e=>{if(e.pointerType!=='mouse')e.preventDefault();});return n;}
 function dkCard(f,docs,hit,q,edit,ed,i,n){const ic=(DK_ICONS[f.icon]||DK_ICONS.doc)[1];const has=!!f.url;const open=!!q&&hit||!!S.dkOpen[f.id];const all=dkDocs(f.id);
   const headKids=[el('span',{class:'dk-fi',style:'--c:'+(f.color||DK_COLORS[0])},svg(ic)),el('span',{class:'dk-ft'},el('b',{},dkMark(f.name,q)),has?null:el('small',{class:'muted',text:'Посилання ще не додано'})),has&&!edit?el('span',{class:'dk-ext','aria-hidden':'true'},svg(DK_EXT)):null];
   const head=has&&!edit?dkLink(f.url,'dk-fh',headKids,f.name+' — відкрити в Google Диску'):el('div',{class:'dk-fh'},headKids);
