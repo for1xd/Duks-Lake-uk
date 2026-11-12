@@ -16,14 +16,14 @@ window.dlLogoHTML=function(o){o=o||{};var id='dlg'+(++dlLogoHTML.n);var h=DL_LOG
 </script>
 <style>
 /* ---------- екран завантаження (брендовий, завжди темна бірюза) ---------- */
-.dls{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:#0E2A2E;background:linear-gradient(165deg,#0E2A2E 0%,#163F42 55%,#1C5A5C 100%);color:#fff;
+.dls{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:#0E2A2E;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E"),linear-gradient(165deg,#0E2A2E 0%,#163F42 55%,#1C5A5C 100%);color:#fff;
   padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);box-sizing:border-box;overflow:hidden;
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;transition:opacity .3s ease,transform .3s ease;will-change:opacity,transform}
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;transition:opacity .3s ease,transform .3s ease}
 .dls.out{opacity:0;transform:scale(1.02);pointer-events:none}
 .dls-c{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;width:100%;max-width:360px;padding:0 16px;box-sizing:border-box}
 .dls-ic{position:relative;width:92px;height:92px;margin-bottom:24px}
-.dls-ic .dl-logo{position:relative;display:block;width:92px;height:92px;box-shadow:0 10px 30px rgba(0,0,0,.28);animation:dlsBreath 2s ease-in-out .8s infinite;will-change:transform}
-.dls-ring{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;border:1px solid rgba(150,226,218,.5);opacity:0;animation:dlsRing 3s ease-out infinite;will-change:transform,opacity}
+.dls-ic .dl-logo{position:relative;display:block;width:92px;height:92px;box-shadow:0 10px 30px rgba(0,0,0,.28);animation:dlsBreath 2s ease-in-out .8s infinite}
+.dls-ring{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;border:1px solid rgba(150,226,218,.5);opacity:0;animation:dlsRing 3s ease-out infinite}
 .dls-ring:nth-child(2){animation-delay:1s}.dls-ring:nth-child(3){animation-delay:2s}
 .dls .dl-d{stroke-dasharray:1 1;stroke-dashoffset:1;animation:dlsDraw .4s ease-out .1s forwards}
 .dls .dl-a{stroke-dasharray:0 400;stroke-dashoffset:-80;animation:dlsArm .3s ease-out .5s forwards}
@@ -3738,6 +3738,46 @@ html.v2 .tktype,html.v2 .tkst,html.v2 .due,html.v2 .remind{border-radius:6px}
 html.v2 .soon{border-radius:4px}
 /* анімації спокійніші */
 html.v2 button:active,html.v2 .btn:active,html.v2 .person:active{transform:none!important}
+/* ===== ПОВЕРХНІ БЕЗ «СКЛА» + НЕЙТРАЛЬНИЙ ХОВЕР (12.11) =====
+   Причини артефактів: backdrop-filter на ~35 елементах (сайдбар/навігація, шапка, композер, поповери, чипи, кнопки карти),
+   кольорова тінь під іконками плиток (.uk-ic → var(--c1)), підйом плиток transform під скляними шарами, overflow:hidden у плиток,
+   постійний will-change. Тут: суцільні поверхні з токенів, одне скло (шапка; на телефоні ще нижня навігація), тінь ховера в ::after. */
+:root{--surface-1:var(--bg);--surface-2:var(--surface);--surface-3:color-mix(in srgb,var(--surface) 94%,var(--fg) 6%);--surface-press:color-mix(in srgb,var(--surface) 88%,var(--fg) 12%);
+  --border-subtle:color-mix(in srgb,var(--fg) 10%,transparent);--border-strong:color-mix(in srgb,var(--fg) 24%,transparent);
+  --shadow-hover:0 8px 24px rgba(16,24,32,.10);
+  --glass:color-mix(in srgb,var(--surface) 95%,transparent)!important;--mp-bg:color-mix(in srgb,var(--surface) 97%,transparent)!important}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--shadow-hover:0 8px 24px rgba(0,0,0,.28)}}
+:root[data-theme="dark"]{--shadow-hover:0 8px 24px rgba(0,0,0,.28)}
+/* скло: вимкнено скрізь… */
+html body *,html body *::before,html body *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+/* …крім одного шару: липка шапка; на телефоні — нижня навігація (не вкладені одна в одну) */
+html body header.top{-webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important}
+@media (max-width:899px){html body nav.tabs{-webkit-backdrop-filter:blur(12px)!important;backdrop-filter:blur(12px)!important}}
+/* напівпрозорі плашки, що трималися на розмитті, — майже суцільні */
+.gh-badge,.gh-chip,.fl-w,.fl-x,.sf-pwc{background:rgba(255,255,255,.93)!important}
+.fl-card,.sf-wc,.sf-dist{background:rgba(255,255,255,.96)!important}
+.mz-ctl .mz-ib:not([aria-pressed="true"]),.mz-legb,.pen-tb{background:color-mix(in srgb,var(--surface) 95%,transparent)!important}
+.pk-3d-top .sg,.pk-3d-top .iconbtn,.pk-pb,.pk-lock{background:rgba(10,20,24,.86)!important}
+/* кольорові акценти без світіння */
+.uk-ic,.uk-ic.big{box-shadow:none!important}
+.dt-ok{box-shadow:0 6px 16px -8px rgba(0,0,0,.25)!important}
+/* will-change лише на час анімації */
+.sheet{will-change:auto}
+/* інтерактивні картки: рамка → фон → підйом → нейтральна тінь (у ::after, анімуються лише opacity і transform) */
+:is(.uk-tile,button.card,a.card,.pcard){position:relative;isolation:isolate;box-shadow:inset 0 0 0 1px var(--border-subtle)!important;transition:transform .18s ease-out!important}
+.uk-tile{overflow:visible!important;min-width:0;background:var(--surface-2)!important;background-image:none!important}.uk-tile>*{min-width:0;max-width:100%}.uk-tile .uk-t b,.uk-tile .uk-t small{overflow-wrap:anywhere}
+html body :is(.uk-tile,button.card,a.card,.pcard)::after{content:"";display:block!important;position:absolute;inset:0;border-radius:inherit;box-shadow:var(--shadow-hover);opacity:0;transition:opacity .18s ease-out;pointer-events:none;z-index:-1}
+@media (hover:hover) and (pointer:fine){
+  :is(.uk-tile,button.card,a.card,.pcard):hover{transform:translateY(-2px)!important;background-color:var(--surface-3)!important;box-shadow:inset 0 0 0 1px var(--border-strong)!important}
+  .uk-tile:hover{background:var(--surface-3)!important}
+  html body :is(.uk-tile,button.card,a.card,.pcard):hover::after{opacity:1}
+  html body nav.tabs button:not([aria-current="page"]):hover{background:var(--surface-3)!important;box-shadow:none!important}}
+@media (hover:none),(pointer:coarse){
+  :is(.uk-tile,button.card,a.card,.pcard):hover{transform:none!important}
+  :is(.uk-tile,button.card,a.card,.pcard):active{transform:none!important;background-color:var(--surface-press)!important}
+  .uk-tile:active{background:var(--surface-press)!important}}
+:is(.uk-tile,button.card,a.card,.pcard):focus-visible{outline:2px solid var(--accent)!important;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){:is(.uk-tile,button.card,a.card,.pcard),:is(.uk-tile,button.card,a.card,.pcard)::after{transition:none!important}:is(.uk-tile,button.card,a.card,.pcard):hover{transform:none!important}}
 </style>
 
 <div id="dlSplash" class="dls" role="status" aria-live="polite" aria-label="Завантаження Duck’s Lake">
