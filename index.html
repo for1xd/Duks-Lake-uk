@@ -3416,7 +3416,28 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 .ia-all th,.ia-all td{background:var(--accent-soft)}.ia-allb{border:1.5px dashed var(--accent)}
 .ia-pump{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}.ia-pr{display:flex;flex-direction:column;gap:4px;font-weight:600}
 .ia-warnl{margin:0;padding-left:18px;color:#b46f14;font-weight:600}
-.cl-tabs{align-self:flex-start}
+.cl-tabs{width:100%}
+.cl-flt{display:flex;flex-direction:column;gap:8px}.cl-fsel{align-items:center}
+.cl-chips{flex-wrap:wrap!important;margin:0!important;padding:0!important;width:auto!important;overflow:visible!important}
+.dz-chip.cl-pick-c[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.sheet.cl-sheet{padding-top:0;padding-bottom:0;gap:0}
+.cl-shh{position:sticky;top:0;z-index:3;display:flex;flex-direction:column;gap:10px;padding:20px 0 12px;background:var(--surface);border-bottom:1px solid var(--line)}
+.cl-shh h2{margin:0}
+.cl-shb{display:flex;flex-direction:column;gap:14px;padding:14px 0}
+.cl-shf{position:sticky;bottom:0;z-index:3;padding:12px 0 calc(16px + var(--sab,0px));background:var(--surface);border-top:1px solid var(--line)}
+.cl-shf .btn{min-height:48px}
+@media (max-width:719px){.sheet.cl-sheet{height:calc(100dvh - 12px);max-height:calc(100dvh - 12px)}}
+.cl-steps .iw-s{flex:1 1 0;min-width:0;font-size:13px;padding:8px 10px}.cl-steps .iw-s .iw-si{font-weight:800}
+@media (max-width:420px){.cl-steps .iw-s:not(.on){font-size:0;gap:0;flex:0 0 44px}.cl-steps .iw-s:not(.on) .iw-si{font-size:14px}}
+.cl-shrow{display:flex}.cl-shrow .dz-bsel{max-width:280px}
+.cl-cnt{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted)}.cl-cnt b{color:var(--fg)}
+.cl-plist{display:flex;flex-direction:column;gap:10px}
+.cl-pg{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;padding:2px 12px}
+.cl-pgh{border-bottom:1px solid var(--line);font-weight:800!important}
+.cl-pl{display:flex;flex-direction:column}
+.cl-pr{min-height:44px!important;font-size:15px!important;border-bottom:1px solid var(--line)}.cl-pr:last-child{border-bottom:0}
+.cl-prn{flex:1;min-width:0}
+.cl-tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}.cl-tag.un{color:var(--warn,#d23c42)}
 .cl-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}.cl-acts{display:flex;flex-wrap:wrap;gap:8px}.cl-acts .btn{min-height:44px}.cl-acts .btn.on{background:var(--accent-soft);color:var(--accent-ink)}
 .cl-grid{display:grid;grid-template-columns:1fr;gap:12px;align-items:start}@media (min-width:760px){.cl-grid{grid-template-columns:1fr 1fr}}
 .cl-cc{display:flex;flex-direction:column;gap:10px;padding:14px;border-top:3px solid var(--c,#8A969B)}.cl-cc.un{border-top-color:var(--warn,#d23c42)}.cl-cc.loc{border-top-color:var(--accent)}
@@ -3436,12 +3457,9 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 .cl-ina{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cl-chip{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:inherit;opacity:.75}
 .cl-selbar{position:sticky;bottom:calc(96px + var(--sab,0px));z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px;border-radius:16px;background:var(--surface);box-shadow:0 8px 24px rgba(16,24,32,.16),inset 0 0 0 1px var(--line)}
 @media (min-width:900px){.cl-selbar{bottom:16px}}
-.cl-sug{display:flex;flex-wrap:wrap;gap:6px}.cl-locs{display:flex;flex-wrap:wrap;gap:8px}.chip.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.cl-pick{display:flex;flex-direction:column;max-height:40vh;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:4px 10px}.cl-pn{display:flex;flex-direction:column}
 .cl-fabw{position:sticky;top:0;z-index:4}.cl-fab{width:100%;min-height:52px;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:8px}.cl-fab svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2}
 @media (max-width:899px){.cl-fabw{position:sticky;top:auto;bottom:calc(92px + var(--sab,0px));order:99}}
 @media (min-width:900px){.cl-fab{width:auto;padding:0 22px}}
-.cl-flt{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cl-flt select{min-height:44px;max-width:220px}
 .cl-list{display:flex;flex-direction:column;padding:4px 8px}.cl-mine{gap:6px}
 .cl-rr{display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 6px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--fg);font:inherit;text-align:left;cursor:pointer;width:100%;flex-wrap:wrap}.cl-rr:last-child{border-bottom:0}.cl-rr:hover{background:var(--surface-2)}
 .cl-rd{display:flex;flex-direction:column;width:48px}.cl-rt{flex:1;min-width:160px;display:flex;flex-direction:column;gap:2px}.cl-rs{display:flex;gap:4px}
@@ -3451,7 +3469,7 @@ html.ios .hero.hero2 .pill,html.ios .hero2 .hw-chip{background:var(--surface-2)!
 .cl-gseg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:var(--surface-2);border-radius:14px;padding:4px}
 .cl-sb{min-height:52px;flex-direction:column;gap:2px;font-size:13px}.iw-sb.bad[aria-checked="true"]{background:var(--warn-soft);color:var(--warn);box-shadow:inset 0 0 0 1.5px var(--warn)}
 .cl-next{min-height:52px}.cl-card .iw-camb{min-height:56px!important}
-.cl-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.cl-k{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:12px;background:var(--surface-2);text-align:center}.cl-k b{font-family:var(--display);font-size:22px}.cl-k small{font-size:11.5px;color:var(--muted);font-weight:700}
+.cl-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.cl-k{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:12px;background:var(--surface-2);text-align:center}.cl-k b{font-family:var(--display);font-size:22px}.cl-k small{font-size:12px;color:var(--muted);font-weight:700}
 .cl-k.ok b{color:var(--ok-ink)}.cl-k.remark b{color:var(--amber-ink)}.cl-k.bad b{color:var(--warn)}
 .cl-bcl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:32px}
 .cl-acts2{display:flex;flex-wrap:wrap;gap:8px}.cl-acts2 .btn{min-height:48px}
@@ -8700,11 +8718,11 @@ function clView(){const g=FG.find(x=>x.id==='clean');
   const out=[fgHead(g)];
   if(inspCan())out.push(el('button',{type:'button',class:'card ip-link',onclick:()=>openFg('insp')},el('span',{},el('b',{text:'Фотозвіти обходу →'}),el('small',{class:'muted',text:'Щоденні фото будівель і території — у розділі «Обхід будівель»'}))));
   const tab=S.clTab||'zones';const pend=clPending();
-  out.push(el('div',{class:'seg cl-tabs',role:'tablist'},[['zones','Закріплення зон'],['revs','Ревізії'+(pend&&clCanApprove()?' · '+pend:'')]].map(([k,l])=>el('button',{type:'button',role:'tab','aria-selected':String(tab===k),'aria-pressed':String(tab===k),onclick:()=>{S.clTab=k;S.clSel=null;render();}},l))));
+  out.push(el('div',{class:'sg full cl-tabs',role:'tablist'},[['zones','Закріплення зон'],['revs','Ревізії'+(pend&&clCanApprove()?' · '+pend:'')]].map(([k,l])=>el('button',{type:'button',role:'tab','aria-selected':String(tab===k),'aria-pressed':String(tab===k),onclick:()=>{S.clTab=k;S.clSel=null;render();}},l))));
   if(!S.clLoaded)return out.concat(el('div',{class:'card cl-sk','aria-hidden':'true'}));
   return out.concat(tab==='revs'?clRevsView():clZonesView());}
 function clZonesView(){const ed=clCanEdit();const mode=S.clMode||'cl';const sel=S.clSel;const out=[];const objs=clObjs();
-  out.push(el('div',{class:'cl-bar'},el('div',{class:'seg',role:'tablist','aria-label':'Режим перегляду'},[['cl','За прибиральницями'],['loc','За будинками']].map(([k,l])=>el('button',{type:'button',role:'tab','aria-pressed':String(mode===k),'aria-selected':String(mode===k),onclick:()=>{S.clMode=k;render();}},l))),
+  out.push(el('div',{class:'cl-bar'},el('div',{class:'sg',role:'tablist','aria-label':'Режим перегляду'},[['cl','За прибиральницями'],['loc','За будинками']].map(([k,l])=>el('button',{type:'button',role:'tab','aria-pressed':String(mode===k),'aria-selected':String(mode===k),onclick:()=>{S.clMode=k;render();}},l))),
     ed?el('div',{class:'cl-acts'},el('button',{type:'button',class:'btn sm',onclick:()=>clObjSheet(null)},'+ Об’єкт'),el('button',{type:'button',class:'btn ghost sm',onclick:()=>clCleanerSheet(null)},'+ Прибиральниця'),
       el('button',{type:'button',class:'btn ghost sm'+(sel?' on':''),'aria-pressed':String(!!sel),onclick:()=>{S.clSel=sel?null:new Set();render();}},sel?'Скасувати вибір':'Вибрати кілька')):null));
   const me=myStaff();const mine=me&&clCleaners().find(c=>c.staffId===me.id);
@@ -8752,7 +8770,7 @@ function clObjSheet(o){const locs=clLocs();const loc=el('select',{id:'clL'},[...
     else{const last=clObjs().filter(x=>x.loc===loc.value);ok=await clPut('cl_objects',clId('o_'),{loc:loc.value,name:n,cleanerId:cid,order:(last.length?Math.max(...last.map(x=>x.order||0)):0)+10},null,'Клінінг: додано об’єкт «'+n+'» · '+lc+' → '+(cid?S.clC[cid].name:'не закріплено'));}
     save.disabled=false;if(ok){closeSheet();toast(o?'Збережено':'Об’єкт додано');}}},'Зберегти');
   openSheet(el('h2',{text:o?'Змінити об’єкт':'Новий об’єкт'}),el('label',{for:'clL'},'Будинок / локація',loc),el('label',{for:'clN'},'Назва об’єкта',nm,dl),
-    el('div',{class:'cl-sug'},CL_SUG.slice(0,8).map(t=>el('button',{type:'button',class:'chip',onclick:()=>{nm.value=t;nm.dispatchEvent(new Event('input'));nm.focus();}},t))),
+    el('div',{class:'dz-chips cl-sug'},CL_SUG.slice(0,8).map(t=>el('button',{type:'button',class:'dz-chip',onclick:()=>{nm.value=t;nm.dispatchEvent(new Event('input'));nm.focus();}},t))),
     el('label',{for:'clC'},'Прибиральниця',cs),er,el('div',{class:'btn-pair'},el('button',{type:'button',class:'btn ghost',onclick:()=>closeSheet()},'Скасувати'),save));
   fancySel(document.getElementById('sheetRoot'));setTimeout(()=>nm.focus(),80);}
 function clTransferSheet(ids){const os=ids.map(id=>(S.clO||{})[id]).filter(Boolean);if(!os.length)return;const cs=clCleanerSelect('clT','',true);
@@ -8787,11 +8805,11 @@ function clRevsView(){const out=[];const can=clCanRev();const m=clMe();
   if(mine.length)out.push(el('section',{class:'card stack cl-mine'},el('b',{text:'Мої незавершені ревізії'}),mine.map(r=>clRevRow(r,true))));
   const f=S.clF=S.clF||{per:'30'};const all=clRevs().filter(r=>r.status!=='draft');const lim=f.per==='all'?'':addDays(ymd(new Date()),-(+f.per));
   const L=all.filter(r=>(!lim||r.date>=lim)&&(!f.loc||(r.locs||[]).includes(f.loc))&&(!f.cl||Object.values(r.items||{}).some(i=>i.cleanerId===f.cl))&&(!f.st||r.status===f.st)&&(!f.by||r.authorId===f.by));
-  const sel=(id,label,opts,key)=>{const s=el('select',{id,'aria-label':label},[el('option',{value:'',text:label})].concat(opts.map(([v,t])=>el('option',{value:v,text:t}))));s.value=f[key]||'';s.addEventListener('change',()=>{f[key]=s.value;render();});return s;};
+  const sel=(id,label,opts,key)=>{const s=el('select',{id,class:'dz-bsel'+(f[key]?' on':''),'aria-label':label},[el('option',{value:'',text:label})].concat(opts.map(([v,t])=>el('option',{value:v,text:t}))));s.value=f[key]||'';s.addEventListener('change',()=>{f[key]=s.value;render();});return s;};
   const authors=[...new Set(all.map(r=>r.authorId))].map(staffById).filter(Boolean);
-  out.push(el('div',{class:'cl-flt'},el('div',{class:'seg',role:'tablist','aria-label':'Період'},[['7','7 днів'],['30','30 днів'],['all','Усі']].map(([k,l])=>el('button',{type:'button','aria-pressed':String(f.per===k),onclick:()=>{f.per=k;render();}},l))),
-    sel('clFL','Усі будинки',clLocs().map(l=>[l.id,l.name]),'loc'),sel('clFC','Усі прибиральниці',clCleaners(true).map(c=>[c.id,c.name]),'cl'),
-    sel('clFS','Усі статуси',[['submitted','На погодженні'],['returned','Повернено'],['approved','Погоджено']],'st'),sel('clFB','Усі перевіряючі',authors.map(s=>[s.id,s.name]),'by')));
+  out.push(el('div',{class:'cl-flt'},el('div',{class:'sg',role:'tablist','aria-label':'Період'},[['7','7 днів'],['30','30 днів'],['all','Усі']].map(([k,l])=>el('button',{type:'button','aria-pressed':String(f.per===k),onclick:()=>{f.per=k;render();}},l))),
+    el('div',{class:'dz-fsel cl-fsel'},sel('clFL','Усі будинки',clLocs().map(l=>[l.id,l.name]),'loc'),sel('clFC','Усі прибиральниці',clCleaners(true).map(c=>[c.id,c.name]),'cl'),sel('clFS','Усі статуси',[['submitted','На погодженні'],['returned','Повернено'],['approved','Погоджено']],'st'),sel('clFB','Усі перевіряючі',authors.map(s=>[s.id,s.name]),'by'),
+      (f.loc||f.cl||f.st||f.by)?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{f.loc='';f.cl='';f.st='';f.by='';render();}},'✕ Скинути фільтри'):null)));
   if(!L.length)out.push(el('div',{class:'card empty'},el('p',{class:'muted',text:all.length?'За цими фільтрами ревізій немає.':'Ревізій ще не було.'+(can?' Натисніть «Провести ревізію».':'')})));
   else out.push(el('div',{class:'card cl-list'},L.map(r=>clRevRow(r))));
   return out;}
@@ -8804,18 +8822,30 @@ function clRevRow(r,mine){const a=staffById(r.authorId);const s=clSum(r);const c
 function clOpenRev(id){S.hist.push(snap());S.tab='uk';S.ukSec=null;S.fg='clean';S.clW=null;S.clR=id;SC().scrollTop=0;clLiveOn(id);render();}
 function clContinue(r){S.hist.push(snap());S.clR=null;S.clW={id:r.id,step:1,i:0};clLiveOn(r.id);const its=clItems(r);const k=its.findIndex(i=>!clItemOk(r,i).ok);S.clW.i=k<0?0:k;if(k<0)S.clW.step=2;render();}
 /* ---------- старт: що перевіряємо ---------- */
+const CL_STEPS=['Що перевіряємо','Фото й оцінки','Підсумок'];
+function clStepper(cur){return el('div',{class:'iw-steps cl-steps','aria-label':'Кроки ревізії'},CL_STEPS.map((t,i)=>el('span',{class:'iw-s'+(i===cur?' on':i<cur?' done':''),'aria-current':i===cur?'step':null},el('span',{class:'iw-si',text:i<cur?'✓':String(i+1)}),t)));}
 function clStartSheet(){const locs=clLocs().filter(l=>clObjs().some(o=>o.loc===l.id));if(!locs.length){toast('Спершу додайте об’єкти в «Закріпленні зон»');return;}
-  const st={locs:new Set([locs[0].id]),cl:'',off:new Set()};const box=el('div',{class:'stack',style:'gap:12px'});
-  const draw=()=>{const objs=clObjs().filter(o=>st.locs.has(o.loc)&&(!st.cl||(clCleanerOf(o)||{}).id===st.cl));
-    const chips=el('div',{class:'cl-locs',role:'group','aria-label':'Будинки / локації'},locs.map(l=>el('button',{type:'button',class:'chip'+(st.locs.has(l.id)?' on':''),'aria-pressed':String(st.locs.has(l.id)),onclick:()=>{st.locs.has(l.id)?st.locs.delete(l.id):st.locs.add(l.id);draw();}},l.name)));
-    const cs=clCleanerSelect('clSC',st.cl,false);cs.prepend(el('option',{value:'',text:'Усі прибиральниці'}));cs.value=st.cl;cs.addEventListener('change',()=>{st.cl=cs.value;draw();});
-    const list=el('div',{class:'cl-pick'},objs.map(o=>{const id='clp_'+o.id;const c=el('input',{type:'checkbox',class:'ck',id,checked:st.off.has(o.id)?null:true});c.addEventListener('change',()=>{c.checked?st.off.delete(o.id):st.off.add(o.id);cnt.textContent=n();});const cl=clCleanerOf(o);
-      return el('label',{class:'ck-row',for:id},c,el('span',{class:'cl-pn'},el('span',{text:o.name}),el('small',{class:'muted',text:clLoc(o.loc).name+' · '+(cl?cl.name:'не закріплено')})));}));
-    const n=()=>{const k=objs.filter(o=>!st.off.has(o.id)).length;return k+' '+plural(k,'об’єкт','об’єкти','об’єктів');};const cnt=el('b',{text:n()});
-    box.replaceChildren(el('span',{class:'flabel',text:'Будинок / локація'}),chips,el('label',{for:'clSC'},'Фільтр за прибиральницею',cs),el('div',{class:'row between'},el('span',{class:'flabel',text:'Об’єкти'}),cnt),objs.length?list:el('p',{class:'muted',text:'Оберіть будинок'}),
-      el('div',{class:'btn-pair'},el('button',{type:'button',class:'btn ghost',onclick:()=>closeSheet()},'Скасувати'),el('button',{type:'button',class:'btn',onclick:async e=>{const sel=objs.filter(o=>!st.off.has(o.id));if(!sel.length){toast('Оберіть хоча б один об’єкт');return;}e.currentTarget.disabled=true;await clCreate(sel);}},'Почати ревізію')));
-    fancySel(box);};
-  openSheet(el('h2',{text:'Провести ревізію'}),el('p',{class:'muted',style:'margin:0',text:'Крок 1 з 3 · що перевіряємо. Прибиральниця підтягується із закріплення.'}),box);draw();}
+  const st={locs:new Set([locs[0].id]),cl:'',off:new Set()};const body=el('div',{class:'cl-shb'});const go=el('button',{type:'button',class:'btn'},'Далі →');
+  const objsNow=()=>clObjs().filter(o=>st.locs.has(o.loc)&&(!st.cl||(clCleanerOf(o)||{}).id===st.cl));
+  const draw=()=>{const objs=objsNow();const on=objs.filter(o=>!st.off.has(o.id));const all=st.locs.size===locs.length;
+    const chips=el('div',{class:'dz-chips cl-chips',role:'group','aria-label':'Будинки / локації'},
+      el('button',{type:'button',class:'dz-chip cl-pick-c','aria-pressed':String(all),onclick:()=>{if(all)st.locs=new Set([locs[0].id]);else st.locs=new Set(locs.map(l=>l.id));draw();}},all?'✓ Усі':'Усі'),
+      locs.map(l=>{const sel=st.locs.has(l.id);return el('button',{type:'button',class:'dz-chip cl-pick-c','aria-pressed':String(sel),onclick:()=>{sel?st.locs.delete(l.id):st.locs.add(l.id);draw();}},sel?'✓ '+l.name:l.name);}));
+    const cs=el('select',{class:'dz-bsel'+(st.cl?' on':''),'aria-label':'Фільтр за прибиральницею'},[el('option',{value:'',text:'Усі прибиральниці'})].concat(clCleaners().map(c=>el('option',{value:c.id,text:c.name}))));cs.value=st.cl;cs.addEventListener('change',()=>{st.cl=cs.value;draw();});
+    const groups=clLocs().filter(l=>objs.some(o=>o.loc===l.id)).map(l=>{const os=objs.filter(o=>o.loc===l.id);const n=os.filter(o=>!st.off.has(o.id)).length;const gid='clg_'+l.id;
+      const gc=el('input',{type:'checkbox',class:'ck',id:gid,checked:n===os.length?true:null,'aria-label':'Вибрати всі в «'+l.name+'»'});gc.indeterminate=n>0&&n<os.length;gc.addEventListener('change',()=>{os.forEach(o=>gc.checked?st.off.delete(o.id):st.off.add(o.id));draw();});
+      return el('div',{class:'cl-pg'},el('label',{class:'ck-row cl-pgh',for:gid},gc,el('span',{text:l.name+' · '+os.length})),
+        el('div',{class:'cl-pl'},os.map(o=>{const id='clp_'+o.id;const c=el('input',{type:'checkbox',class:'ck',id,checked:st.off.has(o.id)?null:true});c.addEventListener('change',()=>{c.checked?st.off.delete(o.id):st.off.add(o.id);draw();});const cl=clCleanerOf(o);
+          return el('label',{class:'ck-row cl-pr',for:id},c,el('span',{class:'cl-prn',text:o.name}),el('span',{class:'cl-tag'+(cl?'':' un')},cl?[clDot(cl),cl.name]:'не закріплено'));})));});
+    body.replaceChildren(el('div',{class:'stack',style:'gap:8px'},el('span',{class:'flabel',text:'Будинок / локація'}),chips),
+      el('div',{class:'cl-shrow'},cs),
+      el('div',{class:'cl-cnt'},el('span',{},'Вибрано ',el('b',{text:String(on.length)}),' з '+objs.length),objs.length?el('button',{type:'button',class:'linkbtn',onclick:()=>{if(on.length)objs.forEach(o=>st.off.add(o.id));else objs.forEach(o=>st.off.delete(o.id));draw();}},on.length?'Зняти всі':'Вибрати всі'):null),
+      objs.length?el('div',{class:'cl-plist'},groups):el('p',{class:'muted',style:'margin:0',text:'Оберіть будинок або локацію'}));
+    go.disabled=on.length?null:true;fancySel(body);};
+  go.addEventListener('click',async()=>{const sel=objsNow().filter(o=>!st.off.has(o.id));if(!sel.length){toast('Оберіть хоча б один об’єкт');return;}go.disabled=true;await clCreate(sel);go.disabled=false;});
+  openSheet(el('div',{class:'cl-shh'},el('h2',{text:'Провести ревізію'}),clStepper(0),el('p',{class:'muted small',style:'margin:0',text:'Оберіть будинки й об’єкти. Прибиральниця підтягується із закріплення.'})),
+    body,el('div',{class:'cl-shf btn-pair'},el('button',{type:'button',class:'btn ghost',onclick:()=>closeSheet()},'Скасувати'),go));
+  const sh=document.querySelector('#sheetRoot .sheet');if(sh)sh.classList.add('cl-sheet');draw();}
 async function clCreate(objs){const m=clMe();if(!m){toast('Спершу оберіть себе в колективі');return;}const id=clId('r_');const now=Date.now();const items={};
   objs.forEach((o,i)=>{const c=clCleanerOf(o);items[o.id]={name:o.name,loc:o.loc,cleanerId:c?c.id:null,ord:i,grade:null,comment:'',ph:{}};});
   const locs=[...new Set(objs.map(o=>o.loc))];
@@ -8871,10 +8901,10 @@ function clPhGrid(r,i,edit){const purged=r.purged;const ps=clPhotos(r,i.oid);con
 function clExit(){S.clW=null;clLiveOff();render();}
 function clWizard(){const w=S.clW;const r=(S.clRev||{})[w.id];if(!r)return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Ревізію не знайдено або її видалено.'}),el('button',{type:'button',class:'btn',onclick:clExit},'До списку'))];
   const its=clItems(r);const edit=clCanEditRev(r);const done=its.filter(i=>clItemOk(r,i).ok).length;
-  const head=el('div',{class:'cl-wh'},el('button',{type:'button',class:'btn ghost sm',onclick:clExit},'← Вийти'),el('div',{class:'cl-wt'},el('b',{text:'Ревізія · '+(r.locs||[]).map(l=>clLoc(l).name).join(', ')}),el('small',{class:'muted',text:dm(r.date)+' · '+(w.step===2?'крок 3 з 3 · підсумок':'крок 2 з 3 · '+done+' з '+its.length+' готово')})),clStPill(r.status));
+  const head=el('div',{class:'cl-wh'},el('button',{type:'button',class:'btn ghost sm',onclick:clExit},'← Вийти'),el('div',{class:'cl-wt'},el('b',{text:'Ревізія · '+(r.locs||[]).map(l=>clLoc(l).name).join(', ')}),el('small',{class:'muted',text:dm(r.date)+' · готово '+done+' з '+its.length})),clStPill(r.status));
   const prog=el('div',{class:'cl-dots',role:'tablist','aria-label':'Об’єкти'},its.map((i,k)=>{const ok=clItemOk(r,i).ok;return el('button',{type:'button',role:'tab','aria-selected':String(w.step===1&&w.i===k),'aria-label':i.name+(ok?' — готово':''),class:'cl-d'+(ok?' ok':'')+(i.grade&&i.grade!=='ok'?' '+i.grade:'')+(w.step===1&&w.i===k?' cur':''),onclick:()=>{w.step=1;w.i=k;render();}},String(k+1));}),
     el('button',{type:'button',class:'cl-d sum'+(w.step===2?' cur':''),'aria-label':'Підсумок',onclick:()=>{w.step=2;render();}},'Σ'));
-  const out=[head,el('div',{class:'w-prog'},el('i',{style:'width:'+Math.round(done/Math.max(1,its.length)*100)+'%'})),prog];
+  const out=[head,clStepper(w.step===2?2:1),el('div',{class:'w-prog'},el('i',{style:'width:'+Math.round(done/Math.max(1,its.length)*100)+'%'})),prog];
   if(r.status==='returned'&&r.returnText)out.push(el('p',{class:'iw-lock ret',role:'note',text:'Повернено із зауваженнями'+(r.returnObj&&(r.items||{})[r.returnObj]?' («'+r.items[r.returnObj].name+'»)':'')+': '+r.returnText}));
   if(!edit&&r.status==='submitted')out.push(el('p',{class:'iw-lock',role:'note',text:'Ревізію відправлено на погодження — змінювати не можна.'}));
   out.push(w.step===2?clSummary(r,its,edit):clObjStep(r,its,w.i,edit));return out;}
