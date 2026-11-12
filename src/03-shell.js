@@ -71,7 +71,7 @@ function render(){{const fe=document.fullscreenElement||document.webkitFullscree
   if(chatOn){markChatSeen();if(S.chatStick){const sm=!!S.chatShown&&S.shownRoom===curRoom();if(sm)requestAnimationFrame(()=>{const e=SC();e.scrollTo({top:e.scrollHeight,behavior:'smooth'});});else stickBottom();}S.chatShown=true;S.shownRoom=curRoom();}else{S.chatShown=false;S.knownMsgs=null;}
   drawFab();placeComposer();
 }
-function badgeFor(id){if(id==='pm')return pmCan()?pmUrgent().length:0;if(id==='sos')return (S.sos||[]).filter(x=>x.status!=='done'&&x.sev==='crit').length||0;const mine=myStaff();
+function badgeFor(id){if(id==='pm')return pmCan()?pmUrgent().length:0;if(id==='sos')return sosBadge();const mine=myStaff();
   if(id==='tasks'){const n=mine?S.tasks.filter(t=>myOpen(t,mine)).length:0;return n;}
   if(id==='team')return canAdmin()?S.requests.length:0;
   if(id==='chat')return unreadChat();

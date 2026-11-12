@@ -31,7 +31,12 @@ function sosCard(x){const c=sosCat(x.cat);const sv=SOS_SEV[x.sev]||SOS_SEV.mid;c
     el('span',{class:'sos-cm'},el('b',{text:x.title}),el('small',{text:[c.n,x.bld?'Буд. '+x.bld:'',x.place].filter(Boolean).join(' · ')}),
       el('span',{class:'sos-ct'},el('span',{class:'pill t-'+st[1]},el('i'),st[0]),el('span',{class:'sos-sev'},el('i'),sv[0]),(x.photos||[]).length?el('span',{class:'muted small',text:'📷 '+x.photos.length}):null,(x.log||[]).length?el('span',{class:'muted small',text:'💬 '+x.log.length}):null,sosMailBadge(x))),
     el('span',{class:'sos-cr'},el('small',{text:sosWhen(sosT(x)),title:'Сталося · внесено '+sosWhen(x.at)}),who?avatar(who):null));}
-function viewSos(){if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ доступний менеджерам, старшому менеджеру, головному інженеру, директору та Dev.'}))];
+/* бейдж «Екстрених ситуацій»: нові з моменту, коли ви востаннє відкривали розділ (крім ваших власних), відкриті на вас, і всі невирішені критичні */
+function sosSeenAt(){try{return +localStorage.getItem('dl.sosSeen')||0;}catch(e){return 0;}}
+function sosBadgeList(){if(!isUK())return [];const me=myStaff();const seen=sosSeenAt();
+  return (S.sos||[]).filter(x=>x.status!=='done'&&(x.sev==='crit'||(me&&x.resp===me.id&&x.status==='open')||((x.at||0)>seen&&x.by!==S.myId)));}
+function sosBadge(){return sosBadgeList().length;}
+function viewSos(){if(S.tab==='sos'){const t=Date.now();setTimeout(()=>{try{localStorage.setItem('dl.sosSeen',String(t));}catch(e){}if(typeof renderTabs==='function')renderTabs();},1500);}if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ доступний менеджерам, старшому менеджеру, головному інженеру, директору та Dev.'}))];
   const L=(S.sos||[]).slice().sort((a,b)=>sosT(b)-sosT(a));const op=L.filter(sosOpen);const crit=op.filter(x=>x.sev==='crit');const mo=L.filter(x=>sosT(x)>=new Date(new Date().getFullYear(),new Date().getMonth(),1).getTime());
   const curP=ymd(new Date()).slice(0,7);const per=S.sosPer||curP;const inP=ts=>per==='all'||(ts&&ymd(new Date(ts)).slice(0,7)===per);
   const pers=[...new Set([curP,...L.map(x=>ymd(new Date(sosT(x))).slice(0,7)),...L.filter(x=>x.doneAt).map(x=>ymd(new Date(x.doneAt)).slice(0,7))])].sort().reverse();

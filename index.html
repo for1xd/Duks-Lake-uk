@@ -4207,7 +4207,7 @@ function render(){{const fe=document.fullscreenElement||document.webkitFullscree
   if(chatOn){markChatSeen();if(S.chatStick){const sm=!!S.chatShown&&S.shownRoom===curRoom();if(sm)requestAnimationFrame(()=>{const e=SC();e.scrollTo({top:e.scrollHeight,behavior:'smooth'});});else stickBottom();}S.chatShown=true;S.shownRoom=curRoom();}else{S.chatShown=false;S.knownMsgs=null;}
   drawFab();placeComposer();
 }
-function badgeFor(id){if(id==='pm')return pmCan()?pmUrgent().length:0;if(id==='sos')return (S.sos||[]).filter(x=>x.status!=='done'&&x.sev==='crit').length||0;const mine=myStaff();
+function badgeFor(id){if(id==='pm')return pmCan()?pmUrgent().length:0;if(id==='sos')return sosBadge();const mine=myStaff();
   if(id==='tasks'){const n=mine?S.tasks.filter(t=>myOpen(t,mine)).length:0;return n;}
   if(id==='team')return canAdmin()?S.requests.length:0;
   if(id==='chat')return unreadChat();
@@ -7126,7 +7126,12 @@ function sosCard(x){const c=sosCat(x.cat);const sv=SOS_SEV[x.sev]||SOS_SEV.mid;c
     el('span',{class:'sos-cm'},el('b',{text:x.title}),el('small',{text:[c.n,x.bld?'Буд. '+x.bld:'',x.place].filter(Boolean).join(' · ')}),
       el('span',{class:'sos-ct'},el('span',{class:'pill t-'+st[1]},el('i'),st[0]),el('span',{class:'sos-sev'},el('i'),sv[0]),(x.photos||[]).length?el('span',{class:'muted small',text:'📷 '+x.photos.length}):null,(x.log||[]).length?el('span',{class:'muted small',text:'💬 '+x.log.length}):null,sosMailBadge(x))),
     el('span',{class:'sos-cr'},el('small',{text:sosWhen(sosT(x)),title:'Сталося · внесено '+sosWhen(x.at)}),who?avatar(who):null));}
-function viewSos(){if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ доступний менеджерам, старшому менеджеру, головному інженеру, директору та Dev.'}))];
+/* бейдж «Екстрених ситуацій»: нові з моменту, коли ви востаннє відкривали розділ (крім ваших власних), відкриті на вас, і всі невирішені критичні */
+function sosSeenAt(){try{return +localStorage.getItem('dl.sosSeen')||0;}catch(e){return 0;}}
+function sosBadgeList(){if(!isUK())return [];const me=myStaff();const seen=sosSeenAt();
+  return (S.sos||[]).filter(x=>x.status!=='done'&&(x.sev==='crit'||(me&&x.resp===me.id&&x.status==='open')||((x.at||0)>seen&&x.by!==S.myId)));}
+function sosBadge(){return sosBadgeList().length;}
+function viewSos(){if(S.tab==='sos'){const t=Date.now();setTimeout(()=>{try{localStorage.setItem('dl.sosSeen',String(t));}catch(e){}if(typeof renderTabs==='function')renderTabs();},1500);}if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ доступний менеджерам, старшому менеджеру, головному інженеру, директору та Dev.'}))];
   const L=(S.sos||[]).slice().sort((a,b)=>sosT(b)-sosT(a));const op=L.filter(sosOpen);const crit=op.filter(x=>x.sev==='crit');const mo=L.filter(x=>sosT(x)>=new Date(new Date().getFullYear(),new Date().getMonth(),1).getTime());
   const curP=ymd(new Date()).slice(0,7);const per=S.sosPer||curP;const inP=ts=>per==='all'||(ts&&ymd(new Date(ts)).slice(0,7)===per);
   const pers=[...new Set([curP,...L.map(x=>ymd(new Date(sosT(x))).slice(0,7)),...L.filter(x=>x.doneAt).map(x=>ymd(new Date(x.doneAt)).slice(0,7))])].sort().reverse();
