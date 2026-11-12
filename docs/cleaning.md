@@ -1,0 +1,51 @@
+# Клінінг: закріплення зон і ревізії
+
+## Дані (db)
+
+| Колекція | Поля |
+|---|---|
+| `cl_cleaners` | `name, phone, color, staffId` (профіль у «Колективі» або `null`), `active, order, v` |
+| `cl_objects` | `loc` (id будинку з ARCH або `x_uk` / `x_kult`), `name, cleanerId, order, v` |
+| `cl_locs` | інші локації: «Офіс УК», «Культ (приміщення резидента)», група «Інші локації» |
+| `cl_revisions` | див. нижче |
+| `cl_rev_photos` | `revId, objId, assetId, data, thumb, takenAt, exifAt, fromGallery, sizeKb, w, h, authorId, addedAt, purged` |
+
+`cl_revisions`:
+- `date, authorId, locs[]`;
+- `items{oid:{name, loc, cleanerId, ord, grade(ok|remark|bad), comment, ph{pid:{by,at}}}}`;
+- `status` (draft → submitted → returned → approved);
+- `hist[{st,at,by,text}]`;
+- `generalComment, returnText, returnObj, purged, v`.
+
+**Запис і журнал:**
+- Записи з перевіркою версії (`clPut`). Об'єкт ревізії змінюється злиттям одного поля, тож паралельні правки не затирають одна одну.
+- Початкові дані (`clSeed`) створюються один раз, коли колекції порожні; від дублів захищає lease на `cl_locs/x_uk`.
+- Прибиральниці прив'язуються до профілів у «Колективі» за іменем.
+- Кожна зміна пишеться в `log` з префіксом «Клінінг:».
+
+## Перевикористано з «Обходу будівель»
+
+- **Фото:**
+  - читання файлу одразу після вибору (`inspPreRead`);
+  - обробка, стиснення й штамп часу (`inspSrc` → `inspProcess`);
+  - тексти помилок (`inspErrText`);
+  - черга на телефоні (`IDBX`, записи `kind:'clph'`) з повторною відправкою;
+  - сховище assets (`inspAssetsNs`), а без assets — data URL.
+- **Погодження:**
+  - погоджує той самий набір ролей (`inspCanReview`);
+  - ті самі стилі статусів (`ip-st`);
+  - лічильник «на перевірці» в шапці (обходи + ревізії) і бейдж меню Facility (`inspBadge + clBadge`).
+- **Очищення:**
+  - місячне очищення оригіналів (`inspPurge`) прибирає й фото ревізій за той самий період;
+  - у Dev-панелі є картка «Фото ревізій клінінгу» з кнопками «старші 30 днів» і «усі погоджені»;
+  - після очищення тексти лишаються, а замість фото показується «Фото видалено (очищення сховища)».
+
+## Права
+
+| Дія | Ролі |
+|---|---|
+| Закріплення | manager, director, dev (або `staff.perms.cleanEdit`) |
+| Ревізія | manager, director, dev |
+| Погодження | ceo, director, dev |
+
+Прибиральниця з акаунтом бачить «Мої зони прибирання» на «Сьогодні».
