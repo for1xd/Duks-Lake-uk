@@ -99,7 +99,7 @@ function clSchedView(){const ed=clCanEdit();const today=ymd(new Date());const wk
         const cls='cl-gc'+(d===today?' now':'')+(!n&&!e?' we':'');
         return ed?el('button',{type:'button',class:cls,'aria-label':c.name+', '+CL_WD[i]+' '+dm(d)+': '+(n?n+' об’єктів':'вихідний')+(e?', '+CL_EXT[e.type]:''),onclick:()=>clExcSheet(c,d)},body):el('span',{class:cls},body);})));
     if(open){const objs=clObjs().filter(o=>o.cleanerId===c.id);const by={};objs.forEach(o=>{(by[o.loc]=by[o.loc]||[]).push(o);});
-      clLocs().filter(l=>by[l.id]).forEach(l=>rows.push(el('div',{class:'cl-gr sub'},el('span',{class:'cl-gn'},el('span',{class:'cl-lhs',text:l.name+' · '+by[l.id].length})),
+      clLocs().filter(l=>by[l.id]).forEach(l=>rows.push(el('div',{class:'cl-gr sub'},el('span',{class:'cl-gn'},clLocHead(l.id,by[l.id].length,{color:c.color,cls:'sm'})),
         days.map((d,i)=>{const wd=i;const k=by[l.id].filter(o=>clObjDays(o).includes(wd)).length;const e=plans[i][c.id].exc;return el('span',{class:'cl-gc mini'+(d===today?' now':'')+(!k?' we':'')},k?(e&&e.type!=='sub'?'—':String(k)):'—');}))));}});
   out.push(el('div',{class:'card cl-grid7'},el('div',{class:'cl-gscroll'},head,rows)));
   return out;}
@@ -129,10 +129,19 @@ function clChip(o,opt){const c=clCleanerOf(o);const last=clLast(o.id);const sel=
   if(ed&&!sel&&!IS_TOUCH){b.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/cl-obj',o.id);e.dataTransfer.effectAllowed='move';b.classList.add('drag');document.body.classList.add('cl-dragging');});
     b.addEventListener('dragend',()=>{b.classList.remove('drag');document.body.classList.remove('cl-dragging');document.querySelectorAll('.cl-col.over').forEach(x=>x.classList.remove('over'));});}
   return b;}
+/* однаковий заголовок групи будинку в усіх вкладках клінінгу: іконка в кольорі, повна назва, лічильник, стрілка */
+const CL_BLD_IC='<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>';
+function clLocTitle(id){const b=ARCH.find(x=>x.id===id);if(b)return 'Будинок '+b.fac;return String(clLoc(id).name).replace(/\s*\(.*\)\s*$/,'');}
+function clLocHead(id,n,o){o=o||{};const kids=[o.lead||null,el('span',{class:'cl-bhi','aria-hidden':'true'},svg(CL_BLD_IC)),el('span',{class:'cl-bhn',text:clLocTitle(id)}),el('span',{class:'cl-bhc',title:n+' '+plural(n,'об’єкт','об’єкти','об’єктів'),text:o.cls==='sm'?String(n):n+' '+plural(n,'об’єкт','об’єкти','об’єктів')}),o.extra||null,
+    o.toggle?el('span',{class:'cl-bhv','aria-hidden':'true'},svg(o.collapsed?'<path d="m9 6 6 6-6 6"/>':'<path d="m6 9 6 6 6-6"/>')):null];
+  const st=o.color?'--c:'+o.color:null;
+  if(o.toggle)return el('button',{type:'button',class:'cl-bh',style:st,'aria-expanded':String(!o.collapsed),id:o.id||null,onclick:o.toggle},kids);
+  return el(o.tag||'div',Object.assign({class:'cl-bh'+(o.cls?' '+o.cls:''),style:st,id:o.id||null},o.attrs||{}),kids);}
 function clChipGroups(objs,key,opt){const by={};objs.forEach(o=>{(by[o.loc]=by[o.loc]||[]).push(o);});S.clColl=S.clColl||{};
   return clLocs().filter(l=>by[l.id]).map(l=>{const k=key+'|'+l.id;const cl=!!S.clColl[k];
-    return el('div',{class:'cl-cg'},el('button',{type:'button',class:'cl-cgh','aria-expanded':String(!cl),onclick:()=>{S.clColl[k]=!cl;render();}},svg(cl?'<path d="m9 6 6 6-6 6"/>':'<path d="m6 9 6 6 6-6"/>'),el('span',{text:l.name+' · '+by[l.id].length})),
-      cl?null:el('div',{class:'cl-chips2'},by[l.id].map(o=>clChip(o,opt))));});}
+    const col=(S.clC||{})[key]&&S.clC[key].color;
+    return el('div',{class:'cl-cg'},clLocHead(l.id,by[l.id].length,{color:col||null,collapsed:cl,id:'clg_'+key+'_'+l.id,toggle:()=>{S.clColl[k]=!cl;render();}}),
+      cl?null:el('div',{class:'cl-chips2 cl-under',style:col?'--c:'+col:null},by[l.id].map(o=>clChip(o,opt))));});}
 function clDropZone(col,cid){if(!clCanEdit()||IS_TOUCH)return col;col.addEventListener('dragover',e=>{if(![...e.dataTransfer.types].includes('text/cl-obj'))return;e.preventDefault();e.dataTransfer.dropEffect='move';col.classList.add('over');});
   col.addEventListener('dragleave',e=>{if(!col.contains(e.relatedTarget))col.classList.remove('over');});
   col.addEventListener('drop',async e=>{e.preventDefault();col.classList.remove('over');const id=e.dataTransfer.getData('text/cl-obj');const o=(S.clO||{})[id];if(!o)return;const old=clCleanerOf(o);if((old&&old.id||null)===(cid||null))return;
@@ -143,8 +152,9 @@ function clZonesView(){const ed=clCanEdit();const mode=S.clMode||'cl';const sel=
   /* зведення: плитки прибиральниць */
   const un=objs.filter(o=>!clCleanerOf(o));
   out.push(el('div',{class:'cl-sum'},cls.map(c=>{const os=objs.filter(o=>o.cleanerId===c.id);const nb=new Set(os.map(o=>o.loc)).size;const st=clStateTxt(c,today);
-    return el('button',{type:'button',class:'cl-st'+(S.clHi===c.id?' hi':''),style:'--c:'+(c.color||CL_COLORS[0]),onclick:()=>{S.clHi=c.id;S.clMode='cl';render();setTimeout(()=>{const x=document.getElementById('clcol_'+c.id);if(x)x.scrollIntoView({behavior:'smooth',block:'nearest'});},30);setTimeout(()=>{S.clHi=null;const x=document.getElementById('clcol_'+c.id);if(x)x.classList.remove('hi');},2200);}},
-      clAv(c,true),el('span',{class:'cl-stt'},el('b',{text:c.name}),el('small',{class:'muted',text:os.length+' об’єкт. · '+nb+' '+plural(nb,'будинок','будинки','будинків')}),el('small',{class:'cl-sst'+(st==='Сьогодні працює'?' ok':''),text:st})));}),
+    const locIds=[...new Set(os.map(o=>o.loc))];const bchips=el('span',{class:'cl-stb'},clLocs().filter(l=>locIds.includes(l.id)).map(l=>el('button',{type:'button',class:'cl-stc',onclick:e=>{e.stopPropagation();S.clMode='cl';S.clColl=S.clColl||{};delete S.clColl[c.id+'|'+l.id];render();setTimeout(()=>{const x=document.getElementById('clg_'+c.id+'_'+l.id);if(x){x.scrollIntoView({behavior:'smooth',block:'center'});x.classList.add('flash');setTimeout(()=>x.classList.remove('flash'),1600);}},40);}},l.name.replace(/\s*\(.*\)\s*$/,''))));
+  return el('div',{role:'button',tabindex:'0',class:'cl-st'+(S.clHi===c.id?' hi':''),style:'--c:'+(c.color||CL_COLORS[0]),onkeydown:e=>{if((e.key==='Enter'||e.key===' ')&&e.target===e.currentTarget){e.preventDefault();e.currentTarget.click();}},onclick:()=>{S.clHi=c.id;S.clMode='cl';render();setTimeout(()=>{const x=document.getElementById('clcol_'+c.id);if(x)x.scrollIntoView({behavior:'smooth',block:'nearest'});},30);setTimeout(()=>{S.clHi=null;const x=document.getElementById('clcol_'+c.id);if(x)x.classList.remove('hi');},2200);}},
+      clAv(c,true),el('span',{class:'cl-stt'},el('b',{text:c.name}),el('small',{class:'muted',text:os.length+' об’єкт. · '+nb+' '+plural(nb,'будинок','будинки','будинків')}),el('small',{class:'cl-sst'+(st==='Сьогодні працює'?' ok':''),text:st}),bchips));}),
     un.length?el('button',{type:'button',class:'cl-st un',onclick:()=>{const x=document.getElementById('clcol_un');if(x)x.scrollIntoView({behavior:'smooth',block:'nearest'});}},el('span',{class:'cl-av big un',text:'?'}),el('span',{class:'cl-stt'},el('b',{text:'Не закріплено'}),el('small',{class:'cl-unl',text:un.length+' об’єкт.'}))):null));
   out.push(el('div',{class:'cl-bar'},el('div',{class:'sg',role:'tablist','aria-label':'Режим перегляду'},[['cl','За прибиральницями'],['loc','За будинками']].map(([k,l])=>el('button',{type:'button',role:'tab','aria-pressed':String(mode===k),'aria-selected':String(mode===k),onclick:()=>{S.clMode=k;render();}},l))),
     ed?el('div',{class:'cl-acts'},el('button',{type:'button',class:'btn ghost sm',onclick:()=>clObjSheet(null)},'+ Об’єкт'),el('button',{type:'button',class:'btn sm',onclick:()=>clCleanerSheet(null)},'+ Прибиральниця'),
@@ -162,7 +172,7 @@ function clZonesView(){const ed=clCanEdit();const mode=S.clMode||'cl';const sel=
     if(ina.length)out.push(el('div',{class:'cl-ina'},el('span',{class:'flabel',text:'Неактивні'}),ina.map(c=>el('button',{type:'button',class:'cl-chip',disabled:ed?null:true,onclick:()=>clCleanerSheet(c)},clAv(c),el('span',{text:c.name}),el('small',{class:'muted',text:'неактивна'})))));}
   else{out.push(el('div',{class:'cl-legend'},cls.map(c=>el('span',{class:'cl-tag'},clDot(c),c.name)),el('span',{class:'cl-tag un'},el('span',{class:'cl-dot un'}),'не закріплено')));
     const grid=el('div',{class:'cl-cols'});clLocs().forEach(l=>{const os=objs.filter(o=>o.loc===l.id);if(!os.length)return;const n=os.filter(o=>!clCleanerOf(o)).length;
-      grid.append(el('section',{class:'card cl-col loc'},el('div',{class:'cl-colh'},el('span',{class:'cl-li'},svg('<path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 21v-6h6v6"/>')),el('div',{class:'cl-ct'},el('b',{text:l.full}),el('small',{class:n?'cl-unl':'muted',text:os.length+' об’єкт.'+(n?' · не закріплено: '+n:'')}))),
+      const kk='loc|'+l.id;S.clColl=S.clColl||{};const cc=!!S.clColl[kk];grid.append(el('section',{class:'card cl-col loc'},clLocHead(l.id,os.length,{collapsed:cc,toggle:()=>{S.clColl[kk]=!cc;render();},extra:n?el('span',{class:'cl-bhc un',text:'не закріплено: '+n}):null}),cc?null:
         el('div',{class:'cl-chips2'},os.map(o=>clChip(o,{showCl:true})))));});out.push(grid);}
   if(sel)out.push(el('div',{class:'cl-selbar',role:'region','aria-label':'Масова дія'},el('b',{text:'Вибрано: '+sel.size}),el('button',{type:'button',class:'btn',disabled:sel.size?null:true,onclick:()=>clTransferSheet([...sel])},'Передати вибрані ('+sel.size+') →'),el('button',{type:'button',class:'btn ghost',onclick:()=>{S.clSel=null;render();}},'Скасувати')));
   return out;}
@@ -264,7 +274,7 @@ function clStartSheet(){const locs=clLocs().filter(l=>clObjs().some(o=>o.loc===l
     const cs=el('select',{class:'dz-bsel'+(st.cl?' on':''),'aria-label':'Фільтр за прибиральницею'},[el('option',{value:'',text:'Усі прибиральниці'})].concat(clCleaners().map(c=>el('option',{value:c.id,text:c.name}))));cs.value=st.cl;cs.addEventListener('change',()=>{st.cl=cs.value;draw();});
     const groups=clLocs().filter(l=>objs.some(o=>o.loc===l.id)).map(l=>{const os=objs.filter(o=>o.loc===l.id);const n=os.filter(o=>!st.off.has(o.id)).length;const gid='clg_'+l.id;
       const gc=el('input',{type:'checkbox',class:'ck',id:gid,checked:n===os.length?true:null,'aria-label':'Вибрати всі в «'+l.name+'»'});gc.indeterminate=n>0&&n<os.length;gc.addEventListener('change',()=>{os.forEach(o=>gc.checked?st.off.delete(o.id):st.off.add(o.id));draw();});
-      return el('div',{class:'cl-pg'},el('label',{class:'ck-row cl-pgh',for:gid},gc,el('span',{text:l.name+' · '+os.length})),
+      return el('div',{class:'cl-pg'},clLocHead(l.id,os.length,{tag:'label',cls:'cl-pgh',attrs:{for:gid},lead:gc}),
         el('div',{class:'cl-pl'},os.map(o=>{const id='clp_'+o.id;const c=el('input',{type:'checkbox',class:'ck',id,checked:st.off.has(o.id)?null:true});c.addEventListener('change',()=>{c.checked?st.off.delete(o.id):st.off.add(o.id);draw();});const cl=clCleanerOf(o);
           return el('label',{class:'ck-row cl-pr',for:id},c,el('span',{class:'cl-prn',text:o.name}),el('span',{class:'cl-tag'+(cl?'':' un')},cl?[clDot(cl),cl.name]:'не закріплено'));})));});
     body.replaceChildren(el('div',{class:'cl-shrow'},planChip),el('div',{class:'stack',style:'gap:8px'},el('span',{class:'flabel',text:'Будинок / локація'}),chips),
