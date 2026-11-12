@@ -1,8 +1,60 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Duck's Lake</title>
+<meta name="theme-color" content="#044F5E">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<script>
+/* ЛОГОТИП-ІКОНКА Duck's Lake — єдине джерело геометрії (еталонний SVG). Не змінювати пропорції. */
+window.DL_LOGO_SVG='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="dlg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1A6576"/><stop offset="1" stop-color="#044F5E"/></linearGradient></defs><rect width="100" height="100" fill="url(#dlg)"/><g stroke="#FFFFFF" stroke-width="6.4" fill="none" stroke-linecap="butt" stroke-linejoin="miter"><path d="M34 30 L90 89"/><path d="M90.7 13 L90.7 93 L14 93"/></g></svg>';
+/* екземпляр: унікальний id градієнта; стилі ліній продубльовано інлайн, щоб CSS застосунку (stroke-width, linecap для svg) їх не перебив;
+   draw:true — класи для промальовування (діагональ, потім плечі від кута назовні) */
+window.dlLogoHTML=function(o){o=o||{};var id='dlg'+(++dlLogoHTML.n);var h=DL_LOGO_SVG.replace('id="dlg"','id="'+id+'"').replace('url(#dlg)','url(#'+id+')')
+  .replace('<svg ','<svg class="dl-logo'+(o.cls?' '+o.cls:'')+'" '+(o.label?'role="img" aria-label="'+o.label+'" ':'aria-hidden="true" focusable="false" '))
+  .replace('<g ','<g style="stroke:#FFFFFF;stroke-width:6.4;fill:none;stroke-linecap:butt;stroke-linejoin:miter" ');
+  if(o.draw)h=h.replace('<path d="M34 30 L90 89"/>','<path class="dl-d" pathLength="1" d="M34 30 L90 89"/>').replace('<path d="M90.7 13 L90.7 93 L14 93"/>','<path class="dl-a" pathLength="156.7" d="M90.7 13 L90.7 93 L14 93"/>');
+  return h;};dlLogoHTML.n=0;
+(function(){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='data:image/svg+xml,'+encodeURIComponent(DL_LOGO_SVG);document.head.appendChild(l);})();
+</script>
+<style>
+/* ---------- екран завантаження (брендовий, завжди темна бірюза) ---------- */
+.dls{position:fixed;inset:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;background:#0E2A2E;background:linear-gradient(165deg,#0E2A2E 0%,#163F42 55%,#1C5A5C 100%);color:#fff;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);box-sizing:border-box;overflow:hidden;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;transition:opacity .3s ease,transform .3s ease;will-change:opacity,transform}
+.dls.out{opacity:0;transform:scale(1.02);pointer-events:none}
+.dls-c{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;width:100%;max-width:360px;padding:0 16px;box-sizing:border-box}
+.dls-ic{position:relative;width:92px;height:92px;margin-bottom:24px}
+.dls-ic .dl-logo{position:relative;display:block;width:92px;height:92px;box-shadow:0 10px 30px rgba(0,0,0,.28);animation:dlsBreath 2s ease-in-out .8s infinite;will-change:transform}
+.dls-ring{position:absolute;left:50%;top:50%;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;border:1px solid rgba(150,226,218,.5);opacity:0;animation:dlsRing 3s ease-out infinite;will-change:transform,opacity}
+.dls-ring:nth-child(2){animation-delay:1s}.dls-ring:nth-child(3){animation-delay:2s}
+.dls .dl-d{stroke-dasharray:1 1;stroke-dashoffset:1;animation:dlsDraw .4s ease-out .1s forwards}
+.dls .dl-a{stroke-dasharray:0 400;stroke-dashoffset:-80;animation:dlsArm .3s ease-out .5s forwards}
+.dls-name{display:flex;align-items:center;justify-content:center;gap:8px;font:700 15px/1.2 Verdana,"DejaVu Sans",system-ui,sans-serif;letter-spacing:.2em;color:#fff;white-space:nowrap}
+.dls.uf .dls-name{font-family:"Unbounded",Verdana,system-ui,sans-serif}
+.dls-beta{font:700 10px/1.3 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.06em;text-transform:lowercase;color:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.34);border-radius:999px;padding:1px 7px}
+.dls-bar{position:relative;width:160px;height:3px;margin-top:22px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden}
+.dls-bar b{position:absolute;inset:0;border-radius:3px;background:#3FBFB3;transform-origin:left center;transform:scaleX(var(--p,.06));transition:transform .45s ease}
+.dls-bar i{position:absolute;top:0;bottom:0;left:0;width:56px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));animation:dlsSh 1.3s linear infinite}
+.dls-st{min-height:18px;margin-top:12px;font-size:13px;line-height:18px;color:rgba(255,255,255,.66);transition:opacity .2s ease}
+.dls-st.hi{color:#fff;font-weight:600}
+.dls-slow,.dls-err{position:absolute;left:16px;right:16px;top:100%;display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:14px;font-size:13px;line-height:1.4;color:rgba(255,255,255,.75)}
+.dls-err{position:static;margin-top:20px;max-width:320px}.dls-err b{font-size:15px;color:#fff}
+.dls-slow[hidden],.dls-err[hidden],.dls-bar[hidden],.dls-st[hidden]{display:none}
+.dls button{min-height:44px;padding:0 20px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.1);color:#fff;font:700 14px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+.dls button:focus-visible{outline:2px solid #9FE3DB;outline-offset:2px}
+@keyframes dlsDraw{to{stroke-dashoffset:0}}
+@keyframes dlsArm{to{stroke-dasharray:156.7 400;stroke-dashoffset:0}}
+@keyframes dlsBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes dlsRing{0%{transform:scale(.9);opacity:0}15%{opacity:.55}100%{transform:scale(3.1);opacity:0}}
+@keyframes dlsSh{from{transform:translateX(-56px)}to{transform:translateX(160px)}}
+@media (prefers-reduced-motion:reduce){.dls-ring,.dls-bar i{display:none}.dls *{animation:none!important}.dls .dl-d,.dls .dl-a{stroke-dasharray:none!important;stroke-dashoffset:0!important}.dls,.dls.out{transform:none!important}.dls-st{transition:none}}
+/* логотип-іконка в шапці / меню / героях: квадрат без заокруглень */
+.dl-logo{display:inline-block;flex:none;vertical-align:middle}
+svg.logo.dl-logo,.side-head .dl-logo,.hero2 .hero-brand .dl-logo{stroke:none}
+.side-head .dl-logo{width:18px;height:18px}
+.hero2 .hero-brand .dl-logo{width:13px;height:13px}
+</style>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Manrope:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700&family=Manrope:wght@400;600;700;800&display=swap" media="print" onload="this.media='all'">
 <style>
 :root{--sab:max(env(safe-area-inset-bottom,0px),var(--sab-min,0px))}
 
@@ -3633,14 +3685,43 @@ html.v2 .soon{border-radius:4px}
 html.v2 button:active,html.v2 .btn:active,html.v2 .person:active{transform:none!important}
 </style>
 
+<div id="dlSplash" class="dls" role="status" aria-live="polite" aria-label="Завантаження Duck’s Lake">
+  <div class="dls-c">
+    <div class="dls-ic" id="dlsIc"><span class="dls-ring"></span><span class="dls-ring"></span><span class="dls-ring"></span></div>
+    <div class="dls-name">DUCK’S LAKE <span class="dls-beta">beta</span></div>
+    <div class="dls-bar" id="dlsBar"><b></b><i></i></div>
+    <div class="dls-st" id="dlsSt">Підключаємось…</div>
+    <div class="dls-slow" id="dlsSlow" hidden><span>Завантаження триває довше, ніж зазвичай</span><button type="button" onclick="location.reload()">Оновити</button></div>
+    <div class="dls-err" id="dlsErr" hidden><b id="dlsErrT"></b><span id="dlsErrM"></span><button type="button" onclick="location.reload()">Спробувати ще раз</button></div>
+  </div>
+</div>
+<script>
+/* Екран завантаження: етапи приходять із boot() (реальні події бази), мінімум ~700 мс показу, плавний вихід */
+window.DLS=(function(){var t0=performance.now(),root=document.getElementById('dlSplash'),$=function(i){return document.getElementById(i);};
+  var ic=$('dlsIc');ic.insertAdjacentHTML('beforeend',dlLogoHTML({draw:true}));
+  var arm=ic.querySelector('.dl-a');if(arm)arm.addEventListener('animationend',function(){ic.querySelectorAll('.dl-d,.dl-a').forEach(function(p){p.removeAttribute('class');p.removeAttribute('pathLength');});});
+  try{if(document.fonts&&document.fonts.check('700 15px Unbounded'))root.classList.add('uf');}catch(e){}
+  var st=$('dlsSt'),bar=$('dlsBar'),fin=false,failed=false,greet=false,ft=null,cur=st.textContent;
+  function txt(t,hi){if(t===cur)return;cur=t;clearTimeout(ft);st.style.opacity='0';ft=setTimeout(function(){st.textContent=t;st.classList.toggle('hi',!!hi);st.style.opacity='1';},200);}
+  function prog(p){bar.firstChild.style.setProperty('--p',String(Math.max(.06,Math.min(1,p))));}
+  var slow=setTimeout(function(){if(!fin&&!failed)$('dlsSlow').hidden=false;},8000);
+  return {
+    stage:function(t,p){if(fin||failed)return;if(p!=null){prog(p);if(p>=.6)$('dlsSlow').hidden=true;}if(!greet&&t)txt(t);},
+    hi:function(name){if(fin||failed||greet||!name)return;greet=true;var h=new Date().getHours();txt((h>=5&&h<12?'Доброго ранку':h<18&&h>=12?'Доброго дня':h>=18&&h<23?'Доброго вечора':'Доброї ночі')+', '+name,true);},
+    fail:function(title,msg){if(fin)return;failed=true;clearTimeout(slow);bar.hidden=true;st.hidden=true;$('dlsSlow').hidden=true;$('dlsErrT').textContent=title||'Не вдалося завантажити';$('dlsErrM').textContent=msg||'';$('dlsErr').hidden=false;},
+    done:function(){if(fin||failed)return;fin=true;clearTimeout(slow);prog(1);var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var wait=Math.max(0,(rm?300:700)-(performance.now()-t0))+(greet?450:0);if(/splash/.test(location.hash+location.search))wait=Math.max(wait,6000);/* перегляд: …#splash */
+      setTimeout(function(){root.classList.add('out');setTimeout(function(){root.remove();},rm?220:330);},wait);},
+    get active(){return !fin&&!!root.isConnected;}};})();
+</script>
 <div id="scroller"><div class="wrap">
   <header class="top">
     <button id="backBtn" class="iconbtn backbtn" type="button" aria-label="Назад" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <div class="brand"><span class="eyebrow logo-row"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" role="img" aria-label="Логотип Duck’s Lake"><path d="M5 5l14 14M19 3v16M3 19h16"/></svg>DUCK’S LAKE <span class="beta">beta version</span></span><h1 id="pageTitle">Сьогодні</h1><span id="pageSub" class="page-sub"></span></div>
+    <div class="brand"><span class="eyebrow logo-row"><span id="hdrLogo" class="logo-slot"></span>DUCK’S LAKE <span class="beta">beta version</span></span><h1 id="pageTitle">Сьогодні</h1><span id="pageSub" class="page-sub"></span></div>
     <div class="row hactions" style="gap:8px;flex-wrap:nowrap;min-width:0"><div id="hdrInfo" class="hdr-info"></div><button class="hbtn" id="supBtn" type="button" aria-label="Підтримка"></button><button class="hbtn" id="themeBtn" type="button" aria-label="Змінити тему"></button><button class="me" id="meChip" type="button" style="border:0;text-align:left" hidden></button><button class="iconbtn" id="menuBtn" type="button" aria-label="Меню розділів" aria-haspopup="true"></button></div>
   </header>
+  <script>document.getElementById('hdrLogo').outerHTML=dlLogoHTML({cls:'logo',label:'Логотип Duck’s Lake'});</script>
   <main id="app" class="stack">
-    <div class="card empty"><h2>Завантаження…</h2><p class="muted">Підключаємося до графіка та задач колективу.</p></div>
   </main>
 </div></div>
 <div id="composer" class="composer" hidden></div>
@@ -3738,6 +3819,7 @@ function normShift(txt){txt=(txt||'').trim();if(!txt)return'';if(/^[дД]$/.test
 function sortedStaff(){return [...S.staff].sort((a,b)=>(a.order??999)-(b.order??999)||a.name.localeCompare(b.name,'uk'));}
 function schedStaff(){return sortedStaff().filter(s=>s.inSchedule!==false);}
 function staffById(id){return S.staff.find(s=>s.id===id);}
+function dlLogo(cls,label){const t=document.createElement('template');t.innerHTML=dlLogoHTML({cls,label});return t.content.firstChild;}
 function myStaff(){return S.myId?S.staff.find(s=>s.userId===S.myId):null;}
 function myRole(){const m=myStaff();return m?m.role:null;}
 function myRolesReal(){const m=myStaff();return m?[m.role,m.extraRole].filter(Boolean):null;}
@@ -3766,14 +3848,17 @@ function roleTag(r){return el('span',{class:'role '+(r||''),text:ROLE_NAME[r]||'
 function dayValue(sid,i){const d=S.week&&S.week.days&&S.week.days[sid];return d?d[i]||'':'';}
 
 /* ---------- boot ---------- */
+function dlsCheck(){if(!window.DLS||!DLS.active)return;if(S.loaded.staff&&S.loaded.tasks&&S.weekLoaded){DLS.stage('Майже готово…',.92);requestAnimationFrame(()=>requestAnimationFrame(()=>DLS.done()));}}
 async function boot(){
+  window.DLS&&DLS.stage('Підключаємось…',.12);
   const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
+  window.DLS&&DLS.stage('Завантажуємо колектив…',.35);
   S.db=db;S.user=user;
   claude.use('assets').then(a=>{S.assets=a;}).catch(()=>{S.assets=null;});
   if(user){const me=await user.me();S.me=me;S.myId=me.id;S.isOwner=me.isOwner;}
-  if(!db){renderNoDb();return;}
-  db.collection('staff').onSnapshot(q=>{S.staff=q.docs.map(d=>({id:d.id,...d.data()}));const first=!S.loaded.staff;S.loaded.staff=true;if(first)beat();render();},e=>fail(e));
-  db.collection('tasks').onSnapshot(q=>{S.tasks=q.docs.map(d=>({id:d.id,...d.data()}));S.loaded.tasks=true;render();},e=>fail(e));
+  if(!db){renderNoDb();window.DLS&&DLS.fail('Немає доступу до бази','Відкрийте застосунок за посиланням, увійшовши у свій обліковий запис Claude. Якщо не допомагає, попросіть керівника надати вам доступ.');return;}
+  db.collection('staff').onSnapshot(q=>{S.staff=q.docs.map(d=>({id:d.id,...d.data()}));const first=!S.loaded.staff;S.loaded.staff=true;if(first){beat();if(window.DLS&&DLS.active){DLS.stage('Оновлюємо графік і задачі…',.65);const me=myStaff();if(me&&me.name)DLS.hi(me.name.trim().split(/\s+/)[0]);setTimeout(()=>window.DLS&&DLS.active&&DLS.done(),4000);}}render();dlsCheck();},e=>fail(e));
+  db.collection('tasks').onSnapshot(q=>{S.tasks=q.docs.map(d=>({id:d.id,...d.data()}));S.loaded.tasks=true;render();dlsCheck();},e=>fail(e));
   db.collection('map_zones').onSnapshot(q=>{S.mzDb=q.docs.map(d=>({id:d.id,...d.data()})).filter(z=>Array.isArray(z.polygon)&&z.polygon.length);if(S.tab==='map'){if(S.mzEdit)mzSync();else render();}},()=>{});
   db.collection('inspections').onSnapshot(q=>{S.insp={};q.docs.forEach(d=>{S.insp[d.id]={id:d.id,...d.data()};});S.inspLoaded=true;if(S.tab==='uk')render();renderTabs();},()=>{S.inspLoaded=true;});
   db.collection('buildings_assignments').onSnapshot(q=>{S.inspAs={};q.docs.forEach(d=>{S.inspAs[d.id]=d.data()||{};});if(S.tab==='uk')render();renderTabs();},()=>{});
@@ -3821,8 +3906,8 @@ async function boot(){
   render();
 }
 function watchWeek(){if(unWeek)unWeek();S.week=null;S.weekExists=false;S.weekLoaded=false;
-  unWeek=S.db.doc('weeks/'+S.weekStart).onSnapshot(d=>{S.weekExists=d.exists;S.week=d.exists?d.data():null;if(S.week&&S.scQ&&S.scQWs===S.weekStart){S.week.days=S.week.days||{};Object.assign(S.week.days,S.scQ);}S.weekLoaded=true;render();},e=>fail(e));}
-function fail(e){if(e&&e.code==='revoked')return;console.warn(e);toast('Немає зв’язку з базою. Спробуйте оновити сторінку.');}
+  unWeek=S.db.doc('weeks/'+S.weekStart).onSnapshot(d=>{S.weekExists=d.exists;S.week=d.exists?d.data():null;if(S.week&&S.scQ&&S.scQWs===S.weekStart){S.week.days=S.week.days||{};Object.assign(S.week.days,S.scQ);}S.weekLoaded=true;dlsCheck();render();},e=>fail(e));}
+function fail(e){if(e&&e.code==='revoked')return;console.warn(e);if(window.DLS&&DLS.active&&!S.loaded.staff){DLS.fail('Немає зв’язку з базою','Перевірте інтернет і спробуйте ще раз. Якщо не допомагає, зверніться до Віталія Головньова.');return;}toast('Немає зв’язку з базою. Спробуйте оновити сторінку.');}
 async function write(fn,okMsg){try{await fn();if(okMsg){toast(okMsg);devLog(okMsg);}}catch(e){logErr('Запис: '+((e&&(e.code||e.message))||e),okMsg||'');
   if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,600+Math.random()*600));try{await fn();if(okMsg)toast(okMsg);return;}catch(e2){}}
   console.warn('write failed',e);
@@ -4067,7 +4152,7 @@ function meCard(cls,onclick){const m=myStaff();if(!S.me)return null;
 function renderTabs(){updBar();
   const wide=WIDE.matches;const box=document.getElementById('tabs');const T=id=>TABS.find(t=>t.id===id);
   if(wide){
-    const kids=[el('div',{class:'side-head'},svg('<path d="M5 5l14 14M19 3v16M3 19h16"/>'),el('span',{text:'DUCK’S LAKE'}),el('span',{class:'beta',text:'beta'})),
+    const kids=[el('div',{class:'side-head'},dlLogo(),el('span',{text:'DUCK’S LAKE'}),el('span',{class:'beta',text:'beta'})),
       meCard('side-me',()=>go('profile')),notesChip('nc-side')];
     for(const [lbl,ids] of NAV_GROUPS){const v=ids.filter(tabVisible);if(!v.length)continue;kids.push(el('div',{class:'side-lbl',text:lbl}),...v.map(id=>navBtn(T(id))));}
     const dark=isDarkNow();
@@ -4442,7 +4527,7 @@ function heroCard(m,v,has,tIdx){const parts=shiftParts(v);const now=new Date();c
   return el('section',{class:'hero hero2 has-duck'},
     el('span',{class:'hero-water','aria-hidden':'true'}),el('span',{class:'hero-duck','aria-hidden':'true'},duckArt(false)),
     el('span',{class:'hero-logo','aria-hidden':'true'},svg('<path d="M5 5l14 14M19 3v16M3 19h16"/>')),
-    el('div',{class:'hero-top'},el('span',{class:'eyebrow',text:DAYS[tIdx]+', '+dm(addDays(mondayOf(new Date()),tIdx))}),el('span',{class:'hero-brand'},svg('<path d="M5 5l14 14M19 3v16M3 19h16"/>'),'DUCK’S LAKE')),
+    el('div',{class:'hero-top'},el('span',{class:'eyebrow',text:DAYS[tIdx]+', '+dm(addDays(mondayOf(new Date()),tIdx))}),el('span',{class:'hero-brand'},dlLogo(),'DUCK’S LAKE')),
     el('h2',{text:'Привіт, '+m.name.split(' ')[0]+'!'}),
     has?(parts.length?el('div',{class:'hero-shift'},el('div',{class:'hero-tiles'},parts.map(miniShift)),
         el('div',{class:'hero-st'},el('span',{text:status||''}),prog!=null?el('div',{class:'hero-bar'},el('i',{style:'width:'+Math.round(Math.min(1,Math.max(0,prog))*100)+'%'})):null))
@@ -10364,7 +10449,7 @@ function escClose(e){if(e.key==='Escape')closeSheet();}
 function closeSheet(){document.body.classList.remove('sheet-open');document.getElementById('sheetRoot').replaceChildren();document.removeEventListener('keydown',escClose);}
 function confirmSheet(q,label,fn){openSheet(el('h2',{text:q}),el('div',{class:'row'},el('button',{class:'btn danger',type:'button',style:'flex:1',onclick:()=>{closeSheet();fn();}},label),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));}
 
-boot();
+boot().catch(e=>{console.warn(e);window.DLS&&DLS.fail('Не вдалося запустити застосунок','Перевірте інтернет і спробуйте ще раз.');});
 })();
 
 /* auto-height for every textarea (chat composer has its own) */
