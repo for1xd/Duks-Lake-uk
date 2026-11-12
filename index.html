@@ -3881,10 +3881,9 @@ window.DLS=(function(){var t0=performance.now(),root=document.getElementById('dl
 <div id="scroller"><div class="wrap">
   <header class="top">
     <button id="backBtn" class="iconbtn backbtn" type="button" aria-label="Назад" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <div class="brand"><span class="eyebrow logo-row"><span id="hdrLogo" class="logo-slot"></span>DUCK’S LAKE <span class="beta">beta version</span></span><h1 id="pageTitle">Сьогодні</h1><span id="pageSub" class="page-sub"></span></div>
+    <div class="brand"><span class="eyebrow logo-row"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" role="img" aria-label="Логотип Duck’s Lake"><path d="M5 5l14 14M19 3v16M3 19h16"/></svg>DUCK’S LAKE <span class="beta">beta version</span></span><h1 id="pageTitle">Сьогодні</h1><span id="pageSub" class="page-sub"></span></div>
     <div class="row hactions" style="gap:8px;flex-wrap:nowrap;min-width:0"><div id="hdrInfo" class="hdr-info"></div><button class="hbtn" id="supBtn" type="button" aria-label="Підтримка"></button><button class="hbtn" id="themeBtn" type="button" aria-label="Змінити тему"></button><button class="me" id="meChip" type="button" style="border:0;text-align:left" hidden></button><button class="iconbtn" id="menuBtn" type="button" aria-label="Меню розділів" aria-haspopup="true"></button></div>
   </header>
-  <script>document.getElementById('hdrLogo').outerHTML=dlLogoHTML({cls:'logo',label:'Логотип Duck’s Lake'});</script>
   <main id="app" class="stack">
   </main>
 </div></div>
@@ -4323,7 +4322,7 @@ function meCard(cls,onclick){const m=myStaff();if(!S.me)return null;
 function renderTabs(){updBar();
   const wide=WIDE.matches;const box=document.getElementById('tabs');const T=id=>TABS.find(t=>t.id===id);
   if(wide){
-    const kids=[el('div',{class:'side-head'},dlLogo(),el('span',{text:'DUCK’S LAKE'}),el('span',{class:'beta',text:'beta'})),
+    const kids=[el('div',{class:'side-head'},svg('<path d="M5 5l14 14M19 3v16M3 19h16"/>'),el('span',{text:'DUCK’S LAKE'}),el('span',{class:'beta',text:'beta'})),
       meCard('side-me',()=>go('profile')),notesChip('nc-side')];
     for(const [lbl,ids] of NAV_GROUPS){const v=ids.filter(tabVisible);if(!v.length)continue;kids.push(el('div',{class:'side-lbl',text:lbl}),...v.map(id=>navBtn(T(id))));}
     const dark=isDarkNow();
@@ -4698,7 +4697,7 @@ function heroCard(m,v,has,tIdx){const parts=shiftParts(v);const now=new Date();c
   return el('section',{class:'hero hero2 has-duck'},
     el('span',{class:'hero-water','aria-hidden':'true'}),el('span',{class:'hero-duck','aria-hidden':'true'},duckArt(false)),
     el('span',{class:'hero-logo','aria-hidden':'true'},svg('<path d="M5 5l14 14M19 3v16M3 19h16"/>')),
-    el('div',{class:'hero-top'},el('span',{class:'eyebrow',text:DAYS[tIdx]+', '+dm(addDays(mondayOf(new Date()),tIdx))}),el('span',{class:'hero-brand'},dlLogo(),'DUCK’S LAKE')),
+    el('div',{class:'hero-top'},el('span',{class:'eyebrow',text:DAYS[tIdx]+', '+dm(addDays(mondayOf(new Date()),tIdx))}),el('span',{class:'hero-brand'},svg('<path d="M5 5l14 14M19 3v16M3 19h16"/>'),'DUCK’S LAKE')),
     el('h2',{text:'Привіт, '+m.name.split(' ')[0]+'!'}),
     has?(parts.length?el('div',{class:'hero-shift'},el('div',{class:'hero-tiles'},parts.map(miniShift)),
         el('div',{class:'hero-st'},el('span',{text:status||''}),prog!=null?el('div',{class:'hero-bar'},el('i',{style:'width:'+Math.round(Math.min(1,Math.max(0,prog))*100)+'%'})):null))
