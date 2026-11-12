@@ -8337,12 +8337,18 @@ async function inspFileHead(file){const out={fmt:'',w:0,h:0,orient:1,exifAt:null
   return out;}
 function inspErr(stage,code,msg,extra){return Object.assign(new Error(msg||code),{stage,code},extra||{});}
 /* читаємо байти файлу одразу в пам’ять: на Android файл із галереї (content://) може стати недоступним або не читатися зовсім */
-async function inspReadBytes(f){let err=null;const ways=[()=>f.arrayBuffer(),()=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error||new Error('FileReader'));r.readAsArrayBuffer(f);})];
-  if(f instanceof Blob)ways.push(()=>new Response(f).arrayBuffer());
-  for(const w of ways){try{const b=await w();if(b&&b.byteLength)return b;err=new Error('прочитано 0 байт');}catch(e){err=e;}}
-  throw inspErr('read','unreadable',err?((err.name||'')+' '+(err.message||'')).trim():'read failed');}
+async function inspReadBytes(f){const errs=[];const ways=[['arrayBuffer',()=>f.arrayBuffer()],['FileReader',()=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error||new Error('FileReader'));r.readAsArrayBuffer(f);})]];
+  if(f instanceof Blob)ways.push(['Response',()=>new Response(f).arrayBuffer()]);
+  for(const [k,w] of ways){try{const b=await w();if(b&&b.byteLength)return b;errs.push(k+': 0 байт');}catch(e){errs.push(k+': '+((e&&(e.name||'')+' '+(e.message||''))||'?').trim().slice(0,80));}}
+  /* частинами: якщо телефон повідомив неправильний розмір файлу, читаємо все, що вдається */
+  if(f instanceof Blob&&f.size){const parts=[];let o=0;const step=async n=>{const b=await f.slice(o,o+n).arrayBuffer();if(!b.byteLength)throw new Error('0');parts.push(new Uint8Array(b));o+=b.byteLength;};
+    try{while(o<f.size){try{await step(Math.min(262144,f.size-o));}catch(e){let ok=false;for(let n=16384;n>=512&&!ok;n>>=2){try{await step(Math.min(n,f.size-o));ok=true;}catch(e2){}}if(!ok)break;}}}catch(e){}
+    if(o>4096){const u=new Uint8Array(o);let i=0;for(const pt of parts){u.set(pt,i);i+=pt.length;}errs.push('частинами: '+Math.round(o/1024)+' з '+Math.round(f.size/1024)+' КБ');
+      if(u[0]===0xFF&&u[1]===0xD8||u[0]===0x89){const buf=u.buffer;buf.partial=o<f.size;buf.notes=errs;return buf;}}
+    else errs.push('частинами: 0 КБ');}
+  throw inspErr('read','unreadable',errs.join('; ')||'read failed');}
 async function inspSrc(f){if(!f||!f.size)throw inspErr('read','empty','порожній файл');if(f.size>INSP_MAXFILE)throw inspErr('read','toolarge','файл '+Math.round(f.size/1048576)+' МБ');
-  const buf=await inspReadBytes(f);const hd=await inspFileHead(buf);const u=new Uint8Array(buf);
+  const buf=await inspReadBytes(f);const hd=await inspFileHead(buf);hd.partial=!!buf.partial;hd.notes=buf.notes||null;const u=new Uint8Array(buf);
   hd.hex=Array.from(u.subarray(0,12),x=>x.toString(16).padStart(2,'0')).join(' ');
   if(hd.fmt==='jpeg'){let e=false;for(let i=u.length-2;i>=Math.max(0,u.length-4096);i--)if(u[i]===0xFF&&u[i+1]===0xD9){e=true;break;}hd.eoi=e;}
   const type={jpeg:'image/jpeg',png:'image/png',webp:'image/webp',heic:'image/heic',avif:'image/avif'}[hd.fmt]||f.type||'application/octet-stream';
@@ -8397,7 +8403,7 @@ function inspErrText(e){const c=e&&e.code,s=e&&e.stage;
   return 'Фото не вдалося обробити. Воно збережене — натисніть «Спробувати ще раз».';}
 function inspLogErr(e,q,file){const b=inspB(q&&q.bid);const m=inspMe();
   devLog('Обхід: помилка фото · '+(b?'Буд. '+b.fac:'')+' · '+inspPt(q&&q.pointKey).n+' · етап: '+((e&&e.stage)||'?'),'err',
-    [m?m.name:'',q&&q.meta?(q.meta.fromGallery?'галерея':'камера'):'',file?(file.type||'тип ?')+' · '+Math.round((file.size||0)/1024)+' КБ':'',q&&q.meta?'формат '+(q.meta.fmt||'не розпізнано')+(q.meta.dims?' '+q.meta.dims:'')+(q.meta.eoi===false?' · без кінця файлу':''):'',q&&q.meta&&q.meta.hex?'байти '+q.meta.hex:'',(e&&(e.code||''))+' '+((e&&e.message)||''),e&&e.tries&&e.tries.length?'спроби: '+e.tries.join('; '):'',inspUA()].filter(Boolean).join(' | '));}
+    [m?m.name:'',q&&q.meta?(q.meta.fromGallery?'галерея':'камера'):'',file?(file.type||'тип ?')+' · '+Math.round((file.size||0)/1024)+' КБ'+(file.lastModified?' · змінено '+dmy(new Date(file.lastModified))+' '+inspKyivHM(file.lastModified):''):'',q&&q.meta?'формат '+(q.meta.fmt||'не розпізнано')+(q.meta.dims?' '+q.meta.dims:'')+(q.meta.eoi===false?' · без кінця файлу':''):'',q&&q.meta&&q.meta.hex?'байти '+q.meta.hex:'',(e&&(e.code||''))+' '+((e&&e.message)||''),e&&e.tries&&e.tries.length?'спроби: '+e.tries.join('; '):'',inspUA()].filter(Boolean).join(' | '));}
 /* ---------- спільний звіт: один документ на будівлю за день ---------- */
 function inspRep(rid){return (S.insp||{})[rid]||null;}
 function inspLocked(x){return !!x&&x.status==='approved';}
@@ -8445,13 +8451,15 @@ async function inspSync(){if(inspSync.busy||!S.db)return 0;const Q=Object.values
   if(sent&&S.tab==='uk')render();return sent;}
 addEventListener('online',()=>{inspSync();});setInterval(()=>{if(Object.keys(S.inspQ||{}).length&&navigator.onLine!==false)inspSync();},20000);
 /* додати фото до точки: обробка → черга на телефоні → відправка; при помилці фото лишається в черзі з «Спробувати ще раз» */
-async function inspAddPhotos(rid,bid,date,p,files,gallery){const m=inspMe();if(!m){toast('Спершу оберіть себе в колективі');return;}
+/* байти читаємо одразу після вибору — до очищення поля і перемальовування (Android відкликає доступ до файлу з галереї) */
+async function inspPreRead(files){S.inspBusy=(S.inspBusy||0)+1;try{return await Promise.all(files.slice(0,6).map(f=>inspSrc(f).then(s=>({s}),e=>({e}))));}finally{S.inspBusy=Math.max(0,S.inspBusy-1);}}
+async function inspAddPhotos(rid,bid,date,p,files,gallery,pre){const m=inspMe();if(!m){toast('Спершу оберіть себе в колективі');return;}
   if(!inspCanEditRep(bid)){toast(inspErrText({code:'rights'}));devLog('Обхід: спроба додати фото без закріплення · '+inspBShort(bid),'err',m.name+' | '+inspUA());return;}
   if(inspLocked(inspRep(rid))){toast(inspErrText({code:'locked'}));return;}
-  for(const f of files){const have=inspPhCount(inspRep(rid),p.k)+inspQOf(rid).filter(q=>q.kind==='photo'&&q.pointKey===p.k).length;if(have>=p.max){toast('Для цієї точки до '+p.max+' фото');break;}
+  for(let fi=0;fi<files.length;fi++){const f=files[fi];const have=inspPhCount(inspRep(rid),p.k)+inspQOf(rid).filter(q=>q.kind==='photo'&&q.pointKey===p.k).length;if(have>=p.max){toast('Для цієї точки до '+p.max+' фото');break;}
     const lid=Date.now().toString(36)+Math.random().toString(36).slice(2,6);const q={id:'ph:'+lid,kind:'photo',inspId:rid,bid,date,pointKey:p.k,authorId:m.id,lid,at:Date.now(),meta:{fromGallery:!!gallery,name:f.name||'',type:f.type||'',size:f.size||0}};
     S.inspBusy=(S.inspBusy||0)+1;render();
-    let src=null;try{src=await inspSrc(f);const hd=src.hd;Object.assign(q.meta,{fmt:hd.fmt,dims:hd.w?hd.w+'×'+hd.h:'',hex:hd.hex,eoi:hd.eoi});q.meta.exifAt=hd.exifAt||null;const tk=hd.exifAt||(gallery?(f.lastModified||Date.now()):Date.now());q.meta.takenAt=tk;
+    let src=null;try{const pr=pre&&pre[fi];if(pr&&pr.e)throw pr.e;src=pr&&pr.s?pr.s:await inspSrc(f);const hd=src.hd;Object.assign(q.meta,{fmt:hd.fmt,dims:hd.w?hd.w+'×'+hd.h:'',hex:hd.hex,eoi:hd.eoi,partial:hd.partial});if(hd.partial)devLog('Обхід: фото прочитано частково · '+inspBShort(bid)+' · '+p.n,'err',m.name+' | '+(hd.notes||[]).join('; ')+' | '+inspUA());q.meta.exifAt=hd.exifAt||null;const tk=hd.exifAt||(gallery?(f.lastModified||Date.now()):Date.now());q.meta.takenAt=tk;
       const r=await inspProcess(f,{takenAt:tk,bid,point:p.n,who:m.name,gallery},src);Object.assign(q.meta,{thumb:r.thumb,mini:r.mini,sizeKb:r.sizeKb,w:r.w,h:r.h});q.blob=r.blob;
       const saved=await IDBX.put(q);S.inspQ=S.inspQ||{};S.inspQ[q.id]=q;if(!saved&&!IDBX.mem.has(q.id))throw inspErr('save','idb','IndexedDB не зберіг');}
     catch(e){q.raw=src?src.blob:f;q.err=(e&&e.code)||'error';q.stage=(e&&e.stage)||'decode';q.msg=(e&&e.message)||'';await inspQPut(q);inspLogErr(e,q,f);toast(inspErrText(e));}
@@ -8543,8 +8551,8 @@ function inspPointStep(d,p,step,pts){const x=inspRep(d.id);const lock=inspLocked
   const set=(patch,now)=>inspSetPoint(d.id,d.bid,d.date,p.k,patch,now);
   const phs=inspPhotosOf(x,p.k,Object.fromEntries(((S.inspLive&&S.inspLive.list)||[]).map(q=>[q.id,q])));const qs=inspQOf(d.id).filter(q=>q.kind==='photo'&&q.pointKey===p.k);
   const grid=el('div',{class:'iw-ph'},phs.map(q=>inspPhTile(q,lock,d,p)),qs.map(q=>inspQTile(q,p)),S.inspBusy?el('span',{class:'thumb iw-sk','aria-label':'Обробляємо фото'}):null);
-  const cam=el('input',{type:'file',accept:'image/*',capture:'environment',class:'iw-file','aria-label':'Зробити фото: '+p.n});cam.addEventListener('change',()=>{const f=[...cam.files];cam.value='';inspAddPhotos(d.id,d.bid,d.date,p,f,false);});
-  const gal=el('input',{type:'file',accept:'image/*',multiple:true,class:'iw-file','aria-label':'Додати з галереї: '+p.n});gal.addEventListener('change',()=>{const f=[...gal.files];gal.value='';inspAddPhotos(d.id,d.bid,d.date,p,f,true);});
+  const cam=el('input',{type:'file',accept:'image/*',capture:'environment',class:'iw-file','aria-label':'Зробити фото: '+p.n});cam.addEventListener('change',async()=>{const f=[...cam.files];const pre=await inspPreRead(f);cam.value='';inspAddPhotos(d.id,d.bid,d.date,p,f,false,pre);});
+  const gal=el('input',{type:'file',accept:'image/*',multiple:true,class:'iw-file','aria-label':'Додати з галереї: '+p.n});gal.addEventListener('change',async()=>{const f=[...gal.files];const pre=await inspPreRead(f);gal.value='';inspAddPhotos(d.id,d.bid,d.date,p,f,true,pre);});
   const n=phs.length+qs.length;
   box.append(el('div',{class:'stack',style:'gap:4px'},el('h2',{id:'iwH',text:p.n}),el('span',{class:'muted small',text:(p.req?'Обов’язково · ':'Необов’язково · ')+p.hint})),
     lock?null:el('div',{class:'iw-cam'},el('label',{class:'btn filebtn iw-camb'},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),' Зробити фото',cam),el('label',{class:'btn ghost filebtn iw-camb'},svg('<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/>'),' З галереї',gal)),
