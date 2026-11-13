@@ -365,11 +365,41 @@ function consExportStock(){const t=ymd(new Date());const aoa=[['Витратні
 function consExportLog(L){const aoa=[['Дата','Час','Тип','Позиція','Кількість','Од.','Кому','Ким видано','Будинок','Призначення','Причина','Коментар','Джерело','Статус','Внесено','Хто вніс']];
   L.forEach(o=>(o.lines||[]).forEach(l=>{const d=new Date(o.at);aoa.push([o.date,o.time||'',(CONS_KIND[o.kind]||[''])[0],l.name,cr(l.delta),l.unit,consToLabel(o),o.byId?consWho(o.byId):'',o.bld||'',o.purpose||'',o.reason||'',o.note||'',o.src?(o.src.t==='table'?o.src.file:o.src.t==='invoice'?(o.src.doc||o.src.file):o.src.t==='storno'?'сторно':'вручну'):'вручну',o.storno?'сторновано':'',ymd(d)+' '+pad(d.getHours())+':'+pad(d.getMinutes()),consWho(o.authorSid,o.author)]);}));
   consXlsx('Витратні матеріали — журнал '+ymd(new Date()),[['Журнал',aoa,[11,6,14,36,10,7,22,20,12,14,18,28,22,12,16,20]]]);}
-function consExportRep(D){const a1=[['Звіт витрат '+D.a+' — '+D.b+(D.withOff?' (видачі та списання)':' (лише видачі)')],['Позиція','Категорія','Од.','Видано',...(D.withOff?['Списано']:[]),'Разом','Операцій']];
-  D.rows.forEach(r=>a1.push([r.name,consCat(r.cat)[1],r.unit,r.iss,...(D.withOff?[r.off]:[]),cr(r.iss+r.off),r.n]));
-  const a2=[['Кому видано','Видач','Позиція','Кількість','Од.']];Object.entries(D.who).forEach(([k,w])=>Object.entries(w.items).forEach(([nu,v],i)=>{const [n,u]=nu.split('|');a2.push([i?'':k,i?'':w.n,n,v,u]);}));
-  const a3=[['Будинок / локація','Операцій']];Object.entries(D.blds).forEach(([k,v])=>a3.push([k,v]));
-  consXlsx('Звіт витрат '+D.a+' — '+D.b,[['Звіт',a1,[40,26,8,10,10,10,10]],['Кому видано',a2,[26,8,36,10,8]],['Будинки',a3,[24,10]]]);}
+/* Звіт витрат → Excel у стилі звіту по воді (ExcelJS + спільні WXL-хелпери) */
+function consRepMeta(D){const dd=x=>dm(x)+'.'+x.slice(0,4);const now=new Date();const to=S.crTo&&D.ops.find(o=>(o.toId||('t:'+o.toText))===S.crTo);
+  const f=[S.crC?'категорія: '+consCat(S.crC)[1]:'',S.crB?'будинок: '+S.crB:'',to?'отримувач: '+consToLabel(to):'',S.crPu?'призначення: '+S.crPu:''].filter(Boolean);const me=myStaff();
+  return {from:dd(D.a),to:dd(D.b),lines:['Період: '+dd(D.a)+' — '+dd(D.b),'Враховано: '+(D.withOff?'видачі та списання':'тільки видачі')+(f.length?' · '+f.join(' · '):''),'Сформовано: '+dmy(now)+' '+hm(now)+(me?' · '+me.name:'')]};}
+function consRepXlsx(ExcelJS,D,meta){const wb=new ExcelJS.Workbook();wb.creator='Duck’s Lake';wb.created=new Date();const C=WXL.C;
+  const sheet=(name,widths,H)=>{const ws=wb.addWorksheet(name,{properties:{tabColor:{argb:WXL.NAVY}},views:[{state:'frozen',ySplit:6,showGridLines:false}]});ws.columns=widths.map(width=>({width}));
+    WXL.title(ws,'Звіт витрат ресурсів',H.length,meta.lines);WXL.head(ws,6,H);ws.autoFilter={from:{row:6,column:1},to:{row:6,column:H.length}};WXL.page(ws,H.length,'1:6','витратні матеріали');return ws;};
+  const put=WXL.put,num=(ws,r,c,v,st)=>put(ws,r,c,v,{...st,fmt:WXL.qty(v),align:{horizontal:'right'}});
+  const fillRow=(ws,r,n,fill,bold)=>{for(let c=1;c<=n;c++){const x=ws.getCell(r,c);if(x.value==null)put(ws,r,c,null,{fill});else{x.fill={type:'pattern',pattern:'solid',fgColor:{argb:fill}};if(bold)x.font={...x.font,bold:true};}}ws.getRow(r).height=20;};
+  const units=rs=>{const m={};rs.forEach(x=>m[x.unit]=cr((m[x.unit]||0)+x.iss+x.off));return m;};
+  /* «Звіт»: групи за категорією, підсумок групи; кількості різних одиниць не складаються */
+  const off=D.withOff,H=['№','Позиція','Категорія','Од.','Видано',...(off?['Списано']:[]),'Разом використано','Операцій'],N=H.length,cT=N-1,cN=N;
+  const ws=sheet('Звіт',[5,Math.min(60,Math.max(30,...D.rows.map(x=>x.name.length+2))),24,7,11,...(off?[11]:[]),14,11],H);let r=7,k=0;
+  const groups=[];D.rows.forEach(x=>{const g=consCat(x.cat)[1];if(!groups.length||groups[groups.length-1].name!==g)groups.push({name:g,rows:[]});groups[groups.length-1].rows.push(x);});
+  groups.forEach(g=>{ws.mergeCells(r,1,r,N);put(ws,r,1,g.name,{fill:C.sec,font:{bold:true,color:{argb:WXL.NAVY}},align:{indent:1}});ws.getRow(r).height=20;r++;
+    g.rows.forEach((x,i)=>{const fill=i%2?C.zebra:null;put(ws,r,1,++k,{fill,align:{horizontal:'center'}});put(ws,r,2,x.name,{fill,align:{wrapText:true}});put(ws,r,3,consCat(x.cat)[1],{fill});put(ws,r,4,x.unit,{fill,align:{horizontal:'center'}});
+      num(ws,r,5,x.iss,{fill});if(off)num(ws,r,6,x.off,{fill});num(ws,r,cT,cr(x.iss+x.off),{fill,font:{bold:true}});num(ws,r,cN,x.n,{fill});r++;});
+    const u=Object.entries(units(g.rows)),ops=g.rows.reduce((t,x)=>t+x.n,0);
+    put(ws,r,2,'Разом: '+g.name+(u.length>1?' — '+u.map(([a,v])=>cq(v)+' '+a).join(' · '):''),{font:{bold:true},align:{wrapText:true}});
+    if(u.length===1){put(ws,r,4,u[0][0],{align:{horizontal:'center'}});const s=f=>cr(g.rows.reduce((t,x)=>t+f(x),0));num(ws,r,5,s(x=>x.iss));if(off)num(ws,r,6,s(x=>x.off));num(ws,r,cT,u[0][1]);}
+    num(ws,r,cN,ops);fillRow(ws,r,N,C.tot,true);r++;});
+  ws.getRow(r).height=6;r++;put(ws,r,2,'РАЗОМ: '+D.rows.length+' '+plural(D.rows.length,'позиція','позиції','позицій'),{font:{bold:true}});num(ws,r,cN,D.rows.reduce((t,x)=>t+x.n,0));fillRow(ws,r,N,C.tot,true);
+  /* «Кому видано» */
+  const w2=sheet('Кому видано',[30,9,40,12,7],['Кому видано','Видач','Позиція','Кількість','Од.']);r=7;let gi=0,nIss=0;
+  Object.entries(D.who).forEach(([who,w])=>{const fill=gi++%2?C.zebra:null;nIss+=w.n;Object.entries(w.items).forEach(([nu,v],i)=>{const [n,u]=nu.split('|');
+    put(w2,r,1,i?null:who,{fill,font:i?{}:{bold:true}});if(i)put(w2,r,2,null,{fill});else num(w2,r,2,w.n,{fill});put(w2,r,3,n,{fill,align:{wrapText:true}});num(w2,r,4,v,{fill});put(w2,r,5,u,{fill,align:{horizontal:'center'}});r++;});});
+  w2.getRow(r).height=6;r++;put(w2,r,1,'РАЗОМ: '+gi+' '+plural(gi,'отримувач','отримувачі','отримувачів'),{font:{bold:true}});num(w2,r,2,nIss);fillRow(w2,r,5,C.tot,true);
+  /* «Будинки» */
+  const w3=sheet('Будинки',[44,11],['Будинок / локація','Операцій']);r=7;const bl=Object.entries(D.blds);
+  bl.forEach(([b,n],i)=>{const fill=i%2?C.zebra:null;put(w3,r,1,b,{fill});num(w3,r,2,n,{fill});r++;});
+  w3.getRow(r).height=6;r++;put(w3,r,1,'РАЗОМ',{font:{bold:true}});num(w3,r,2,bl.reduce((t,x)=>t+x[1],0));fillRow(w3,r,2,C.tot,true);
+  return wb;}
+async function consExportRep(D){toast('Готую файл…');let EJ;try{EJ=await loadExcelJS();}catch(e){toast('Не вдалося завантажити модуль Excel — перевірте інтернет');return;}
+  try{const m=consRepMeta(D);const buf=await consRepXlsx(EJ,D,m).xlsx.writeBuffer();await saveFile('Звіт витрат '+m.from+' — '+m.to+'.xlsx',new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));}
+  catch(e){console.error(e);toast('Не вдалося сформувати файл');}}
 /* CONS:END */
 
 function resView(){const out=[];

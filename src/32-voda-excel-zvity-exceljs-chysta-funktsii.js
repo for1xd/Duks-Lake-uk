@@ -13,12 +13,17 @@ WXL.units=function(data){const out=[];data.buildings.forEach(b=>{const secs=[...
   if(!secs.length){out.push({obj:b.id,objName:b.name,name:b.name,meters:b.meters});return;}
   const shared=b.meters.filter(m=>!m.section);if(shared.length)out.push({obj:b.id,objName:b.name,name:b.name,meters:shared,mainsOf:secs});
   secs.forEach(s=>out.push({obj:b.id,objName:b.name,name:s,meters:b.meters.filter(m=>m.section===s),sharedMainsWith:shared.some(m=>m.type==='common')?b.name:null}));});return out;};
-WXL.page=function(ws,lastCol,titleRows){ws.pageSetup={paperSize:9,orientation:'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,horizontalCentered:true,
+/* спільна клітинка таблиці: межа, шрифт, заливка, вирівнювання, формат */
+WXL.put=function(ws,r,c,v,st){st=st||{};const x=ws.getCell(r,c);x.value=v;x.border=WXL.border();x.font={name:WXL.FONT,size:10,...(st.font||{})};x.alignment={vertical:'middle',...(st.align||{})};
+  if(st.fill)x.fill={type:'pattern',pattern:'solid',fgColor:{argb:st.fill}};if(st.fmt)x.numFmt=st.fmt;return x;};
+/* кількість: цілі без «,00», дробові до 2 знаків */
+WXL.qty=v=>Number.isInteger(+v)?'#,##0':'#,##0.##';
+WXL.page=function(ws,lastCol,titleRows,foot){ws.pageSetup={paperSize:9,orientation:'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,horizontalCentered:true,
   margins:{left:0.4,right:0.4,top:0.5,bottom:0.6,header:0.3,footer:0.3},printTitlesRow:titleRows};
-  ws.headerFooter={oddFooter:'&L&8Duck’s Lake · облік води&R&8Сторінка &P з &N'};};
+  ws.headerFooter={oddFooter:'&L&8Duck’s Lake · '+(foot||'облік води')+'&R&8Сторінка &P з &N'};};
 WXL.title=function(ws,text,cols,sub){ws.mergeCells(1,1,1,cols);const c=ws.getCell(1,1);c.value=text;c.font={name:WXL.FONT,size:14,bold:true,color:{argb:WXL.NAVY}};
   c.alignment={vertical:'middle',horizontal:'left',indent:1};ws.getRow(1).height=30;
-  if(sub){ws.mergeCells(2,1,2,cols);const s=ws.getCell(2,1);s.value=sub;s.font={name:WXL.FONT,size:9,italic:true,color:{argb:WXL.C.note}};s.alignment={indent:1};}};
+  [].concat(sub||[]).forEach((t,i)=>{ws.mergeCells(2+i,1,2+i,cols);const s=ws.getCell(2+i,1);s.value=t;s.font={name:WXL.FONT,size:9,italic:true,color:{argb:WXL.C.note}};s.alignment={indent:1};});};
 WXL.head=function(ws,row,labels){const r=ws.getRow(row);labels.forEach((h,i)=>{const c=r.getCell(i+1);c.value=h;c.font={name:WXL.FONT,size:10,bold:true,color:{argb:'FFFFFFFF'}};
   c.fill={type:'pattern',pattern:'solid',fgColor:{argb:WXL.NAVY}};c.alignment={vertical:'middle',horizontal:'center',wrapText:true};c.border=WXL.border();});r.height=34;};
 /* Аркуш будинку. full=true — додаються загальнобудинкові лічильники й рядок відхилення */
@@ -29,8 +34,7 @@ WXL.buildingSheet=function(wb,u,data,full,used){const res=u.meters.filter(m=>m.t
   ws.columns=[{width:9},{width:13},{width:34},{width:20},{width:15},{width:15},{width:14}];
   WXL.title(ws,'Облік води | '+u.name+' | '+data.period.label,7,'Сформовано '+data.generatedAt+(u.sharedMainsWith&&full?' · загальнобудинкові лічильники — на аркуші «'+u.sharedMainsWith+'»':'')+(u.mainsOf?' · спільні лічильники для: '+u.mainsOf.join(', '):''));
   WXL.head(ws,3,H);let r=4;const B=WXL.border();
-  const put=(row,col,v,st)=>{const c=ws.getCell(row,col);c.value=v;c.border=B;c.font={name:WXL.FONT,size:10,...(st&&st.font||{})};if(st&&st.fill)c.fill={type:'pattern',pattern:'solid',fgColor:{argb:st.fill}};
-    c.alignment={vertical:'middle',...(st&&st.align||{})};if(st&&st.fmt)c.numFmt=st.fmt;return c;};
+  const put=(row,col,v,st)=>WXL.put(ws,row,col,v,st);
   const meterRow=(m,fill,label)=>{const noSer=!String(m.serial||'').trim();const hasRd=[m.start,m.end].some(v=>WXL.num(v));const noMeter=noSer&&!hasRd;const st={fill};
     put(r,1,m.floor===''||m.floor==null?null:(isNaN(+m.floor)?String(m.floor):+m.floor),{...st,align:{horizontal:'center'}});
     put(r,2,m.room===''||m.room==null?null:(isNaN(+m.room)?String(m.room):+m.room),{...st,align:{horizontal:'center'}});
@@ -61,8 +65,7 @@ WXL.buildingSheet=function(wb,u,data,full,used){const res=u.meters.filter(m=>m.t
 WXL.dashboard=function(ws,data,sums){const q=s=>"'"+s.replace(/'/g,"''")+"'!";
   ws.columns=[{width:56},{width:20},{width:20},{width:18},{width:14}];const B=WXL.border();
   WXL.title(ws,'Облік води | Зведення | '+data.period.label,5,'Сформовано '+data.generatedAt+' · формули посилаються на аркуші будинків');
-  const put=(r,c,v,st={})=>{const x=ws.getCell(r,c);x.value=v;x.border=B;x.font={name:WXL.FONT,size:10,...(st.font||{})};x.alignment={vertical:'middle',...(st.align||{})};
-    if(st.fill)x.fill={type:'pattern',pattern:'solid',fgColor:{argb:st.fill}};if(st.fmt)x.numFmt=st.fmt;return x;};
+  const put=(r,c,v,st)=>WXL.put(ws,r,c,v,st);
   const block=(r,text)=>{ws.mergeCells(r,1,r,5);const c=ws.getCell(r,1);c.value=text;c.font={name:WXL.FONT,size:12,bold:true,color:{argb:WXL.NAVY}};c.border={bottom:{style:'medium',color:{argb:WXL.NAVY}}};ws.getRow(r).height=22;};
     /* Блок 2 спершу рахуємо, щоб Блок 1 міг на нього посилатися */
   const by={};sums.filter(Boolean).forEach(x=>{const g=by[x.obj]=by[x.obj]||{name:x.objName,sheet:x.sheet,mains:[],ress:[],mainV:0,resV:0};
