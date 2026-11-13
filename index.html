@@ -1023,7 +1023,8 @@ body.mz-lock .wrap{padding-bottom:0!important}
 @media (prefers-reduced-motion:no-preference){.mzp.s-over{animation:mzPulse 1.4s ease-in-out infinite}}
 @keyframes mzPulse{50%{stroke-opacity:.35}}
 .mz-map.pen-on{cursor:crosshair}.mz-map.pen-on .mzp,.mz-map.pen-on .mzl{pointer-events:none!important}
-.mz-map.pen-edit .mzp:not(.pen-shape){opacity:.38}.mz-map.pen-edit .mzl{opacity:.3}.mz-map.pen-on .mzp{opacity:.55}
+/* під час роботи пером інші зони — лише тонкий контур без заливки, щоб було видно знімок */
+.mz-map:is(.pen-on,.pen-edit) .mzp:not(.pen-shape){fill-opacity:0!important;opacity:.45}.mz-map:is(.pen-on,.pen-edit) .mzl{opacity:.3}
 .pen-path{stroke:#F2A33A;stroke-width:2.5px;fill:none;stroke-linejoin:round;stroke-linecap:round;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.6))}
 .pen-rubber{stroke:#F2A33A;stroke-width:1.5px;stroke-dasharray:4 4;fill:none}
 .pen-shape{stroke:#F2A33A!important;stroke-width:2.5px!important;filter:drop-shadow(0 0 1.5px rgba(0,0,0,.55));opacity:1!important}
