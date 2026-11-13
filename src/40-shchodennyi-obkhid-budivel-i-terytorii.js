@@ -238,6 +238,8 @@ function inspFillText(bid,x){if(!x||!x.shared)return '';const pts=inspPts(bid);c
   pts.forEach(p=>{const who=new Set();Object.values((x.ptPh||{})[p.k]||{}).forEach(v=>v&&who.add(v.by));const v=(x.points||{})[p.k];if(v&&v.by&&v.status==='remark')who.add(v.by);who.forEach(s=>{by[s]=(by[s]||0)+1;});});
   const filled=pts.filter(p=>inspPhCount(x,p.k)>0).length;const names=Object.entries(by).map(([s,n])=>{const st=staffById(s);const nm=st?st.name.split(/\s+/)[0]:'—';return nm+': '+n;});
   return 'заповнено '+filled+' з '+pts.length+' точок'+(names.length?' · '+names.join(', '):'');}
+/* останній звіт по будівлі до дати (будь-який статус, крім порожньої чернетки) */
+function inspPrev(bid,date){return Object.values(S.insp||{}).filter(x=>x.buildingId===bid&&x.date<date&&x.points).sort((a,b)=>a.date<b.date?1:-1)[0]||null;}
 function inspPill(st){const s=INSP_ST[st]||INSP_ST.none;return el('span',{class:'ip-st ip-'+s[1]},el('i'),s[0]);}
 /* ---------- головний екран модуля ---------- */
 function inspHead(){const g=FG.find(x=>x.id==='insp');return el('section',{class:'uk-head',style:'--c1:'+g.c1+';--c2:'+g.c2},el('span',{class:'uk-ic big'},svg(g.ic)),el('div',{},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:g.name}),el('p',{text:g.sub})));}
@@ -263,6 +265,10 @@ function inspMine(){const bl=inspMyBlds();const out=[];const st=bl.map(b=>({b,s:
       el('span',{class:'ip-bn'},el('b',{text:'Буд. '+b.fac}),el('span',{text:b.name}),el('small',{class:'muted',text:fill||b.addr})),inspPill(s.st),
       upd?el('span',{class:'ip-rc upd',text:'Оновлено після відправки: '+upd}):null,
       s.st==='returned'&&x?el('span',{class:'ip-rc',text:'Повернуто: '+(x.reviewComment||'')}):null,el('span',{class:'uk-go'},svg('<path d="m9 6 6 6-6 6"/>')));})));
+  const today=ymd(new Date());const past=Object.values(S.insp||{}).filter(x=>x.date<today&&x.status!=='draft'&&bl.some(b=>b.id===x.buildingId)).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0).slice(0,15);
+  if(past.length)out.push(el('div',{class:'ip-sum'},el('b',{text:'Попередні звіти'}),el('span',{class:'muted small',text:'останні '+past.length+' · лише перегляд'})),
+    el('div',{class:'iw-rows'},past.map(x=>el('button',{type:'button',class:'iw-row',onclick:()=>inspOpen(x.id)},
+      el('span',{class:'iw-rn'},el('b',{text:dm(x.date)+' · '+inspBShort(x.buildingId)}),el('small',{class:x.remarks?'iw-rem':'muted',text:x.remarks?'⚠ зауважень: '+x.remarks:'✓ без зауважень'})),inspPill(x.status)))));
   return out;}
 /* ---------- майстер обходу (спільний звіт) ---------- */
 async function inspStart(bid){const m=inspMe();if(!m){toast('Спершу оберіть себе в колективі');return;}if(!inspCanEditRep(bid)){toast(inspErrText({code:'rights'}));return;}
@@ -323,6 +329,10 @@ function inspPointStep(d,p,step,pts){const x=inspRep(d.id);const lock=inspLocked
   cm.addEventListener('blur',()=>{if((v.status)==='remark'&&!cm.value.trim()){err.textContent='Опишіть зауваження — без коментаря його не зрозуміють.';err.hidden=false;}});
   const seg=el('div',{class:'iw-seg',role:'radiogroup','aria-label':'Стан точки'},[['ok','Норма','✓'],['remark','Зауваження','⚠']].map(([k,l,ic])=>el('button',{type:'button',role:'radio',disabled:dis,class:'iw-sb '+k,'aria-checked':String((v.status||'ok')===k),onclick:()=>{set({status:k,priority:k==='remark'?(v.priority||'mid'):null,seen:true},true);render();if(k==='remark')setTimeout(()=>{const c=document.getElementById('iwCm');if(c&&!IS_TOUCH)c.focus();},0);}},el('span',{class:'iw-si','aria-hidden':'true',text:ic}),l)));
   const by=v.by&&staffById(v.by);
+  const pr=inspPrev(d.bid,d.date);const pv=pr&&(pr.points||{})[p.k];
+  if(!lock&&pv&&pv.status==='remark'&&!(v.status==='remark'&&v.comment===pv.comment))box.append(el('div',{class:'iw-info',role:'note'},
+    el('span',{class:'iw-rn'},el('small',{class:'muted',text:'Минулого разу, '+dm(pr.date)+':'}),el('span',{class:'iw-rem',text:'⚠ '+INSP_PRIO[pv.priority||'mid']+(pv.comment?' — '+pv.comment:'')})),
+    el('button',{class:'btn sm',type:'button',style:'margin-top:8px',onclick:()=>{set({status:'remark',priority:pv.priority||'mid',comment:pv.comment||'',seen:true},true);render();}},'Ще не виправлено')));
   box.append(el('fieldset',{class:'iw-fs'},el('legend',{class:'flabel',text:'Стан'}),seg,by?el('small',{class:'muted',text:'Стан вказав: '+by.name+(v.at?' · '+inspKyivHM(v.at):'')+(v._pending?' · ще не відправлено':'')}):null));
   if(v.status==='remark')box.append(el('label',{for:'iwCm'},'Коментар до зауваження (обов’язково)',cm),
     el('fieldset',{class:'iw-fs'},el('legend',{class:'flabel',text:'Пріоритет'}),el('div',{class:'iw-seg three',role:'radiogroup','aria-label':'Пріоритет'},Object.entries(INSP_PRIO).map(([k,l])=>el('button',{type:'button',role:'radio',disabled:dis,class:'iw-sb pr-'+k,'aria-checked':String((v.priority||'mid')===k),onclick:()=>{set({priority:k},true);render();}},l)))));
