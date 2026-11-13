@@ -2,7 +2,7 @@
 // Розділ: карта території v2: Leaflet (CRS.Simple) поверх чистого фото, зони з db (map_zones), запасний варіант — MZ3 у коді.
 
 /* MZ3:BEGIN — карта території v2: Leaflet (CRS.Simple) поверх чистого фото, зони з db (map_zones), запасний варіант — MZ3 у коді.
-   Координати зон — пікселі фото 960×640 (x вправо, y вниз); у Leaflet latlng = [640 − y, x]. Карта зараз відкрита лише для Dev. */
+   Координати зон — пікселі фото 960×640 (x вправо, y вниз); у Leaflet latlng = [640 − y, x]. Доступ: MAP_ROLES (mapOpen), редагування — canZoneEdit. */
 const MZ_W=960,MZ_H=640;
 const MZ_TY={g:{n:'Газон / трава',c:'#46c25f',l:'zones'},sh:{n:'Клумба / кущі',c:'#1f7a3a',l:'zones'},tr:{n:'Дерева / посадки',c:'#9aa83a',l:'zones'},
   st:{n:'Каміння / гравій',c:'#b3a796',l:'zones'},s:{n:'Плитка / доріжка',c:'#d5d9dc',l:'zones'},w:{n:'Берег',c:'#2bc0b4',l:'zones'},
@@ -26,7 +26,8 @@ function mzTasks(id){return mzTasksAll(id).filter(t=>!isDone(t));}
 function mzStatus(id){const today=ymd(new Date());const L=mzTasksAll(id);const open=L.filter(t=>!isDone(t));
   if(open.some(t=>t.due&&t.due<today))return 'over';if(open.length)return 'open';if(L.some(t=>isDone(t)&&t.doneAt&&ymd(new Date(t.doneAt))===today))return 'done';return 'none';}
 function canZoneEdit(){return isDev();}
-function mapOpen(){return isDev();}
+/* карту бачать клінери, садівники, менеджери, директор (Віталій), CEO (Богдан) і Dev; редагування зон — лише Dev (canZoneEdit) */
+const MAP_ROLES=['cleaner','gardener','manager','senior','director','ceo','dev'];function mapOpen(){return hasAny(MAP_ROLES);}
 function zoneTag(t){const zs=tZones(t).map(mzById).filter(Boolean);if(!zs.length)return null;const z=zs[0];const txt=zs.length>1?'Зони '+zs.map(x=>x.n).join(', '):z.name;
   if(!mapOpen())return el('span',{class:'zone-tag t-'+z.t},el('i'),txt);
   return el('button',{type:'button',class:'zone-tag t-'+z.t,title:'Показати на карті',onclick:e=>{e.stopPropagation();S.mzSel=z.id;S.mzMulti=null;S.mzFocus=z.id;go('map');}},el('i'),txt,' · на карті');}
