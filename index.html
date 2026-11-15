@@ -3559,6 +3559,23 @@ label.cl-bh{flex-direction:row!important;align-items:center!important;gap:10px!i
 .dk-acc.head[data-tip2]::after{bottom:auto;top:calc(100% + 8px)}
 @media (hover:hover) and (pointer:fine){.dk-acc:hover::after{opacity:1}}.dk-acc:focus-visible::after{opacity:1}
 .uk-tile:has(.dk-acc){overflow:visible!important}
+/* графік: перемикач вигляду і швидке заповнення — без обрізання на телефоні */
+.sc-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sc-bar .sc-seg{flex:1 1 320px;min-width:0}
+.sc-seg button{gap:6px;min-height:40px}.sc-seg button span{white-space:nowrap}
+.sc-acts{display:flex;gap:8px;flex:0 0 auto}.sc-acts .btn{min-height:40px;white-space:nowrap}
+.sc-sh{display:none}
+.sc-tools{display:flex;flex-direction:column;gap:8px;padding:12px 14px}
+.sc-qa{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.sc-qa .btn{min-height:44px;justify-content:center;gap:6px;white-space:nowrap;padding:0 8px}
+.sc-qa .btn svg{width:16px;height:16px;flex:none}
+.sc-qa .btn.ghost{background:var(--surface-2)!important;border:1px solid var(--line)!important}
+@media (max-width:600px){
+  .sc-bar .sc-seg{flex:1 1 100%}
+  .sc-acts{flex:1 1 100%}.sc-acts .btn{flex:1;justify-content:center}
+  .sc-lg{display:none}.sc-sh{display:inline}
+  .sc-qa .btn{display:flex!important;flex-direction:column!important;align-items:center!important;gap:3px!important;min-height:58px;font-size:13px;white-space:normal;line-height:1.15;text-align:center;padding:4px 6px}
+}
 .dk-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .dk-qw{flex:1 1 260px;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 .dk-qw svg{width:18px;height:18px;flex:none;color:var(--muted);fill:none;stroke:currentColor;stroke-width:2}
@@ -10078,11 +10095,12 @@ function viewSchedule(){
   const edit=canPlan();const showHrs=hasAny(['dev','manager','director']);const list=schedStaff();const tIdx=isThisWeek()?todayIdx():-1;
   const cnt=i=>list.filter(x=>isWorking(dayValue(x.id,i))).length;
   const IC_D='<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/>',IC_W='<path d="M4 6h16M4 12h16M4 18h16"/>';
-  out.push(el('div',{class:'sc-bar'},el('div',{class:'sg sc-seg'},
-      el('button',{type:'button','aria-pressed':String(S.schedView!=='week'),onclick:()=>{S.schedView='day';render();}},svg(IC_D),'По днях'),
-      el('button',{type:'button','aria-pressed':String(S.schedView==='week'),onclick:()=>{S.schedView='week';render();}},svg(IC_W),'Весь тиждень')),
-    el('div',{class:'row',style:'gap:8px'},!isThisWeek()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.weekStart=mondayOf(new Date());S.day=todayIdx();watchWeek();render();}},'Сьогодні'):null,
-      el('button',{class:'btn ghost sm',type:'button',title:'Графік тижня картинкою: таблиця, для телефону або один день',onclick:()=>scExportImg(ws)},svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/>'),' Завантажити PNG'))));
+  /* перемикач вигляду — окремим рядком на всю ширину; дії поруч на ПК і під ним на телефоні */
+  out.push(el('div',{class:'sc-bar'},el('div',{class:'sg full sc-seg',role:'tablist','aria-label':'Вигляд графіка'},
+      el('button',{type:'button',role:'tab','aria-selected':String(S.schedView!=='week'),'aria-pressed':String(S.schedView!=='week'),onclick:()=>{S.schedView='day';render();}},svg(IC_D),el('span',{text:'По днях'})),
+      el('button',{type:'button',role:'tab','aria-selected':String(S.schedView==='week'),'aria-pressed':String(S.schedView==='week'),onclick:()=>{S.schedView='week';render();}},svg(IC_W),el('span',{class:'sc-lg',text:'Весь тиждень'}),el('span',{class:'sc-sh',text:'Тиждень'}))),
+    el('div',{class:'sc-acts'},!isThisWeek()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.weekStart=mondayOf(new Date());S.day=todayIdx();watchWeek();render();}},svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),' Сьогодні'):null,
+      el('button',{class:'btn ghost sm',type:'button',title:'Графік тижня картинкою: таблиця, для телефону або один день','aria-label':'Завантажити графік картинкою PNG',onclick:()=>scExportImg(ws)},svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/>'),el('span',{class:'sc-lg',text:' Завантажити PNG'}),el('span',{class:'sc-sh',text:' PNG'})))));
   if(edit)out.push(scToolbar());
   if(S.schedView!=='week'){
     out.push(el('div',{class:'sc-days'},DS.map((d,i)=>{const n=cnt(i);return el('button',{type:'button',class:'sc-day'+(i>=5?' we':'')+(i===tIdx?' now':''),'aria-pressed':String(S.day===i),onclick:()=>{S.day=i;render();}},
@@ -10136,11 +10154,11 @@ const SC_BRUSH=[['','Вихідний'],['Д','Менеджер'],['8:00–13:00
 function scBrushes(){const extra=(S.scCustom||[]).filter(v=>!SC_BRUSH.some(b=>b[0]===v)).map(v=>[v,v.replace(/:00/g,'').replace('|',' + ')]);return SC_BRUSH.concat(extra);}
 function scToolbar(){const on=S.brush!=null;const cur=on?scBrushes().find(b=>b[0]===S.brush):null;
   return el('div',{class:'card sc-tools'+(on?' on':'')},
-    el('div',{class:'row between',style:'gap:8px'},
-      el('button',{type:'button',class:'btn sm'+(on?'':' ghost'),'aria-pressed':String(on),onclick:()=>{if(on){S.brush=null;scFlush();}else{S.brush='8:00–13:00';S.schedView='week';}render();}},svg('<path d="M18 2l4 4-11 11H7v-4z"/><path d="M7 17c-2 0-4 1-4 4 2 0 4-1 4-4z"/>'),on?' Готово':' Пензлик'),
-      el('div',{class:'row',style:'gap:6px'},
-        el('button',{type:'button',class:'btn ghost sm',onclick:scPhoto},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),' З фото'),
-        el('button',{type:'button',class:'btn ghost sm',onclick:()=>confirmSheet('Замінити графік цього тижня копією попереднього?','Скопіювати',copyPrevWeek)},'Як минулого тижня'))),
+    el('span',{class:'flabel',text:'Швидко заповнити тиждень'}),
+    el('div',{class:'sc-qa'},
+      el('button',{type:'button',class:'btn sm'+(on?'':' ghost'),'aria-pressed':String(on),title:'Вибрати зміну й торкатися клітинок',onclick:()=>{if(on){S.brush=null;scFlush();}else{S.brush='8:00–13:00';S.schedView='week';}render();}},svg('<path d="M18 2l4 4-11 11H7v-4z"/><path d="M7 17c-2 0-4 1-4 4 2 0 4-1 4-4z"/>'),el('span',{text:on?'Готово':'Пензлик'})),
+      el('button',{type:'button',class:'btn ghost sm',title:'Розпізнати графік з фото таблиці',onclick:scPhoto},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),el('span',{text:'З фото'})),
+      el('button',{type:'button',class:'btn ghost sm',title:'Скопіювати графік попереднього тижня','aria-label':'Як минулого тижня — скопіювати попередній тиждень',onclick:()=>confirmSheet('Замінити графік цього тижня копією попереднього?','Скопіювати',copyPrevWeek)},svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),el('span',{text:'Як минулого тижня'}))),
     on?el('div',{class:'sc-brushes'},scBrushes().map(([v,l])=>el('button',{type:'button',class:'sc-br'+(S.brush===v?' on':''),'aria-pressed':String(S.brush===v),onclick:()=>{S.brush=v;render();}},l)),
       el('button',{type:'button',class:'sc-br add',onclick:()=>{const t=prompt('Свій час, напр. 9:00–18:00 або 8–13, 17–20');if(t==null)return;const v=normShift(t);if(!v){toast('Не вдалося розібрати час');return;}S.scCustom=[...(S.scCustom||[]),v];S.brush=v;render();}},'+ Свій')):null,
     on?el('p',{class:'muted small',style:'margin:0',text:'Обрано: '+(cur?cur[1]:S.brush)+' — торкайтеся клітинок, щоб заповнити. Торкання імені заповнить увесь тиждень працівника.'}):null);}

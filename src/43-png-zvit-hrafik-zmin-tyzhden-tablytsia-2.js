@@ -125,11 +125,12 @@ function viewSchedule(){
   const edit=canPlan();const showHrs=hasAny(['dev','manager','director']);const list=schedStaff();const tIdx=isThisWeek()?todayIdx():-1;
   const cnt=i=>list.filter(x=>isWorking(dayValue(x.id,i))).length;
   const IC_D='<rect x="3" y="4" width="18" height="17" rx="3"/><path d="M3 9h18M8 2v4M16 2v4"/>',IC_W='<path d="M4 6h16M4 12h16M4 18h16"/>';
-  out.push(el('div',{class:'sc-bar'},el('div',{class:'sg sc-seg'},
-      el('button',{type:'button','aria-pressed':String(S.schedView!=='week'),onclick:()=>{S.schedView='day';render();}},svg(IC_D),'По днях'),
-      el('button',{type:'button','aria-pressed':String(S.schedView==='week'),onclick:()=>{S.schedView='week';render();}},svg(IC_W),'Весь тиждень')),
-    el('div',{class:'row',style:'gap:8px'},!isThisWeek()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.weekStart=mondayOf(new Date());S.day=todayIdx();watchWeek();render();}},'Сьогодні'):null,
-      el('button',{class:'btn ghost sm',type:'button',title:'Графік тижня картинкою: таблиця, для телефону або один день',onclick:()=>scExportImg(ws)},svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/>'),' Завантажити PNG'))));
+  /* перемикач вигляду — окремим рядком на всю ширину; дії поруч на ПК і під ним на телефоні */
+  out.push(el('div',{class:'sc-bar'},el('div',{class:'sg full sc-seg',role:'tablist','aria-label':'Вигляд графіка'},
+      el('button',{type:'button',role:'tab','aria-selected':String(S.schedView!=='week'),'aria-pressed':String(S.schedView!=='week'),onclick:()=>{S.schedView='day';render();}},svg(IC_D),el('span',{text:'По днях'})),
+      el('button',{type:'button',role:'tab','aria-selected':String(S.schedView==='week'),'aria-pressed':String(S.schedView==='week'),onclick:()=>{S.schedView='week';render();}},svg(IC_W),el('span',{class:'sc-lg',text:'Весь тиждень'}),el('span',{class:'sc-sh',text:'Тиждень'}))),
+    el('div',{class:'sc-acts'},!isThisWeek()?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{S.weekStart=mondayOf(new Date());S.day=todayIdx();watchWeek();render();}},svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),' Сьогодні'):null,
+      el('button',{class:'btn ghost sm',type:'button',title:'Графік тижня картинкою: таблиця, для телефону або один день','aria-label':'Завантажити графік картинкою PNG',onclick:()=>scExportImg(ws)},svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="m21 17-5-5-9 9"/>'),el('span',{class:'sc-lg',text:' Завантажити PNG'}),el('span',{class:'sc-sh',text:' PNG'})))));
   if(edit)out.push(scToolbar());
   if(S.schedView!=='week'){
     out.push(el('div',{class:'sc-days'},DS.map((d,i)=>{const n=cnt(i);return el('button',{type:'button',class:'sc-day'+(i>=5?' we':'')+(i===tIdx?' now':''),'aria-pressed':String(S.day===i),onclick:()=>{S.day=i;render();}},
