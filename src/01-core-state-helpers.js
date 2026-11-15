@@ -44,7 +44,7 @@ const BAR=['today','schedule','tasks','map','chat'];
 const NAV_GROUPS=[['Робота',['today','shift','schedule','tasks','map']],['Facility',['uk','meet','sos','pm']],['Спілкування',['chat','team','fun']],['Допомога',['support']]];
 function updBar(){const arr=earns(myStaff())?['today','shift','schedule','tasks','chat']:['today','schedule','tasks','chat'];if(isDev())arr.splice(arr.length-1,0,'map');if(arr.length>5)arr.splice(arr.indexOf('schedule'),1);BAR.splice(0,BAR.length,...arr);}
 function isUK(){return hasAny(['manager','senior','engineer','director','ceo','dev']);}
-function tabVisible(id){if(id==='map')return isDev();if(id==='shift')return !!myStaff();if(id==='pm')return pmCan();if(id==='uk')return isUK()||inspIsWalker();if(id==='sos')return isUK();if(id==='meet')return canMeet();return true;}
+function tabVisible(id){if(id==='map')return mapOpen();if(id==='shift')return !!myStaff();if(id==='pm')return pmCan();if(id==='uk')return isUK()||inspIsWalker();if(id==='sos')return isUK();if(id==='meet')return canMeet();return true;}
 function tabName(t){return t.id==='shift'?(earns(myStaff())?'Моя зміна':'Зміни колективу'):t.name;}
 function isCur(id){return S.tab===id||(S.tab==='person'&&id==='team')||(S.tab==='ticket'&&id==='support');}
 const WIDE=window.matchMedia('(min-width:900px)');

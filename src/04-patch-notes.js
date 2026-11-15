@@ -84,7 +84,7 @@ function openNotes(){const L=myNotes();const seen=notesSeen();try{localStorage.s
     el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Закрити'));
   renderTabs();}
 function navBtn(t,short){const b=badgeFor(t.id);return el('button',{type:'button',class:'nb','aria-current':isCur(t.id)?'page':null,onclick:()=>go(t.id)},
-    svg(t.icon),el('span',{class:'row tl',style:'gap:4px'},el('span',{class:'lbl',text:short&&t.short?t.short:tabName(t)}),t.id==='map'?el('span',{class:'devtag',text:'DEV'}):null,b?el('span',{class:'badge',text:b,title:t.id==='uk'?ukAlerts().map(a=>a.g.name+': '+a.t).join('\n'):null}):null));}
+    svg(t.icon),el('span',{class:'row tl',style:'gap:4px'},el('span',{class:'lbl',text:short&&t.short?t.short:tabName(t)}),b?el('span',{class:'badge',text:b,title:t.id==='uk'?ukAlerts().map(a=>a.g.name+': '+a.t).join('\n'):null}):null));}
 function meCard(cls,onclick){const m=myStaff();if(!S.me)return null;
   const img=m?avatar(m):el('img',{src:S.me.avatarUrl,alt:''});
   return el('button',{type:'button',class:cls,'aria-current':S.tab==='profile'?'page':null,'aria-label':'Мій профіль',onclick},img,
@@ -110,7 +110,7 @@ function openMenu(){
   const bg=el('div',{class:'menu-bg',onclick:closeMenu});const T=id=>TABS.find(t=>t.id===id);
   const kids=[meCard('menu-me',()=>go('profile')),notesChip('nc-menu')];
   for(const [lbl,ids] of NAV_GROUPS){const v=ids.filter(tabVisible);if(!v.length)continue;
-    kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),id==='map'?el('span',{class:'devtag',text:'DEV'}):null,b?el('span',{class:'badge',text:b}):null);}));}
+    kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),null,b?el('span',{class:'badge',text:b}):null);}));}
   if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn());
   const m=el('div',{class:'menu',role:'menu'},kids.filter(Boolean));
   document.getElementById('menuRoot').replaceChildren(bg,m);document.getElementById('menuBtn').setAttribute('aria-expanded','true');
