@@ -3959,31 +3959,31 @@ html body :is(.uk-tile,button.card,a.card,.pcard)::after{content:"";display:bloc
    Теми дзеркальні: ті самі правила, різні лише значення токенів нижче (темний блок продубльовано для media і data-theme — правити обидва). ===== */
 html.gg.gg{--bg:#E3E8EC;--surface:#F3F6F8;--surface-2:#E7EBEF;--fg:#1C232B;--muted:#3E4953;--line:rgba(28,35,43,.14);
   --accent:#2F4353;--accent-fg:#FFFFFF;--gg-focus:#2F4353;--accent-soft:rgba(62,85,102,.14);--accent-ink:#2C3E4B;--ok:#2F7D5B;--warn:#A83A31;--amber:#B07A1F;--warn-soft:rgba(184,68,58,.12);--ok-soft:rgba(47,125,91,.12);--amber-soft:rgba(176,122,31,.14);--amber-ink:#7A5212;
-  --mgr:rgba(28,35,43,.10);--mgr-fg:#1C232B;--gg-tint:rgba(28,35,43,.07);--gg-btn-bg:var(--accent);--gg-btn-fg:#FFFFFF;--gg-danger-bg:#F1E0DF;--gg-badge:#B8443A;
-  --gg-bg:linear-gradient(135deg,#F2F4F6 0%,#D6DDE3 50%,#B9C3CC 100%);--gg-surf:linear-gradient(160deg,rgba(255,255,255,.72) 0%,rgba(255,255,255,.55) 55%,rgba(255,255,255,.42) 100%);
+  --mgr:rgba(28,35,43,.10);--mgr-fg:#1C232B;--gg-tint:rgba(28,35,43,.07);--gg-ic-mix:78%;--gg-btn-bg:var(--accent);--gg-btn-fg:#FFFFFF;--gg-danger-bg:#F1E0DF;--gg-badge:#B8443A;
+  --gg-bg:linear-gradient(135deg,#EEF1F4 0%,#CFD7DE 50%,#AEB9C3 100%);--gg-surf:linear-gradient(160deg,rgba(255,255,255,.72) 0%,rgba(255,255,255,.55) 55%,rgba(255,255,255,.42) 100%);
   --gg-rim:rgba(255,255,255,.60);--gg-rimd:rgba(28,35,43,.16);--gg-rim-soft:rgba(255,255,255,.90);--gg-field-rim:rgba(28,35,43,.60);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0));
   --gg-out:0 1px 2px rgba(28,35,43,.12),0 12px 32px -8px rgba(28,35,43,.22);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(28,35,43,.08);--gg-label:#3E4953;
   --gg-drop:0 6px 14px -6px rgba(28,35,43,.35);--gg-press:inset 0 2px 6px rgba(28,35,43,.22);--gg-well:inset 0 2px 5px rgba(28,35,43,.12);--gg-lift:0 2px 6px rgba(28,35,43,.18);--gg-txt-sh:0 1px 1px rgba(0,0,0,.18);
-  --gg-hero:linear-gradient(160deg,#FAFBFC 0%,#DEE4E9 50%,#C3CCD4 100%);--gg-hero-fg:#1C232B;--gg-hero-sub:rgba(28,35,43,.80);--gg-hero-chip:rgba(28,35,43,.08);--gg-hero-bar:rgba(28,35,43,.14);--gg-hero-fill:linear-gradient(90deg,#3E5566,#7A91A3);
+  --gg-hero-a:#FAFBFC;--gg-hero-b:#C3CCD4;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#DEE4E9 50%,var(--gg-hero-b) 100%);--gg-hero-fg:#1C232B;--gg-hero-sub:rgba(28,35,43,.80);--gg-hero-chip:rgba(28,35,43,.08);--gg-hero-bar:rgba(28,35,43,.14);--gg-hero-fill:linear-gradient(90deg,#3E5566,#7A91A3);
   --gg-sheet:linear-gradient(160deg,rgba(245,247,249,.98),rgba(220,226,231,.98));--gg-dim:rgba(20,28,36,.45);--gg-menu-shadow:-12px 0 32px rgba(28,35,43,.28);--gg-sheet-shadow:0 -10px 40px rgba(28,35,43,.25);
   --shadow:var(--gg-out);--app-grad:var(--gg-bg);color-scheme:light}
 @media (prefers-color-scheme:dark){html.gg.gg:not([data-theme="light"]){--bg:#1A2129;--surface:#2A3039;--surface-2:rgba(0,0,0,.22);--fg:#E8EDF1;--muted:#C4CDD5;--line:rgba(255,255,255,.12);
   --accent:#7E95A8;--accent-fg:#0F1A22;--gg-focus:#B4C7D5;--accent-soft:rgba(159,182,199,.18);--accent-ink:#D3E0EA;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:rgba(239,138,127,.16);--ok-soft:rgba(108,197,155,.16);--amber-soft:rgba(226,176,90,.18);--amber-ink:#F0CB8A;
-  --mgr:rgba(255,255,255,.12);--mgr-fg:#E8EDF1;--gg-tint:rgba(255,255,255,.10);--gg-btn-bg:#3E5466;--gg-btn-fg:#F1F4F7;--gg-danger-bg:#3E1C1F;--gg-badge:#C8463C;
+  --mgr:rgba(255,255,255,.12);--mgr-fg:#E8EDF1;--gg-tint:rgba(255,255,255,.10);--gg-ic-mix:55%;--gg-btn-bg:#3E5466;--gg-btn-fg:#F1F4F7;--gg-danger-bg:#3E1C1F;--gg-badge:#C8463C;
   --gg-bg:linear-gradient(135deg,#121A22 0%,#2B3540 50%,#3A4651 100%);--gg-surf:linear-gradient(160deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.03) 100%);
   --gg-rim:rgba(255,255,255,.30);--gg-rimd:rgba(0,0,0,.45);--gg-rim-soft:rgba(255,255,255,.18);--gg-field-rim:rgba(255,255,255,.40);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));
   --gg-out:0 1px 2px rgba(0,0,0,.25),0 12px 32px -8px rgba(0,0,0,.35);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(0,0,0,.18);--gg-label:#E0E6EB;
   --gg-drop:0 6px 14px -6px rgba(0,0,0,.50);--gg-press:inset 0 2px 6px rgba(0,0,0,.35);--gg-well:inset 0 2px 5px rgba(0,0,0,.30);--gg-lift:0 2px 6px rgba(0,0,0,.30);--gg-txt-sh:0 1px 1px rgba(0,0,0,.25);
-  --gg-hero:linear-gradient(160deg,#3A4550 0%,#262E37 55%,#1B222A 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
+  --gg-hero-a:#3A4550;--gg-hero-b:#1B222A;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#262E37 55%,var(--gg-hero-b) 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
   --gg-sheet:linear-gradient(160deg,#323A44,#1E252D);--gg-dim:rgba(8,12,16,.65);--gg-menu-shadow:-16px 0 48px rgba(0,0,0,.55);--gg-sheet-shadow:0 -10px 40px rgba(0,0,0,.40);color-scheme:dark}}
 html.gg.gg[data-theme="dark"]{--bg:#1A2129;--surface:#2A3039;--surface-2:rgba(0,0,0,.22);--fg:#E8EDF1;--muted:#C4CDD5;--line:rgba(255,255,255,.12);
   --accent:#7E95A8;--accent-fg:#0F1A22;--gg-focus:#B4C7D5;--accent-soft:rgba(159,182,199,.18);--accent-ink:#D3E0EA;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:rgba(239,138,127,.16);--ok-soft:rgba(108,197,155,.16);--amber-soft:rgba(226,176,90,.18);--amber-ink:#F0CB8A;
-  --mgr:rgba(255,255,255,.12);--mgr-fg:#E8EDF1;--gg-tint:rgba(255,255,255,.10);--gg-btn-bg:#3E5466;--gg-btn-fg:#F1F4F7;--gg-danger-bg:#3E1C1F;--gg-badge:#C8463C;
+  --mgr:rgba(255,255,255,.12);--mgr-fg:#E8EDF1;--gg-tint:rgba(255,255,255,.10);--gg-ic-mix:55%;--gg-btn-bg:#3E5466;--gg-btn-fg:#F1F4F7;--gg-danger-bg:#3E1C1F;--gg-badge:#C8463C;
   --gg-bg:linear-gradient(135deg,#121A22 0%,#2B3540 50%,#3A4651 100%);--gg-surf:linear-gradient(160deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.03) 100%);
   --gg-rim:rgba(255,255,255,.30);--gg-rimd:rgba(0,0,0,.45);--gg-rim-soft:rgba(255,255,255,.18);--gg-field-rim:rgba(255,255,255,.40);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));
   --gg-out:0 1px 2px rgba(0,0,0,.25),0 12px 32px -8px rgba(0,0,0,.35);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(0,0,0,.18);--gg-label:#E0E6EB;
   --gg-drop:0 6px 14px -6px rgba(0,0,0,.50);--gg-press:inset 0 2px 6px rgba(0,0,0,.35);--gg-well:inset 0 2px 5px rgba(0,0,0,.30);--gg-lift:0 2px 6px rgba(0,0,0,.30);--gg-txt-sh:0 1px 1px rgba(0,0,0,.25);
-  --gg-hero:linear-gradient(160deg,#3A4550 0%,#262E37 55%,#1B222A 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
+  --gg-hero-a:#3A4550;--gg-hero-b:#1B222A;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#262E37 55%,var(--gg-hero-b) 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
   --gg-sheet:linear-gradient(160deg,#323A44,#1E252D);--gg-dim:rgba(8,12,16,.65);--gg-menu-shadow:-16px 0 48px rgba(0,0,0,.55);--gg-sheet-shadow:0 -10px 40px rgba(0,0,0,.40);color-scheme:dark}
 html.gg body,html.gg #scroller{background:var(--gg-bg) fixed!important}
 html.gg body{font-variant-numeric:tabular-nums}
@@ -4041,6 +4041,18 @@ html.gg .sheet{background:var(--gg-sheet)!important;-webkit-backdrop-filter:blur
 @media (min-width:900px){html.gg .sheet{border-radius:28px!important}}
 html.gg .sheet-bg{background:var(--gg-dim)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 @media (prefers-reduced-motion:reduce){html.gg :is(.btn,.iconbtn,.hbtn,.backbtn){transition:none}html.gg :is(.btn,.iconbtn,.hbtn,.backbtn):active{transform:none}html.gg .menu{animation:ggFade .2s ease-out!important}}
+/* Facility: скляні плитки модулів, графітовий герой з легким сталевим тонуванням, скляні іконки, круглі кнопки «›», розділювач однаковий */
+html.gg .uk-tile{padding:24px!important;border-radius:24px!important;overflow:visible!important}html.gg .uk-grid{gap:16px}
+@media (max-width:560px){html.gg .uk-tile{padding:16px!important}}
+html.gg .uk-st{border-top:1px solid var(--gg-rimd)!important;padding-top:12px}
+html.gg .uk-st b,html.gg .uk-st small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+html.gg .uk-head{position:relative;isolation:isolate;background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 14%,var(--gg-hero-a)),var(--gg-hero-b))!important;color:var(--gg-hero-fg);border-radius:24px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+html.gg .uk-head::before{content:"";position:absolute;inset:0 0 55% 0;pointer-events:none;background:var(--gg-hi);border-radius:inherit;z-index:-1}
+html.gg .uk-head p,html.gg .uk-head .eyebrow{color:var(--gg-hero-sub)!important}
+html.gg .uk-ic{background:linear-gradient(160deg,color-mix(in srgb,var(--c1) var(--gg-ic-mix),var(--surface)),color-mix(in srgb,var(--c2) calc(var(--gg-ic-mix) - 10%),var(--surface)))!important;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25);border-radius:16px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 0 1px var(--gg-rimd),var(--gg-lift)!important}
+html.gg .uk-tile:hover{filter:brightness(1.04)}html.gg .uk-tile:active{box-shadow:var(--gg-press),0 0 0 1px var(--gg-rimd)!important}
+html.gg .uk-tt .uk-go{width:32px!important;height:32px!important}html.gg .uk-go{background:var(--gg-btn-hi),var(--gg-tint)!important;color:var(--fg)!important;box-shadow:inset 0 1px 0 var(--gg-rim-soft),inset 0 0 0 .5px var(--gg-rimd),0 0 0 1px var(--gg-rim),var(--gg-drop)!important}
+html.gg .card.empty{padding:22px 16px!important}
 @media (prefers-contrast:more){html.gg.gg{--gg-surf:var(--surface);--gg-tint:var(--surface-2)}}
 </style>
 
