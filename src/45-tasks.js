@@ -77,6 +77,7 @@ function taskCard(t){
   const myAcc=amIn&&(t.acceptMap||{})[mine.id];
   const prog=ids.length>1?el('div',{class:'prog'},el('div',{class:'bar'},el('span',{style:'width:'+Math.round(nDone/ids.length*100)+'%'})),el('span',{class:'muted small',text:nDone+' з '+ids.length})):null;
   const secs=[];
+  if(tZones(t).length){const zt=zoneTag(t);const mini=zoneMini(t);if(zt||mini)secs.push(tsec('Де',zt,mini));}
   if(t.note)secs.push(tsec('Опис',el('p',{class:'t-note',text:t.note})));
   if(t.refPhotos&&t.refPhotos.length)secs.push(tsec('Фото до задачі',thumbs(t.refPhotos,'Фото до задачі','ref')));
   if(t.insp&&(S.insp||{})[t.insp]&&inspCan())secs.push(tsec('Обхід будівель',el('button',{class:'btn ghost sm',type:'button',style:'align-self:flex-start',onclick:()=>inspGoto(t.insp)},'Відкрити звіт обходу →')));
