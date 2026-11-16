@@ -4047,6 +4047,24 @@ html.gg .uk-tile{padding:24px!important;border-radius:24px!important;overflow:vi
 html.gg .uk-st{border-top:1px solid var(--gg-rimd)!important;padding-top:12px}
 html.gg .uk-st b,html.gg .uk-st small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 html.gg .uk-head{position:relative;isolation:isolate;background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 14%,var(--gg-hero-a)),var(--gg-hero-b))!important;color:var(--gg-hero-fg);border-radius:24px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+/* усі кольорові герої (Нарада з інвестором, Екстрені, Планове ТО, Що нового, Моя зміна): одна графітова/срібна панель; стани «тривога» / «зміна відкрита» — кольорове кільце */
+html.gg.gg:not(.hw) :is(.mt-hero,.sos-hero,.nw-hero,.sh-hero){position:relative;isolation:isolate;background:var(--gg-hero)!important;color:var(--gg-hero-fg)!important;border-radius:24px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+html.gg:not(.hw) :is(.mt-hero,.sos-hero,.nw-hero,.sh-hero)::before{content:"";position:absolute;inset:0 0 55% 0;pointer-events:none;background:var(--gg-hi);border-radius:inherit;z-index:-1}
+html.gg:not(.hw) :is(.mt-hero,.sos-hero,.nw-hero,.sh-hero) :is(h1,h2,h3,b){color:var(--gg-hero-fg)!important}
+html.gg:not(.hw) :is(.mt-hero,.sos-hero,.nw-hero,.sh-hero) :is(.eyebrow,p,small,.muted,.nw-date){color:var(--gg-hero-sub)!important;opacity:1}
+html.gg:not(.hw) :is(.mt-hero .btn.mt-own,.mt-hero .mt-mon,.nw-hero .nw-e){color:var(--gg-hero-fg)!important;background:var(--gg-hero-chip)!important;border:0!important;box-shadow:inset 0 1px 0 var(--gg-rim-soft),inset 0 0 0 1px var(--gg-rimd)!important}
+html.gg:not(.hw) .mt-hero .mt-mon button{color:var(--gg-hero-fg)!important}
+html.gg:not(.hw) .sh-hero .sh-th{box-shadow:0 0 0 2px var(--gg-rimd)!important}
+html.gg.gg:not(.hw) .sos-hero.alarm{box-shadow:var(--gg-in),inset 0 0 0 2px var(--warn),var(--gg-out)!important;animation:none!important}html.gg:not(.hw) .sos-hero.alarm .eyebrow{color:var(--warn)!important}
+html.gg.gg:not(.hw) .sh-hero.on{box-shadow:var(--gg-in),inset 0 0 0 2px var(--ok),var(--gg-out)!important}
+/* перемикачі з 4+ кнопками (на телефоні стають у два ряди): м'якший радіус замість пігулки */
+@media (max-width:560px){html.gg .seg:has(>:nth-child(4)){border-radius:18px!important}html.gg .seg:has(>:nth-child(4)) button{border-radius:14px!important}}
+/* чат: бульбашки скляні, мої — як основна кнопка (з власними токенами для часу, цитат, згадок) */
+html.gg .bubble{background:var(--gg-surf)!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd)!important}
+html.gg .msg.mine .bubble{background:var(--gg-btn-hi),var(--gg-btn-bg)!important;color:var(--gg-btn-fg)!important;--mine-bg:var(--gg-btn-bg);--mine-fg:var(--gg-btn-fg);--mine-meta:color-mix(in srgb,var(--gg-btn-fg) 70%,transparent);--mine-acc:#BFE3E7;--mine-q:rgba(255,255,255,.12)}
+/* таблиці в картках: лише колір розділювача (ширина й виключення лишаються), наведення — тонована поверхня; сторінка PDF-звіту не чіпається */
+html.gg .tbl th,html.gg .tbl td{border-bottom-color:var(--gg-rimd)}
+@media (hover:hover){html.gg .tbl:not(.ip-mx) tbody tr:hover td{background:var(--gg-tint)}}
 /* герой Facility (.uk-hero): та сама графітова панель, що й привітання; підпис «Duck’s Lake» видимий */
 html.gg.gg:not(.hw) .uk-hero{position:relative;isolation:isolate;background:var(--gg-hero)!important;color:var(--gg-hero-fg)!important;border-radius:24px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
 html.gg .uk-hero::before{content:"";position:absolute;inset:0 0 55% 0;pointer-events:none;background:var(--gg-hi);border-radius:inherit;z-index:-1}
