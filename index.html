@@ -4060,6 +4060,14 @@ html.gg.gg:not(.hw) .sh-hero.on{box-shadow:var(--gg-in),inset 0 0 0 2px var(--ok
 /* головна KPI-картка води (.w-k.main): та сама графітова/срібна панель, що й герої; текст з токенів героя */
 html.gg.gg .card.w-k.main{background:var(--gg-hero)!important;color:var(--gg-hero-fg)!important}
 html.gg .w-k.main b{color:var(--gg-hero-fg)!important}html.gg .w-k.main .muted,html.gg .w-k.main b small{color:var(--gg-hero-sub)!important}html.gg .w-k.main .w-prog{background:var(--gg-hero-bar)}
+/* блок «Оформлення» (старі стилі й святкова тема) у новому дизайні не потрібен */
+html.gg .card.look{display:none!important}
+/* підтвердження (видалити, вийти…): повідомлення по центру екрана замість шторки знизу */
+html.gg .sheet-bg:has(>.sheet.sh-confirm){align-items:center;padding:16px}
+html.gg .sheet.sh-confirm{max-width:400px;border-radius:28px!important;padding:28px 24px 24px!important;text-align:center;gap:20px;animation:ggPop .2s ease-out!important}
+html.gg .sh-confirm .sheet-grab{display:none}html.gg .sh-confirm h2{font-size:19px;line-height:1.35}html.gg .sh-confirm .row{flex-wrap:nowrap}html.gg .sh-confirm .row .btn{flex:1}
+@keyframes ggPop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){html.gg .sheet.sh-confirm{animation:ggFade .2s ease-out!important}}
 /* перемикачі з 4+ кнопками (на телефоні стають у два ряди): м'якший радіус замість пігулки */
 @media (max-width:560px){html.gg .seg:has(>:nth-child(4)){border-radius:18px!important}html.gg .seg:has(>:nth-child(4)) button{border-radius:14px!important}}
 /* чат: бульбашки скляні, мої — як основна кнопка (з власними токенами для часу, цитат, згадок) */
@@ -11551,7 +11559,7 @@ function openSheet(...kids){document.body.classList.add('sheet-open');
 }
 function escClose(e){if(e.key==='Escape')closeSheet();}
 function closeSheet(){document.body.classList.remove('sheet-open');document.getElementById('sheetRoot').replaceChildren();document.removeEventListener('keydown',escClose);}
-function confirmSheet(q,label,fn){openSheet(el('h2',{text:q}),el('div',{class:'row'},el('button',{class:'btn danger',type:'button',style:'flex:1',onclick:()=>{closeSheet();fn();}},label),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));}
+function confirmSheet(q,label,fn){openSheet(el('h2',{text:q}),el('div',{class:'row'},el('button',{class:'btn danger',type:'button',style:'flex:1',onclick:()=>{closeSheet();fn();}},label),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));const sh=document.querySelector('#sheetRoot .sheet');if(sh)sh.classList.add('sh-confirm');}
 
 boot().catch(e=>{console.warn(e);window.DLS&&DLS.fail('Не вдалося запустити застосунок','Перевірте інтернет і спробуйте ще раз.');});
 })();

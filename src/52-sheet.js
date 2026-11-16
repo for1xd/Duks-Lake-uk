@@ -36,7 +36,7 @@ function openSheet(...kids){document.body.classList.add('sheet-open');
 }
 function escClose(e){if(e.key==='Escape')closeSheet();}
 function closeSheet(){document.body.classList.remove('sheet-open');document.getElementById('sheetRoot').replaceChildren();document.removeEventListener('keydown',escClose);}
-function confirmSheet(q,label,fn){openSheet(el('h2',{text:q}),el('div',{class:'row'},el('button',{class:'btn danger',type:'button',style:'flex:1',onclick:()=>{closeSheet();fn();}},label),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));}
+function confirmSheet(q,label,fn){openSheet(el('h2',{text:q}),el('div',{class:'row'},el('button',{class:'btn danger',type:'button',style:'flex:1',onclick:()=>{closeSheet();fn();}},label),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));const sh=document.querySelector('#sheetRoot .sheet');if(sh)sh.classList.add('sh-confirm');}
 
 boot().catch(e=>{console.warn(e);window.DLS&&DLS.fail('Не вдалося запустити застосунок','Перевірте інтернет і спробуйте ще раз.');});
 /* })(); — кінець обгортки застосунку */
