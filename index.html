@@ -3958,28 +3958,29 @@ html body :is(.uk-tile,button.card,a.card,.pcard)::after{content:"";display:bloc
 /* ===== Graphite Glass (тест для Dev): вмикається класом html.gg; токени перевизначають наявні змінні, логіка не змінюється ===== */
 html.gg.gg{--bg:#E3E8EC;--surface:#F3F6F8;--surface-2:#E7EBEF;--fg:#1C232B;--muted:#5B6672;--line:rgba(28,35,43,.14);
   --accent:#3E5566;--accent-fg:#FFFFFF;--accent-soft:#DCE4EA;--accent-ink:#2C3E4B;--ok:#2F7D5B;--warn:#B8443A;--amber:#B07A1F;
-  --gg-bg:linear-gradient(135deg,#EEF1F4,#C7CFD6);--gg-surf:linear-gradient(180deg,#F7F9FA,#E2E7EB);--gg-rim:rgba(255,255,255,.95);--gg-rimd:rgba(28,35,43,.14);
-  --gg-glass:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.12));--gg-out:0 1px 2px rgba(28,35,43,.10),0 8px 24px rgba(28,35,43,.10);
-  --gg-in:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -2px 6px rgba(28,35,43,.06);--gg-label:#6E7883;--gg-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
-  --shadow:var(--gg-out);--app-grad:var(--gg-bg);--body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;--display:var(--body);color-scheme:light}
+  --gg-bg:linear-gradient(135deg,#EEF1F4,#C7CFD6);--gg-surf:linear-gradient(180deg,#FFFFFF 0%,#EDF0F3 50%,#D9DFE4 100%);--gg-rim:rgba(255,255,255,.95);--gg-rimd:rgba(28,35,43,.14);
+  --gg-glass:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.12));--gg-out:0 1px 2px rgba(28,35,43,.12),0 14px 30px -12px rgba(28,35,43,.35);
+  --gg-in:inset 0 1.5px 0 rgba(255,255,255,1),inset 0 -3px 8px rgba(28,35,43,.10);--gg-label:#6E7883;
+  --shadow:var(--gg-out);--app-grad:var(--gg-bg);color-scheme:light}
 @media (prefers-color-scheme:dark){html.gg.gg:not([data-theme="light"]){--bg:#1A2129;--surface:#2A3039;--surface-2:#343C46;--fg:#E8EDF1;--muted:#A3ADB6;--line:rgba(255,255,255,.10);
   --accent:#9FB6C7;--accent-fg:#14202A;--accent-soft:#2E3C48;--accent-ink:#C9D8E3;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:#3E2A2A;--ok-soft:#1F3A30;
-  --gg-bg:linear-gradient(135deg,#121A22,#3E4955);--gg-surf:linear-gradient(180deg,#333B45,#2A3039);--gg-rim:rgba(255,255,255,.16);--gg-rimd:rgba(0,0,0,.40);
+  --gg-bg:linear-gradient(135deg,#121A22,#3E4955);--gg-surf:linear-gradient(180deg,#3D4650 0%,#2C333C 55%,#23292F 100%);--gg-rim:rgba(255,255,255,.16);--gg-rimd:rgba(0,0,0,.40);
   --gg-glass:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02));--gg-out:0 1px 2px rgba(0,0,0,.35),0 10px 30px rgba(0,0,0,.30);
   --gg-in:inset 0 1px 0 rgba(255,255,255,.10),inset 0 -2px 8px rgba(0,0,0,.22);--gg-label:#8F99A2;color-scheme:dark}}
 html.gg.gg[data-theme="dark"]{--bg:#1A2129;--surface:#2A3039;--surface-2:#343C46;--fg:#E8EDF1;--muted:#A3ADB6;--line:rgba(255,255,255,.10);
   --accent:#9FB6C7;--accent-fg:#14202A;--accent-soft:#2E3C48;--accent-ink:#C9D8E3;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:#3E2A2A;--ok-soft:#1F3A30;
-  --gg-bg:linear-gradient(135deg,#121A22,#3E4955);--gg-surf:linear-gradient(180deg,#333B45,#2A3039);--gg-rim:rgba(255,255,255,.16);--gg-rimd:rgba(0,0,0,.40);
+  --gg-bg:linear-gradient(135deg,#121A22,#3E4955);--gg-surf:linear-gradient(180deg,#3D4650 0%,#2C333C 55%,#23292F 100%);--gg-rim:rgba(255,255,255,.16);--gg-rimd:rgba(0,0,0,.40);
   --gg-glass:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02));--gg-out:0 1px 2px rgba(0,0,0,.35),0 10px 30px rgba(0,0,0,.30);
   --gg-in:inset 0 1px 0 rgba(255,255,255,.10),inset 0 -2px 8px rgba(0,0,0,.22);--gg-label:#8F99A2;color-scheme:dark}
-html.gg body,html.gg #scroller{background:var(--gg-bg) fixed!important;font-family:var(--body)}
+html.gg body,html.gg #scroller{background:var(--gg-bg) fixed!important}
 html.gg body{font-variant-numeric:tabular-nums}
-html.gg h1,html.gg h2,html.gg h3{font-family:var(--body)!important;font-weight:600!important;letter-spacing:-.02em}
-/* моно-ярлики капсом */
-html.gg .eyebrow,html.gg .t-lbl,html.gg .mz-sub,html.gg .flabel,html.gg .menu-lbl,html.gg th,html.gg .role{font-family:var(--gg-mono)!important;text-transform:uppercase;letter-spacing:.16em!important;font-size:11px!important;font-weight:500!important}
+/* ярлики: дрібний капс із розрідженням (шрифт застосунку) */
+html.gg .eyebrow,html.gg .t-lbl,html.gg .mz-sub,html.gg .flabel,html.gg .menu-lbl,html.gg th{text-transform:uppercase;letter-spacing:.12em!important;font-size:11px!important;font-weight:700!important}
 html.gg .eyebrow,html.gg .t-lbl,html.gg .mz-sub,html.gg .flabel,html.gg .menu-lbl,html.gg th{color:var(--gg-label)!important}
 /* картки й панелі: градієнт поверхні, блік зверху, тонкий обідок */
-html.gg .card,html.gg .person,html.gg .stat,html.gg .rolecard,html.gg .tbl,html.gg .wk,html.gg .uk-tile,html.gg .uk-head,html.gg .hero{background:var(--gg-surf)!important;border:0!important;border-radius:20px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+html.gg .card,html.gg .person,html.gg .stat,html.gg .rolecard,html.gg .tbl,html.gg .wk,html.gg .uk-tile{background:var(--gg-surf)!important;border:0!important;border-radius:20px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+/* привітання: темна графітова панель (на ній білий текст) */
+html.gg .hero,html.gg.gg:not(.hw) .hero.hero2{background:linear-gradient(135deg,#1B232B 0%,#3A4550 60%,#5C6873 100%)!important;color:#fff;border-radius:24px!important;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.22),inset 0 -3px 10px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.35),0 16px 34px -14px rgba(0,0,0,.55)!important}
 html.gg .card .card{box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd)!important}
 /* кнопки «скло»: пігулка з подвійним обідком; натиск утискає */
 html.gg .btn{border-radius:999px!important;background:var(--gg-glass),var(--accent)!important;color:var(--accent-fg)!important;font-weight:500;box-shadow:inset 0 0 0 1px var(--gg-rimd),0 0 0 1.5px var(--gg-rim),0 4px 12px -4px rgba(0,0,0,.35)!important;transition:transform .15s ease-out}
@@ -4514,9 +4515,9 @@ function isDarkNow(){const t=document.documentElement.getAttribute('data-theme')
 function applyTheme(){let t=null;try{t=localStorage.getItem('dl.theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);applyV2();applyGG();}
 function v2On(){try{return localStorage.getItem('dl.v2')==='1';}catch(e){return false;}}
 function applyV2(){document.documentElement.classList.toggle('v2',v2On());}
-/* Graphite Glass (тест): вмикається класом html.gg лише в цьому браузері; шрифти Inter + JetBrains Mono вантажаться тільки тоді */
+/* Graphite Glass (тест): вмикається класом html.gg лише в цьому браузері */
 function ggOn(){try{return localStorage.getItem('dl.gg')==='1';}catch(e){return false;}}
-function applyGG(){const on=ggOn();document.documentElement.classList.toggle('gg',on);if(on&&!document.getElementById('ggFont')){const l=document.createElement('link');l.id='ggFont';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap';document.head.append(l);}}
+function applyGG(){document.documentElement.classList.toggle('gg',ggOn());}
 function toggleGG(){const on=!ggOn();try{localStorage.setItem('dl.gg',on?'1':'0');if(on)localStorage.setItem('dl.v2','0');}catch(e){}applyV2();applyGG();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Graphite Glass увімкнено — бачите лише ви':'Повернуто поточний дизайн');}
 function ggBtn(){return el('button',{type:'button',role:'menuitem',onclick:toggleGG},svg('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z"/>'),el('span',{class:'grow',text:ggOn()?'Вимкнути Graphite Glass':'Graphite Glass (тест)'}));}
 function toggleV2(){const on=!v2On();try{localStorage.setItem('dl.v2',on?'1':'0');}catch(e){}applyV2();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Новий дизайн увімкнено — бачите лише ви':'Повернуто поточний дизайн');}
