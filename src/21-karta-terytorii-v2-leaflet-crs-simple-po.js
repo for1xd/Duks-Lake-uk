@@ -361,10 +361,13 @@ function mzSelfReport(id){const z=mzGet(id);const m=myStaff();if(!z||!m)return;
     el('div',{class:'row'},go,el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));}
 /* міні-карта зони для картки задачі: шматок знімка навколо зони з її контуром */
 function zoneMini(t){const z=mzGet(tZones(t)[0]);if(!z||!z.polygon||z.polygon.length<3)return null;const b=mzBox(z);
-  let w=b[2]-b[0],h=b[3]-b[1];const pad=Math.max(30,w*.5,h*.5);w+=pad*2;h+=pad*2;if(w<h*2)w=h*2;else h=w/2;const cx=(b[0]+b[2])/2,cy=(b[1]+b[3])/2;
+  let w=b[2]-b[0],h=b[3]-b[1];const pad=Math.max(20,Math.max(w,h)*.2);w+=pad*2;h+=pad*2;
+  /* пропорція рамки 1:1…2:1 під форму зони; рамка не виходить за знімок, щоб не було порожніх смуг */
+  const ar=Math.min(2,Math.max(1,w/h));if(w<h*ar)w=h*ar;else h=w/ar;const k=Math.min(1,MZ_W/w,MZ_H/h);w*=k;h*=k;
+  const cl=(v,mx)=>Math.max(0,Math.min(mx,v));const x0=cl((b[0]+b[2])/2-w/2,MZ_W-w),y0=cl((b[1]+b[3])/2-h/2,MZ_H-h);
   const ring=r=>'M'+r.map(p=>p[0]+','+p[1]).join('L')+'Z';const d=[z.polygon,...(z.holes||[]),...(z.extra||[]).flat()].map(ring).join('');const c=(MZ_TY[z.type]||MZ_TY.g).c;
   const box=el('button',{type:'button',class:'zmini','aria-label':'Показати зону на карті',onclick:e=>{e.stopPropagation();if(!mapOpen())return;S.mzSel=z.id;S.mzMulti=null;S.mzFocus=z.id;go('map');}});
-  box.innerHTML='<svg viewBox="'+[cx-w/2,cy-h/2,w,h].map(v=>v.toFixed(1)).join(' ')+'" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="'+mzImgUrl()+'" x="0" y="0" width="'+MZ_W+'" height="'+MZ_H+'" preserveAspectRatio="none"/><path d="'+d+'" fill="'+c+'" fill-opacity=".28" fill-rule="evenodd" stroke="'+c+'" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>';
+  box.style.aspectRatio=ar.toFixed(3);box.innerHTML='<svg viewBox="'+[x0,y0,w,h].map(v=>v.toFixed(1)).join(' ')+'" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="'+mzImgUrl()+'" x="0" y="0" width="'+MZ_W+'" height="'+MZ_H+'" preserveAspectRatio="none"/><path d="'+d+'" fill="'+c+'" fill-opacity=".28" fill-rule="evenodd" stroke="'+c+'" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>';
   return box;}
 function mzPanelSheet(id){openSheet(mzPanel(id));const sh=document.querySelector('#sheetRoot .sheet');if(sh)sh.classList.add('mz-sheet');
   requestAnimationFrame(()=>{const h=sh?sh.getBoundingClientRect().height:0;const box=MZM&&MZM.host.getBoundingClientRect();const cover=box?Math.max(0,box.bottom-(innerHeight-h)):0;mzFocusOn(id,cover);});}
