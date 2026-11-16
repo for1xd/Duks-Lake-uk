@@ -4047,6 +4047,10 @@ html.gg .uk-tile{padding:24px!important;border-radius:24px!important;overflow:vi
 html.gg .uk-st{border-top:1px solid var(--gg-rimd)!important;padding-top:12px}
 html.gg .uk-st b,html.gg .uk-st small{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
 html.gg .uk-head{position:relative;isolation:isolate;background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 14%,var(--gg-hero-a)),var(--gg-hero-b))!important;color:var(--gg-hero-fg);border-radius:24px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+/* герой Facility (.uk-hero): та сама графітова панель, що й привітання; підпис «Duck’s Lake» видимий */
+html.gg.gg:not(.hw) .uk-hero{position:relative;isolation:isolate;background:var(--gg-hero)!important;color:var(--gg-hero-fg)!important;border-radius:24px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+html.gg .uk-hero::before{content:"";position:absolute;inset:0 0 55% 0;pointer-events:none;background:var(--gg-hi);border-radius:inherit;z-index:-1}
+html.gg .uk-hero h2{color:var(--gg-hero-fg)!important}html.gg .uk-hero .eyebrow,html.gg .uk-hero p{color:var(--gg-hero-sub)!important}
 html.gg .uk-head::before{content:"";position:absolute;inset:0 0 55% 0;pointer-events:none;background:var(--gg-hi);border-radius:inherit;z-index:-1}
 html.gg .uk-head p,html.gg .uk-head .eyebrow{color:var(--gg-hero-sub)!important}
 html.gg .uk-ic{background:linear-gradient(160deg,color-mix(in srgb,var(--c1) var(--gg-ic-mix),var(--surface)),color-mix(in srgb,var(--c2) calc(var(--gg-ic-mix) - 10%),var(--surface)))!important;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25);border-radius:16px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 0 1px var(--gg-rimd),var(--gg-lift)!important}
