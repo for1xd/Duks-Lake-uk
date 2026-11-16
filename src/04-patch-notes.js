@@ -113,11 +113,11 @@ function openMenu(){
     kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),null,b?el('span',{class:'badge',text:b}):null);}));}
   if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn(),ggBtn());
   const m=el('div',{class:'menu',role:'menu'},kids.filter(Boolean));
-  document.getElementById('menuRoot').replaceChildren(bg,m);document.getElementById('menuBtn').setAttribute('aria-expanded','true');
+  document.getElementById('menuRoot').replaceChildren(bg,m);document.body.classList.add('menu-open');document.getElementById('menuBtn').setAttribute('aria-expanded','true');
   document.addEventListener('keydown',menuEsc);m.querySelector('button').focus();
 }
 function menuEsc(e){if(e.key==='Escape')closeMenu();}
-function closeMenu(){document.getElementById('menuRoot').replaceChildren();const mb=document.getElementById('menuBtn');if(mb)mb.setAttribute('aria-expanded','false');document.removeEventListener('keydown',menuEsc);}
+function closeMenu(){document.getElementById('menuRoot').replaceChildren();document.body.classList.remove('menu-open');const mb=document.getElementById('menuBtn');if(mb)mb.setAttribute('aria-expanded','false');document.removeEventListener('keydown',menuEsc);}
 const I_SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
 const I_MOON='<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>';
 const I_SUP='<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m5.6 5.6 3.6 3.6M14.8 14.8l3.6 3.6M14.8 9.2l3.6-3.6M5.6 18.4l3.6-3.6"/>';

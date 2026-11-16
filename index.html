@@ -3955,61 +3955,93 @@ html body :is(.uk-tile,button.card,a.card,.pcard)::after{content:"";display:bloc
 :is(.uk-tile,button.card,a.card,.pcard):focus-visible{outline:2px solid var(--accent)!important;outline-offset:2px}
 @media (prefers-reduced-motion:reduce){:is(.uk-tile,button.card,a.card,.pcard),:is(.uk-tile,button.card,a.card,.pcard)::after{transition:none!important}:is(.uk-tile,button.card,a.card,.pcard):hover{transform:none!important}}
 
-/* ===== Graphite Glass (тест для Dev): вмикається класом html.gg; токени перевизначають наявні змінні, логіка не змінюється ===== */
-html.gg.gg{--bg:#E3E8EC;--surface:#F3F6F8;--surface-2:#E7EBEF;--fg:#1C232B;--muted:#5B6672;--line:rgba(28,35,43,.14);
-  --accent:#3E5566;--accent-fg:#FFFFFF;--accent-soft:#DCE4EA;--accent-ink:#2C3E4B;--ok:#2F7D5B;--warn:#B8443A;--amber:#B07A1F;
-  --gg-bg:linear-gradient(135deg,#EEF1F4,#C7CFD6);--gg-surf:linear-gradient(180deg,#FFFFFF 0%,#EDF0F3 50%,#D9DFE4 100%);--gg-rim:rgba(255,255,255,.95);--gg-rimd:rgba(28,35,43,.14);
-  --gg-glass:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.12));--gg-out:0 1px 2px rgba(28,35,43,.12),0 14px 30px -12px rgba(28,35,43,.35);
-  --gg-in:inset 0 1.5px 0 rgba(255,255,255,1),inset 0 -3px 8px rgba(28,35,43,.10);--gg-label:#6E7883;
-  --shadow:var(--gg-out);--app-grad:var(--gg-bg);--gg-btn-bg:var(--gg-glass),var(--accent);--gg-btn-fg:var(--accent-fg);--gg-btn-sh:inset 0 0 0 1px var(--gg-rimd),0 0 0 1.5px var(--gg-rim),0 4px 12px -4px rgba(0,0,0,.35);color-scheme:light}
-@media (prefers-color-scheme:dark){html.gg.gg:not([data-theme="light"]){--bg:#1A2129;--surface:#2A3039;--surface-2:#343C46;--fg:#E8EDF1;--muted:#A3ADB6;--line:rgba(255,255,255,.10);
-  --accent:#9FB6C7;--accent-fg:#14202A;--accent-soft:#2E3C48;--accent-ink:#C9D8E3;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:#3E2A2A;--ok-soft:#1F3A30;
-  --gg-bg:linear-gradient(135deg,#141C25 0%,#2E3944 45%,#5E6B77 100%);--gg-surf:linear-gradient(200deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,.13) 100%);--gg-rim:rgba(255,255,255,.20);--gg-rimd:rgba(255,255,255,.13);--surface-2:rgba(0,0,0,.20);--gg-btn-bg:linear-gradient(180deg,rgba(28,36,44,.55) 0%,rgba(150,170,186,.40) 100%);--gg-btn-fg:#E9EEF2;--gg-btn-sh:inset 0 0 0 1px rgba(0,0,0,.45),inset 0 -6px 12px rgba(255,255,255,.08),0 0 0 2px rgba(226,234,240,.85),0 10px 22px -8px rgba(0,0,0,.6);
-  --gg-glass:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02));--gg-out:0 20px 40px -22px rgba(0,0,0,.55);
-  --gg-in:inset 0 1px 0 rgba(255,255,255,.16);--gg-label:#9AA4AD;color-scheme:dark}}
-html.gg.gg[data-theme="dark"]{--bg:#1A2129;--surface:#2A3039;--surface-2:#343C46;--fg:#E8EDF1;--muted:#A3ADB6;--line:rgba(255,255,255,.10);
-  --accent:#9FB6C7;--accent-fg:#14202A;--accent-soft:#2E3C48;--accent-ink:#C9D8E3;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:#3E2A2A;--ok-soft:#1F3A30;
-  --gg-bg:linear-gradient(135deg,#141C25 0%,#2E3944 45%,#5E6B77 100%);--gg-surf:linear-gradient(200deg,rgba(255,255,255,.03) 0%,rgba(255,255,255,.13) 100%);--gg-rim:rgba(255,255,255,.20);--gg-rimd:rgba(255,255,255,.13);--surface-2:rgba(0,0,0,.20);--gg-btn-bg:linear-gradient(180deg,rgba(28,36,44,.55) 0%,rgba(150,170,186,.40) 100%);--gg-btn-fg:#E9EEF2;--gg-btn-sh:inset 0 0 0 1px rgba(0,0,0,.45),inset 0 -6px 12px rgba(255,255,255,.08),0 0 0 2px rgba(226,234,240,.85),0 10px 22px -8px rgba(0,0,0,.6);
-  --gg-glass:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.02));--gg-out:0 20px 40px -22px rgba(0,0,0,.55);
-  --gg-in:inset 0 1px 0 rgba(255,255,255,.16);--gg-label:#9AA4AD;color-scheme:dark}
+/* ===== Graphite Glass (тест для Dev): вмикається класом html.gg; токени перевизначають наявні змінні, логіка не змінюється.
+   Теми дзеркальні: ті самі правила, різні лише значення токенів нижче (темний блок продубльовано для media і data-theme — правити обидва). ===== */
+html.gg.gg{--bg:#E3E8EC;--surface:#F3F6F8;--surface-2:#E7EBEF;--fg:#1C232B;--muted:#3E4953;--line:rgba(28,35,43,.14);
+  --accent:#2F4353;--accent-fg:#FFFFFF;--gg-focus:#2F4353;--accent-soft:rgba(62,85,102,.14);--accent-ink:#2C3E4B;--ok:#2F7D5B;--warn:#A83A31;--amber:#B07A1F;--warn-soft:rgba(184,68,58,.12);--ok-soft:rgba(47,125,91,.12);--amber-soft:rgba(176,122,31,.14);--amber-ink:#7A5212;
+  --mgr:rgba(28,35,43,.10);--mgr-fg:#1C232B;--gg-tint:rgba(28,35,43,.07);--gg-btn-bg:var(--accent);--gg-btn-fg:#FFFFFF;--gg-danger-bg:#F1E0DF;--gg-badge:#B8443A;
+  --gg-bg:linear-gradient(135deg,#F2F4F6 0%,#D6DDE3 50%,#B9C3CC 100%);--gg-surf:linear-gradient(160deg,rgba(255,255,255,.72) 0%,rgba(255,255,255,.55) 55%,rgba(255,255,255,.42) 100%);
+  --gg-rim:rgba(255,255,255,.60);--gg-rimd:rgba(28,35,43,.16);--gg-rim-soft:rgba(255,255,255,.90);--gg-field-rim:rgba(28,35,43,.60);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0));
+  --gg-out:0 1px 2px rgba(28,35,43,.12),0 12px 32px -8px rgba(28,35,43,.22);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(28,35,43,.08);--gg-label:#3E4953;
+  --gg-drop:0 6px 14px -6px rgba(28,35,43,.35);--gg-press:inset 0 2px 6px rgba(28,35,43,.22);--gg-well:inset 0 2px 5px rgba(28,35,43,.12);--gg-lift:0 2px 6px rgba(28,35,43,.18);--gg-txt-sh:0 1px 1px rgba(0,0,0,.18);
+  --gg-hero:linear-gradient(160deg,#FAFBFC 0%,#DEE4E9 50%,#C3CCD4 100%);--gg-hero-fg:#1C232B;--gg-hero-sub:rgba(28,35,43,.80);--gg-hero-chip:rgba(28,35,43,.08);--gg-hero-bar:rgba(28,35,43,.14);--gg-hero-fill:linear-gradient(90deg,#3E5566,#7A91A3);
+  --gg-sheet:linear-gradient(160deg,rgba(245,247,249,.98),rgba(220,226,231,.98));--gg-dim:rgba(20,28,36,.45);--gg-menu-shadow:-12px 0 32px rgba(28,35,43,.28);--gg-sheet-shadow:0 -10px 40px rgba(28,35,43,.25);
+  --shadow:var(--gg-out);--app-grad:var(--gg-bg);color-scheme:light}
+@media (prefers-color-scheme:dark){html.gg.gg:not([data-theme="light"]){--bg:#1A2129;--surface:#2A3039;--surface-2:rgba(0,0,0,.22);--fg:#E8EDF1;--muted:#C4CDD5;--line:rgba(255,255,255,.12);
+  --accent:#7E95A8;--accent-fg:#0F1A22;--gg-focus:#B4C7D5;--accent-soft:rgba(159,182,199,.18);--accent-ink:#D3E0EA;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:rgba(239,138,127,.16);--ok-soft:rgba(108,197,155,.16);--amber-soft:rgba(226,176,90,.18);--amber-ink:#F0CB8A;
+  --mgr:rgba(255,255,255,.12);--mgr-fg:#E8EDF1;--gg-tint:rgba(255,255,255,.10);--gg-btn-bg:#3E5466;--gg-btn-fg:#F1F4F7;--gg-danger-bg:#3E1C1F;--gg-badge:#C8463C;
+  --gg-bg:linear-gradient(135deg,#121A22 0%,#2B3540 50%,#3A4651 100%);--gg-surf:linear-gradient(160deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.03) 100%);
+  --gg-rim:rgba(255,255,255,.30);--gg-rimd:rgba(0,0,0,.45);--gg-rim-soft:rgba(255,255,255,.18);--gg-field-rim:rgba(255,255,255,.40);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));
+  --gg-out:0 1px 2px rgba(0,0,0,.25),0 12px 32px -8px rgba(0,0,0,.35);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(0,0,0,.18);--gg-label:#E0E6EB;
+  --gg-drop:0 6px 14px -6px rgba(0,0,0,.50);--gg-press:inset 0 2px 6px rgba(0,0,0,.35);--gg-well:inset 0 2px 5px rgba(0,0,0,.30);--gg-lift:0 2px 6px rgba(0,0,0,.30);--gg-txt-sh:0 1px 1px rgba(0,0,0,.25);
+  --gg-hero:linear-gradient(160deg,#3A4550 0%,#262E37 55%,#1B222A 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
+  --gg-sheet:linear-gradient(160deg,#323A44,#1E252D);--gg-dim:rgba(8,12,16,.65);--gg-menu-shadow:-16px 0 48px rgba(0,0,0,.55);--gg-sheet-shadow:0 -10px 40px rgba(0,0,0,.40);color-scheme:dark}}
+html.gg.gg[data-theme="dark"]{--bg:#1A2129;--surface:#2A3039;--surface-2:rgba(0,0,0,.22);--fg:#E8EDF1;--muted:#C4CDD5;--line:rgba(255,255,255,.12);
+  --accent:#7E95A8;--accent-fg:#0F1A22;--gg-focus:#B4C7D5;--accent-soft:rgba(159,182,199,.18);--accent-ink:#D3E0EA;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:rgba(239,138,127,.16);--ok-soft:rgba(108,197,155,.16);--amber-soft:rgba(226,176,90,.18);--amber-ink:#F0CB8A;
+  --mgr:rgba(255,255,255,.12);--mgr-fg:#E8EDF1;--gg-tint:rgba(255,255,255,.10);--gg-btn-bg:#3E5466;--gg-btn-fg:#F1F4F7;--gg-danger-bg:#3E1C1F;--gg-badge:#C8463C;
+  --gg-bg:linear-gradient(135deg,#121A22 0%,#2B3540 50%,#3A4651 100%);--gg-surf:linear-gradient(160deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,.03) 100%);
+  --gg-rim:rgba(255,255,255,.30);--gg-rimd:rgba(0,0,0,.45);--gg-rim-soft:rgba(255,255,255,.18);--gg-field-rim:rgba(255,255,255,.40);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));
+  --gg-out:0 1px 2px rgba(0,0,0,.25),0 12px 32px -8px rgba(0,0,0,.35);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(0,0,0,.18);--gg-label:#E0E6EB;
+  --gg-drop:0 6px 14px -6px rgba(0,0,0,.50);--gg-press:inset 0 2px 6px rgba(0,0,0,.35);--gg-well:inset 0 2px 5px rgba(0,0,0,.30);--gg-lift:0 2px 6px rgba(0,0,0,.30);--gg-txt-sh:0 1px 1px rgba(0,0,0,.25);
+  --gg-hero:linear-gradient(160deg,#3A4550 0%,#262E37 55%,#1B222A 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
+  --gg-sheet:linear-gradient(160deg,#323A44,#1E252D);--gg-dim:rgba(8,12,16,.65);--gg-menu-shadow:-16px 0 48px rgba(0,0,0,.55);--gg-sheet-shadow:0 -10px 40px rgba(0,0,0,.40);color-scheme:dark}
 html.gg body,html.gg #scroller{background:var(--gg-bg) fixed!important}
 html.gg body{font-variant-numeric:tabular-nums}
+html.gg #scroller{scrollbar-gutter:stable}
 /* ярлики: дрібний капс із розрідженням (шрифт застосунку) */
-html.gg .eyebrow,html.gg .t-lbl,html.gg .mz-sub,html.gg .flabel,html.gg .menu-lbl,html.gg th{text-transform:uppercase;letter-spacing:.12em!important;font-size:11px!important;font-weight:700!important}
-html.gg .eyebrow,html.gg .t-lbl,html.gg .mz-sub,html.gg .flabel,html.gg .menu-lbl,html.gg th{color:var(--gg-label)!important}
-/* картки й панелі: градієнт поверхні, блік зверху, тонкий обідок */
-html.gg .card,html.gg .person,html.gg .stat,html.gg .rolecard,html.gg .tbl,html.gg .wk,html.gg .uk-tile{background:var(--gg-surf)!important;border:0!important;border-radius:20px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
-/* привітання: темна графітова панель (на ній білий текст) */
-html.gg .hero,html.gg.gg:not(.hw) .hero.hero2{background:linear-gradient(135deg,#1B232B 0%,#3A4550 60%,#5C6873 100%)!important;color:#fff;border-radius:24px!important;box-shadow:inset 0 1.5px 0 rgba(255,255,255,.22),inset 0 -3px 10px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.35),0 16px 34px -14px rgba(0,0,0,.55)!important}
+html.gg .eyebrow,html.gg .t-lbl,html.gg .mz-sub,html.gg .flabel,html.gg .menu-lbl,html.gg th{text-transform:uppercase;letter-spacing:.12em!important;font-size:11px!important;font-weight:700!important;color:var(--gg-label)!important}
+/* скляна плашка: напівпрозорий градієнт поверхні, верхній блік-лінія, нижня внутрішня тінь, тонкий обідок, тінь об'єму, відблиск зверху (::before) */
+html.gg .card,html.gg .person,html.gg .stat,html.gg .rolecard,html.gg .tbl,html.gg .wk,html.gg .uk-tile{position:relative;isolation:isolate;background:var(--gg-surf)!important;border:0!important;border-radius:20px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+html.gg .card::before,html.gg .person::before,html.gg .stat::before,html.gg .rolecard::before,html.gg .uk-tile::before{content:"";position:absolute;inset:0 0 55% 0;pointer-events:none;background:var(--gg-hi);border-radius:inherit;z-index:-1}
 html.gg .card .card{box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd)!important}
-/* кнопки «скло»: пігулка з подвійним обідком; натиск утискає */
-html.gg .btn{border-radius:999px!important;background:var(--gg-btn-bg)!important;color:var(--gg-btn-fg)!important;font-weight:600;box-shadow:var(--gg-btn-sh)!important;text-shadow:0 1px 1px rgba(0,0,0,.25);transition:transform .15s ease-out}
-html.gg .btn.ghost{background:var(--gg-glass),var(--surface)!important;color:var(--fg)!important;text-shadow:0 1px 0 var(--gg-rim)}
-html.gg .btn.danger{background:var(--gg-glass),var(--warn-soft)!important;color:var(--warn)!important}
-html.gg .btn:active:not(:disabled){transform:translateY(1px);box-shadow:inset 0 2px 6px rgba(0,0,0,.25),0 0 0 1.5px var(--gg-rim)!important}
-html.gg .btn:disabled{opacity:.45}
-html.gg :focus-visible{outline:2px solid var(--accent)!important;outline-offset:3px}
-html.gg .iconbtn,html.gg .hbtn,html.gg header.top .me,html.gg .backbtn{background:var(--gg-glass),var(--surface)!important;border:0!important;border-radius:999px!important;box-shadow:inset 0 0 0 1px var(--gg-rimd),0 0 0 1.5px var(--gg-rim),var(--gg-out)!important}
-/* темна тема: кнопки — опукле скло з яскравим обідком, як на референсі; картки напівпрозорі */
-@media (prefers-color-scheme:dark){html.gg:not([data-theme="light"]) .btn.ghost,html.gg:not([data-theme="light"]) .iconbtn,html.gg:not([data-theme="light"]) .hbtn,html.gg:not([data-theme="light"]) header.top .me{background:var(--gg-btn-bg)!important;color:var(--gg-btn-fg)!important;box-shadow:var(--gg-btn-sh)!important}}
-html.gg[data-theme="dark"] .btn.ghost,html.gg[data-theme="dark"] .iconbtn,html.gg[data-theme="dark"] .hbtn,html.gg[data-theme="dark"] header.top .me{background:var(--gg-btn-bg)!important;color:var(--gg-btn-fg)!important;box-shadow:var(--gg-btn-sh)!important}
-/* поля вводу: втоплені */
-html.gg input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),html.gg textarea,html.gg select{background:var(--surface-2)!important;border:0!important;border-radius:14px!important;box-shadow:inset 0 2px 5px rgba(0,0,0,.12),inset 0 0 0 1px var(--gg-rimd)!important;color:var(--fg)}
+/* привітання: та сама форма в обох темах; графіт у темній, срібло у світлій (токени --gg-hero-*). Кольорові KPI-плашки (.dz-k.hero) і хелловінський герой не чіпаються */
+html.gg.gg:not(.hw) .hero.hero2:not(.hw-hero){background:var(--gg-hero)!important;color:var(--gg-hero-fg)!important;border-radius:24px!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+html.gg .hero2:not(.hw-hero) .eyebrow,html.gg .hero2:not(.hw-hero) .hero-brand,html.gg .hero2:not(.hw-hero) .hero-st,html.gg .hero2:not(.hw-hero) .hero-off{color:var(--gg-hero-sub)!important}
+html.gg .hero2 .hero-logo{color:var(--gg-hero-fg)}
+html.gg .hero2:not(.hw-hero) .hchip,html.gg .hero2:not(.hw-hero) .hero-tiles .ms{color:var(--gg-hero-fg)!important;background:var(--gg-hero-chip)!important;box-shadow:inset 0 1px 0 var(--gg-rim-soft),inset 0 0 0 1px var(--gg-rimd)!important;-webkit-backdrop-filter:none;backdrop-filter:none}
+html.gg .hero-bar{background:var(--gg-hero-bar)}html.gg .hero-bar i{background:var(--gg-hero-fill)}
+/* пігулки й бейджі: тонована напівпрозора поверхня над батьківською, без інверсії; радіуси плиток часу (.ms) лишаються */
+html.gg .pill,html.gg .tkst,html.gg .tktype,html.gg .zone-tag{border-radius:999px}
+html.gg .pill,html.gg .ms,html.gg .tkst,html.gg .tktype,html.gg .zone-tag,html.gg .role{box-shadow:inset 0 1px 0 var(--gg-rim-soft),inset 0 0 0 1px var(--gg-rimd)}
+html.gg .role{background:var(--gg-tint)!important;color:var(--fg)!important}
+html.gg .badge{background:var(--gg-badge)!important;color:#fff;min-width:18px;height:18px;font-size:10.5px}
+/* кнопки «скло»: пігулка, обідок ≤ 1.5 px (0.5 px темна лінія всередині + 1 px світла зовні), блік зверху, темна лінія знизу; натиск утискає.
+   Кнопки з власним фірмовим кольором (.tg, .mt-pdf, .mt-own) не чіпаються */
+html.gg .btn:not(.tg):not(.mt-pdf):not(.mt-own),html.gg .iconbtn,html.gg .hbtn,html.gg header.top .me,html.gg .backbtn{border:0!important;border-radius:999px!important;background:var(--gg-hi),var(--gg-tint)!important;color:var(--fg)!important;box-shadow:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 var(--gg-rimd),inset 0 0 0 .5px var(--gg-rimd),0 0 0 1px var(--gg-rim),var(--gg-drop)!important;transition:transform .15s ease-out,filter .15s ease-out,box-shadow .15s ease-out}
+html.gg .btn:not(.tg):not(.mt-pdf):not(.mt-own){background:var(--gg-btn-hi),var(--gg-btn-bg)!important;color:var(--gg-btn-fg)!important;font-weight:600;text-shadow:var(--gg-txt-sh)}
+html.gg .btn.ghost{background:var(--gg-hi),var(--gg-tint)!important;color:var(--fg)!important;text-shadow:none}
+html.gg .btn.danger{background:var(--gg-hi),var(--gg-danger-bg)!important;color:var(--warn)!important;text-shadow:none}
+html.gg :is(.btn,.iconbtn,.hbtn,.backbtn):hover:not(:disabled){filter:brightness(1.06)}
+html.gg :is(.btn,.iconbtn,.hbtn,.backbtn):active:not(:disabled){transform:translateY(1px);filter:none;box-shadow:var(--gg-press),inset 0 0 0 .5px var(--gg-rimd),0 0 0 1px var(--gg-rim)!important}
+html.gg :is(.btn,.iconbtn,.hbtn,.backbtn):disabled{opacity:.45;cursor:not-allowed}
+html.gg :focus-visible{outline:2px solid var(--gg-focus)!important;outline-offset:3px}
+html.gg .hbtn{width:48px!important;height:48px!important}html.gg header.top{gap:8px}
+@media (max-width:520px){html.gg .hbtn,html.gg .backbtn{width:40px!important;height:40px!important}html.gg header.top .me img{width:30px;height:30px}}
+/* поля вводу: втоплені, з помітним обідком */
+html.gg input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),html.gg textarea,html.gg select{background:var(--surface-2)!important;border:0!important;border-radius:14px!important;box-shadow:var(--gg-well),inset 0 0 0 1px var(--gg-field-rim)!important;color:var(--fg)}
 /* перемикачі-сегменти */
-html.gg .seg{background:var(--surface-2)!important;border-radius:999px!important;box-shadow:inset 0 2px 5px rgba(0,0,0,.10),inset 0 0 0 1px var(--gg-rimd)!important}
+html.gg .seg{background:var(--surface-2)!important;border-radius:999px!important;box-shadow:var(--gg-well),inset 0 0 0 1px var(--gg-rimd)!important}
 html.gg .seg button{border-radius:999px!important}
-html.gg .seg button[aria-pressed="true"]{background:var(--gg-glass),var(--surface)!important;color:var(--fg)!important;box-shadow:0 0 0 1px var(--gg-rimd),0 2px 6px rgba(0,0,0,.18)!important}
+html.gg .seg button[aria-pressed="true"]{background:var(--gg-hi),var(--gg-tint)!important;color:var(--fg)!important;box-shadow:inset 0 1px 0 var(--gg-rim-soft),0 0 0 1px var(--gg-rimd),var(--gg-lift)!important}
 /* шапка й нижня навігація: скло з розмиттям (там, де під ними є вміст) */
 html.gg header.top{background:color-mix(in srgb,var(--surface) 55%,transparent)!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--gg-rimd)!important}
-html.gg nav.tabs{background:color-mix(in srgb,var(--surface) 70%,transparent)!important;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 var(--gg-rim),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
-html.gg .tab-ind{background:var(--gg-glass),var(--accent-soft)!important;box-shadow:0 0 0 1px var(--gg-rimd)!important}
-/* шторки й меню */
-html.gg .sheet,html.gg .menu{background:var(--gg-surf)!important;box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),0 -10px 40px rgba(0,0,0,.25)!important}
-html.gg .sheet{border-radius:28px 28px 0 0!important}
+html.gg nav.tabs{background:color-mix(in srgb,var(--surface) 70%,transparent)!important;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 var(--gg-rim-soft),0 0 0 1px var(--gg-rimd),var(--gg-out)!important}
+html.gg nav.tabs svg{stroke-width:1.6}
+html.gg nav.tabs button[aria-current="page"]{color:var(--fg)!important}
+html.gg .tab-ind{background:var(--gg-hi),var(--gg-tint)!important;box-shadow:inset 0 1px 0 var(--gg-rim-soft),0 0 0 1px var(--gg-rimd)!important}
+/* меню: шторка справа на всю висоту, майже непрозора, з затемненням сторінки; скрол сторінки під нею заблоковано */
+html.gg .menu-bg{background:var(--gg-dim)!important;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:ggFade .22s ease-out}
+html.gg .menu{top:0!important;right:0!important;bottom:0!important;left:auto!important;width:min(320px,85vw)!important;max-height:none!important;border-radius:0!important;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + var(--sab,0px))!important;overflow-y:auto;overscroll-behavior:contain;
+  background:var(--gg-sheet)!important;-webkit-backdrop-filter:blur(24px) saturate(1.2);backdrop-filter:blur(24px) saturate(1.2);box-shadow:inset 1px 0 0 var(--gg-rim-soft),-1px 0 0 var(--gg-rimd),var(--gg-menu-shadow)!important;animation:ggSlide .22s ease-out!important;transform-origin:right center}
+html.gg .menu button[aria-current="page"]{background:var(--gg-hi),var(--gg-tint)!important;color:var(--fg)!important;box-shadow:inset 0 1px 0 var(--gg-rim-soft),inset 0 0 0 1px var(--gg-rimd)}
+html.gg body.menu-open #scroller{overflow:hidden!important}
+@keyframes ggSlide{from{transform:translateX(100%)}to{transform:none}}@keyframes ggFade{from{opacity:0}to{opacity:1}}
+/* шторки знизу: та сама майже непрозора поверхня */
+html.gg .sheet{background:var(--gg-sheet)!important;-webkit-backdrop-filter:blur(24px) saturate(1.2);backdrop-filter:blur(24px) saturate(1.2);box-shadow:var(--gg-in),0 0 0 1px var(--gg-rimd),var(--gg-sheet-shadow)!important;border-radius:28px 28px 0 0!important}
 @media (min-width:900px){html.gg .sheet{border-radius:28px!important}}
-html.gg .sheet-bg{background:rgba(10,14,18,.45)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-html.gg .pill,html.gg .tkst,html.gg .tktype{border-radius:999px;box-shadow:inset 0 0 0 1px var(--gg-rimd)}
-@media (prefers-reduced-motion:reduce){html.gg .btn{transition:none}html.gg .btn:active{transform:none}}
+html.gg .sheet-bg{background:var(--gg-dim)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+@media (prefers-reduced-motion:reduce){html.gg :is(.btn,.iconbtn,.hbtn,.backbtn){transition:none}html.gg :is(.btn,.iconbtn,.hbtn,.backbtn):active{transform:none}html.gg .menu{animation:ggFade .2s ease-out!important}}
+@media (prefers-contrast:more){html.gg.gg{--gg-surf:var(--surface);--gg-tint:var(--surface-2)}}
 </style>
 
 <div id="dlSplash" class="dls" role="status" aria-live="polite" aria-label="Завантаження Duck’s Lake">
@@ -4506,11 +4538,11 @@ function openMenu(){
     kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),null,b?el('span',{class:'badge',text:b}):null);}));}
   if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn(),ggBtn());
   const m=el('div',{class:'menu',role:'menu'},kids.filter(Boolean));
-  document.getElementById('menuRoot').replaceChildren(bg,m);document.getElementById('menuBtn').setAttribute('aria-expanded','true');
+  document.getElementById('menuRoot').replaceChildren(bg,m);document.body.classList.add('menu-open');document.getElementById('menuBtn').setAttribute('aria-expanded','true');
   document.addEventListener('keydown',menuEsc);m.querySelector('button').focus();
 }
 function menuEsc(e){if(e.key==='Escape')closeMenu();}
-function closeMenu(){document.getElementById('menuRoot').replaceChildren();const mb=document.getElementById('menuBtn');if(mb)mb.setAttribute('aria-expanded','false');document.removeEventListener('keydown',menuEsc);}
+function closeMenu(){document.getElementById('menuRoot').replaceChildren();document.body.classList.remove('menu-open');const mb=document.getElementById('menuBtn');if(mb)mb.setAttribute('aria-expanded','false');document.removeEventListener('keydown',menuEsc);}
 const I_SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
 const I_MOON='<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>';
 const I_SUP='<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m5.6 5.6 3.6 3.6M14.8 14.8l3.6 3.6M14.8 9.2l3.6-3.6M5.6 18.4l3.6-3.6"/>';
