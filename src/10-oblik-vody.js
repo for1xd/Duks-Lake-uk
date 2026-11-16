@@ -5,7 +5,52 @@
 const MON_NOM=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
 function perLabel(p){const [y,m]=p.split('-').map(Number);return MON_NOM[m-1]+' '+y;}
 function perShift(p,k){let [y,m]=p.split('-').map(Number);m+=k;while(m<1){m+=12;y--;}while(m>12){m-=12;y++;}return y+'-'+pad(m);}
-function wCurPer(){if(S.wPer)return S.wPer;const now=ymd(new Date()).slice(0,7);const ks=Object.keys(S.wPerD).filter(k=>k<=now).sort();return S.wPerD[now]?now:(ks.length?ks[ks.length-1]:now);}
+/* Період споживання (bp*) — період споживання (вода, сміття; електроенергія — коли з'явиться облік).
+   Показники знімають / дані вносять на початку місяця за попередній: дата 1..N-го числа → попередній місяць, після N → поточний.
+   N: settings/main.billDay = {all:10, water?, waste?, power?}; міняють керівники УК і Dev. Уся логіка періоду — лише тут. */
+const BP_DEF=10;
+function bpN(mod){const c=(S.cfg&&S.cfg.billDay)||{};const v=+(c[mod]!=null&&c[mod]!==''?c[mod]:c.all);return v>=1&&v<=28?v:BP_DEF;}
+function billingPeriod(date,mod){const s=typeof date==='string'?date:ymd(date||new Date());const p=s.slice(0,7);return +s.slice(8,10)<=bpN(mod)?perShift(p,-1):p;}
+function bpToday(){return ymd(new Date());}
+/* дата зняття / внесення, з якою зараз вносяться дані (за замовчуванням — сьогодні, лише в минуле) */
+function bpDay(mod){return (S.bpDate&&S.bpDate[mod])||bpToday();}
+function bpHint(d,mod){return 'Дані від '+dm(d)+' → період: '+perLabel(billingPeriod(d,mod)).toLowerCase();}
+function bpDmy(s){return s.slice(8,10)+'.'+s.slice(5,7)+'.'+s.slice(0,4);}
+/* дати зняття записів періоду: вода — reads[*].d (є кінцевий показник), сміття — rows[*].d або дата збереження обсягу */
+function bpRecDate(mod,r){if(!r)return null;if(r.d)return r.d;return mod==='waste'&&r.at?ymd(new Date(r.at)):null;}
+function bpRecs(mod,per){if(mod==='water'){const R=(S.wPerD[per]||{}).reads||{};return Object.keys(R).filter(k=>R[k]&&R[k].e!=null&&R[k].e!=='').map(k=>[k,R[k]]);}
+  if(mod==='waste'){const R=(S.ws[per]||{}).rows||{};return Object.keys(R).filter(k=>R[k]&&R[k].vol!=null).map(k=>[k,R[k]]);}return [];}
+function bpDates(mod,per){return [...new Set(bpRecs(mod,per).map(([,r])=>bpRecDate(mod,r)).filter(Boolean))].sort();}
+/* «01–05.11.2026», «03.11.2026», «28.10–05.11.2026»; long=true — «01.11.2026 — 05.11.2026» для Excel */
+function bpRange(ds,long,noYear){if(!ds.length)return '';const a=ds[0],b=ds[ds.length-1];if(long)return a===b?bpDmy(a):bpDmy(a)+' — '+bpDmy(b);
+  const y=noYear?'':'.'+b.slice(0,4);if(a===b)return dm(a)+y;return (a.slice(0,7)===b.slice(0,7)?a.slice(8,10):dm(a))+'–'+dm(b)+y;}
+function bpWord(mod){return mod==='waste'?'внесено':'знято';}
+/* перемикач місяця: показує період споживання + коли знято дані; під ним (для тих, хто вносить) — дата зняття й підказка правила */
+function bpBar(mod,per,exists,setPer){const ds=bpDates(mod,per);const w=mod==='waste';
+  const sub=!exists?'ще не створено':ds.length?(w?'вивезення · дані внесено ':'споживання · показники знято ')+bpRange(ds):bpRecs(mod,per).length?(w?'вивезення':'споживання'):'дані ще не внесено';
+  const bar=el('div',{class:'w-per card'},
+    el('button',{class:'iconbtn',type:'button','aria-label':'Попередній місяць',onclick:()=>{setPer(perShift(per,-1));render();}},svg('<path d="M15 5l-7 7 7 7"/>')),
+    el('div',{class:'w-per-c'},el('b',{text:perLabel(per)}),el('span',{class:'muted small',text:sub})),
+    el('button',{class:'iconbtn',type:'button','aria-label':'Наступний місяць',onclick:()=>{setPer(perShift(per,1));render();}},svg('<path d="m9 5 7 7-7 7"/>')));
+  if(!canW())return bar;
+  const d=bpDay(mod),bp=billingPeriod(d,mod);
+  const di=el('input',{type:'date',value:d,max:bpToday(),'aria-label':w?'Дата внесення даних':'Дата зняття показників'});
+  di.addEventListener('change',()=>{let v=di.value||bpToday();if(v>bpToday()){v=bpToday();toast('Дата не може бути в майбутньому');}S.bpDate={...(S.bpDate||{}),[mod]:v};setPer(billingPeriod(v,mod));render();});
+  return el('div',{class:'bp-wrap'},bar,el('div',{class:'card bp-row'},
+    el('label',{class:'bp-d'},el('span',{class:'muted small',text:w?'Дата внесення':'Дата зняття'}),di),
+    el('div',{class:'bp-h'},el('span',{class:'small',text:bpHint(d,mod)}),bp!==per?el('span',{class:'bp-warn small'},'Зараз відкрито '+perLabel(per).toLowerCase()+' · ',el('button',{type:'button',class:'bp-lnk',onclick:()=>{setPer(bp);render();}},'перейти до '+perLabel(bp).toLowerCase())):null),
+    el('button',{class:'btn ghost sm',type:'button',title:'Правило періоду',onclick:bpEdit},'до '+bpN(mod)+'-го')));}
+/* правило N-го числа: одне спільне + за потреби окремо для модуля */
+function bpEdit(){if(!canW()){toast('Змінювати правило можуть керівники');return;}const c=(S.cfg&&S.cfg.billDay)||{};
+  const mk=(k,lbl,ph)=>{const i=el('input',{type:'number',min:'1',max:'28',inputmode:'numeric',value:c[k]==null?'':String(c[k]),placeholder:ph});return [i,el('label',{},lbl,i)];};
+  const [a,aL]=mk('all','Для всіх модулів',String(BP_DEF)),[wv,wL]=mk('water','Вода (порожньо — як для всіх)','як для всіх'),[ws,sL]=mk('waste','Сміття (порожньо — як для всіх)','як для всіх');
+  openSheet(el('h2',{text:'Правило періоду'}),el('p',{class:'muted small',style:'margin:0',text:'Дані, зняті або внесені з 1-го до N-го числа, належать до попереднього місяця; після N-го — до поточного. Уже внесені записи не переносяться — для цього є інструмент у Dev.'}),aL,el('div',{class:'grid2'},wL,sL),
+    el('button',{class:'btn',type:'button',onclick:()=>{const n=i=>{const t=i.value.trim();if(t==='')return null;const v=Math.round(+t);return v>=1&&v<=28?v:NaN;};const bd={all:n(a)==null?BP_DEF:n(a),water:n(wv),waste:n(ws)};
+      if(Object.values(bd).some(v=>Number.isNaN(v))){toast('Число від 1 до 28');return;}closeSheet();S.cfg={...(S.cfg||{}),billDay:bd};render();
+      write(()=>S.db.doc('settings/main').set({...(S.cfg||{}),billDay:bd,updatedAt:Date.now(),updatedBy:S.myId||''}),'Правило: до '+bd.all+'-го числа — попередній місяць');}},'Зберегти'),
+    el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
+/* кінець: період споживання */
+function wCurPer(){return S.wPer||billingPeriod(bpDay('water'),'water');}
 function wRead(per,mid){const d=S.wPerD[per];return d&&d.reads&&d.reads[mid]||null;}
 function wCons(per,mid){const r=wRead(per,mid);if(!r||r.s==null||r.e==null||r.s===''||r.e==='')return null;return Math.round((+r.e-+r.s)*1000)/1000;}
 function fm3(v){if(v==null)return '—';const r=Math.round(v*100)/100;return r.toLocaleString('uk-UA',{maximumFractionDigits:2});}
@@ -17,15 +62,12 @@ function wStats(per,oid){const ms=S.wMet.filter(m=>m.obj===oid);const sum=a=>a.r
 function canW(){return isUK();}
 function wSetRead(per,mid,field,val){const v=val===''?null:Math.round(parseFloat(String(val).replace(',','.'))*1000)/1000;if(val!==''&&isNaN(v)){toast('Введіть число');return;}
   if(field==='e'){const old=(wRead(per,mid)||{}).e;const nx=perShift(per,1);const nd=S.wPerD[nx];if(nd){const nr=(nd.reads||{})[mid]||{};if(nr.s==null||nr.s===''||(old!=null&&+nr.s===+old)){nd.reads=nd.reads||{};nd.reads[mid]={...nr,s:v};write(()=>S.db.doc('wPeriods/'+nx).update({reads:{[mid]:{s:v}}}));}}}
-  S.wPerD[per]=S.wPerD[per]||{reads:{}};S.wPerD[per].reads=S.wPerD[per].reads||{};S.wPerD[per].reads[mid]={...(S.wPerD[per].reads[mid]||{}),[field]:v};
-  write(()=>S.db.doc('wPeriods/'+per).update({reads:{[mid]:{[field]:v}},updatedAt:Date.now(),updatedBy:S.myId}));}
+  S.wPerD[per]=S.wPerD[per]||{reads:{}};S.wPerD[per].reads=S.wPerD[per].reads||{};const rec={[field]:v,...(field==='e'?{d:bpDay('water')}:{})};S.wPerD[per].reads[mid]={...(S.wPerD[per].reads[mid]||{}),...rec};
+  write(()=>S.db.doc('wPeriods/'+per).update({reads:{[mid]:rec},updatedAt:Date.now(),updatedBy:S.myId}));}
 function wNewPeriod(per){const ks=Object.keys(S.wPerD).filter(k=>k<per).sort();const prev=ks[ks.length-1];const reads={};
   if(prev){const pr=S.wPerD[prev].reads||{};for(const m of S.wMet){const r=pr[m.id];if(r&&r.e!=null)reads[m.id]={s:r.e,e:null};}}
   write(()=>S.db.doc('wPeriods/'+per).set({reads,bill:null,at:Date.now(),by:S.myId}),'Період «'+perLabel(per)+'» створено');}
-function wPerBar(per){const exists=!!S.wPerD[per];return el('div',{class:'w-per card'},
-  el('button',{class:'iconbtn',type:'button','aria-label':'Попередній місяць',onclick:()=>{S.wPer=perShift(per,-1);render();}},svg('<path d="M15 5l-7 7 7 7"/>')),
-  el('div',{class:'w-per-c'},el('b',{text:perLabel(per)}),el('span',{class:'muted small',text:exists?'звітний період':'ще не створено'})),
-  el('button',{class:'iconbtn',type:'button','aria-label':'Наступний місяць',onclick:()=>{S.wPer=perShift(per,1);render();}},svg('<path d="m9 5 7 7-7 7"/>')));}
+function wPerBar(per){return bpBar('water',per,!!S.wPerD[per],p=>{S.wPer=p;});}
 /* Зведення та баланс: скільки води з рахунку Водоканалу перевиставлено резидентам, а скільки — нестача УК */
 function wBalance(per,actual,mains,billIn,uahIn){const P=S.wPerD[per]||{};const norm=P.tolPct!=null&&!isNaN(+P.tolPct)?+P.tolPct:5;
   const R=54,C=2*Math.PI*R;const NS='http://www.w3.org/2000/svg';const mk=(t,a)=>{const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);return n;};
@@ -101,7 +143,7 @@ function waterObject(oid){const o=S.wObj.find(x=>x.id===oid);if(!o)return [el('d
       el('span',{class:'w-tn'},el('b',{text:m.tenant||(m.kind==='main'?'Загальнобудинковий':'—')}),m.note?el('small',{text:m.note}):null,m.kind==='main'?el('em',{text:m.active===false?'не діючий':'загальнобудинковий'}):null),
       el('span',{class:'w-sn',text:m.serial||'немає лічильника'}),
       noM?el('span',{class:'w-nm'}):wNumIn(per,m,'s',ro),noM?el('span',{class:'w-nm'}):wNumIn(per,m,'e',ro),
-      el('span',{class:'w-c'},c==null?'—':fm3(c),c!=null&&c<0?el('small',{text:'кінець < початку'}):null,(()=>{const rd=wRead(per,m.id)||{};return rd.ph?el('button',{type:'button',class:'w-phb',title:'Фото лічильника','aria-label':'Фото лічильника',onclick:()=>viewPhoto(rd.ph.id)},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>')):null;})()),
+      el('span',{class:'w-c'},c==null?'—':fm3(c),c!=null&&c<0?el('small',{text:'кінець < початку'}):null,(()=>{const rd=wRead(per,m.id)||{};return rd.d&&rd.e!=null?[el('small',{class:'w-dt',text:'знято '+dm(rd.d)}),rd.ph?el('button',{type:'button',class:'w-phb',title:'Фото лічильника','aria-label':'Фото лічильника',onclick:()=>viewPhoto(rd.ph.id)},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>')):null]:rd.ph?el('button',{type:'button',class:'w-phb',title:'Фото лічильника','aria-label':'Фото лічильника',onclick:()=>viewPhoto(rd.ph.id)},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>')):null;})()),
       canW()?el('button',{type:'button',class:'w-ed','aria-label':'Редагувати',onclick:()=>wMeterSheet(m,oid)},svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>')):el('span'));};
   const mains=ms.filter(m=>m.kind==='main'&&match(m));if(mains.length)tbl.append(el('div',{class:'w-grp',text:'Загальнобудинкові лічильники'}),...mains.map(row));
   const secs=o.sections&&o.sections.length?o.sections:[null];

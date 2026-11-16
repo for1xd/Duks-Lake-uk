@@ -18,6 +18,7 @@ function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{cla
     el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'Помилки за 24 год'}),el('b',{class:e1.length?'crit':'',text:String(e1.length)}),el('small',{class:'muted',text:errs.length+' у журналі'})),
     el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'У мережі зараз'}),el('b',{text:String(onl.length)}),el('small',{class:'muted',text:onl.map(x=>x.name.split(' ')[0]).join(', ')||'нікого'})),
     el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'Ваш пристрій'}),el('b',{style:'font-size:17px',text:(IS_TOUCH?'Сенсорний':'ПК')+' · '+innerWidth+'×'+innerHeight}),el('small',{class:'muted',text:(navigator.userAgent.match(/(Safari|Chrome|Firefox|Edg)\/[\d.]+/)||[''])[0]}))));
+  out.push(el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Перерахувати періоди за правилом N-го числа'}),el('span',{class:'muted small',text:'Вода, сміття: перенести вже внесені дані в місяць споживання · перегляд і резервна копія перед записом'})),el('button',{class:'btn sm ghost',type:'button',onclick:()=>bpmSheet('all')},'Відкрити')));
   // db stats
   const cnt=o=>Object.keys(o||{}).length;const dzRowsN=Object.values(S.dz||{}).reduce((a,d)=>a+cnt(d.rows),0);
   const stats=[['Колектив',S.staff.length],['Задачі',S.tasks.length],['Повідомлення (останні)',S.chat.length],['Відмітки змін',S.shifts.length],['Лічильники води',S.wMet.length],['Рядки дебіторки',dzRowsN],['Паркомісця',cnt((S.pk.main||{}).rows)],['Інвентар',cnt((S.inv.main||{}).rows)],['Записів журналу',L.length]];
@@ -39,6 +40,44 @@ function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{cla
   out.push(el('div',{class:'card dz-card'},el('div',{class:'dz-ch'},el('b',{text:'Що ще тут є для розробника'})),el('ul',{class:'dv-ul'},
     ['Журнал усіх збережень: хто, що, на якій сторінці, з якого пристрою','Автоматичний запис помилок JavaScript у користувачів (з файлом і рядком)','Експорт усієї бази в JSON — резервна копія одним кліком','Стан бази та активність людей — видно, хто реально користується'].map(t=>el('li',{text:t})))));
   return out;}
+/* Dev, bpm*: Dev: перерахувати періоди вже внесених даних за правилом N-го числа.
+   Нічого не переноситься автоматично: перегляд «було → стане», резервна копія JSON, потім запис і рядок у журналі.
+   Записи без дати внесення та ті, де в цільовому місяці вже є дані, не переносяться — «потребує уточнення». */
+const BPM_MODS=[['water','Вода'],['power','Електроенергія'],['waste','Сміття'],['all','Усі']];
+function bpmPlan(mods){const moves=[],unclear=[];
+  for(const mod of mods){const pers=Object.keys(mod==='water'?(S.wPerD||{}):mod==='waste'?(S.ws||{}):{}).sort();
+    for(const per of pers){const wr=mod==='waste'?wsRows(per):null;
+      for(const [id,r] of bpRecs(mod,per)){let label=id,key=null;
+        if(mod==='water'){const m=S.wMet.find(x=>x.id===id);label=m?wMeterLabel(m):'лічильник '+id;}else{const x=wr.find(y=>y.id===id);label=(r.tenant||'—')+(x?' · '+wsName(x.bld):'');key=x?wsKey(x):null;}
+        const d=bpRecDate(mod,r);if(!d){unclear.push({mod,per,label,why:'немає дати внесення'});continue;}
+        const to=billingPeriod(d,mod);if(to===per)continue;let tid=id;
+        if(mod==='water'){const t=wRead(to,id);if(t&&t.e!=null&&t.e!==''){unclear.push({mod,per,label,why:'у «'+perLabel(to)+'» вже є показник'});continue;}}
+        else{const t=key&&wsRows(to).find(y=>wsKey(y)===key);if(t&&t.vol!=null){unclear.push({mod,per,label,why:'у «'+perLabel(to)+'» вже є обсяг'});continue;}if(t)tid=t.id;}
+        moves.push({mod,per,to,id,tid,rec:{...r,d},label});}}}
+  return {moves,unclear};}
+async function bpmApply(P){const grp={};P.moves.forEach(m=>{const k=m.mod+'|'+m.to;(grp[k]=grp[k]||[]).push(m);});
+  for(const k in grp){const [mod,to]=k.split('|');const ms=grp[k];
+    if(mod==='water'){const reads={};ms.forEach(m=>{reads[m.tid]=m.rec;});if(S.wPerD[to])await S.db.doc('wPeriods/'+to).update({reads,updatedAt:Date.now(),updatedBy:S.myId});else await S.db.doc('wPeriods/'+to).set({reads,bill:null,at:Date.now(),by:S.myId});}
+    else{const rows={};ms.forEach(m=>{rows[m.tid]=m.rec;});if(S.ws[to])await S.db.doc('waste/'+to).update({rows});else await S.db.doc('waste/'+to).set({per:to,rows,at:Date.now(),by:S.myId});}}
+  const src={};P.moves.forEach(m=>{const k=m.mod+'|'+m.per;(src[k]=src[k]||[]).push(m);});
+  for(const k in src){const [mod,per]=k.split('|');
+    if(mod==='water'){const reads={};src[k].forEach(m=>{reads[m.id]=null;});await S.db.doc('wPeriods/'+per).update({reads,updatedAt:Date.now(),updatedBy:S.myId});}
+    else{const rows={};src[k].forEach(m=>{rows[m.id]={vol:null,d:null};});await S.db.doc('waste/'+per).update({rows});}}}
+function bpmSheet(mod){mod=mod||'all';const mods=mod==='all'?['water','waste']:[mod];const P=bpmPlan(mods);const name=k=>(BPM_MODS.find(x=>x[0]===k)||[])[1];
+  const by={};P.moves.forEach(m=>{const k=m.mod+'|'+m.per+'|'+m.to;by[k]=(by[k]||0)+1;});
+  const lines=Object.keys(by).sort().map(k=>{const [md,a,b]=k.split('|');return el('div',{class:'imp-r'},el('span',{text:name(md)+': '+perLabel(a)+' → '+perLabel(b)}),el('b',{text:String(by[k])}));});
+  openSheet(el('h2',{text:'Перерахувати періоди'}),el('p',{class:'muted small',style:'margin:0',text:'Правило: дані від 1-го до N-го числа належать до попереднього місяця (вода — до '+bpN('water')+'-го, сміття — до '+bpN('waste')+'-го). Записи переносяться за датою зняття / внесення.'}),
+    el('div',{class:'sg sm',role:'group','aria-label':'Модуль'},BPM_MODS.map(([k,l])=>el('button',{type:'button','aria-pressed':String(k===mod),onclick:()=>{closeSheet();bpmSheet(k);}},l))),
+    mod==='power'?el('p',{class:'muted',style:'margin:0',text:'В «Електроенергії» ще немає внесених даних — переносити нічого.'}):null,
+    el('div',{class:'imp-list'},lines.length?lines:el('div',{class:'imp-r'},el('span',{text:'Переносити нічого — усі датовані записи вже у своєму періоді'}),el('b',{text:'0'}))),
+    P.unclear.length?el('div',{class:'imp-warn'},el('div',{},el('b',{text:'Потребує уточнення: '+P.unclear.length+' (не переносяться)'})),P.unclear.slice(0,12).map(u=>el('div',{text:name(u.mod)+' · '+perLabel(u.per)+' · '+u.label+' — '+u.why})),P.unclear.length>12?el('div',{text:'…і ще '+(P.unclear.length-12)}):null):null,
+    P.moves.length?el('button',{class:'btn',type:'button',onclick:async()=>{
+      const dl=await claude.use('downloads').catch(()=>null);if(!dl){toast('Без резервної копії не застосовую: завантаження файлів недоступне');return;}
+      try{await dl.save({filename:'ducks-lake-periody-backup-'+ymd(new Date())+'.json',data:new Blob([JSON.stringify({exportedAt:new Date().toISOString(),billDay:(S.cfg||{}).billDay||null,wPeriods:S.wPerD,waste:S.ws,plan:P.moves.map(m=>({mod:m.mod,from:m.per,to:m.to,id:m.id,toId:m.tid,label:m.label,date:m.rec.d}))},null,1)],{type:'application/json'})});}
+      catch(e){toast('Резервну копію не збережено — нічого не змінено');return;}
+      closeSheet();await write(()=>bpmApply(P),'Перерахунок періодів ('+mods.map(name).join(', ')+'): перенесено '+P.moves.length+', потребує уточнення '+P.unclear.length);}},'Зберегти копію і застосувати ('+P.moves.length+')'):null,
+    el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
+/* кінець bpm */
 async function devExport(){const data={exportedAt:new Date().toISOString(),staff:S.staff,tasks:S.tasks,chat:S.chat,shifts:S.shifts,dz:S.dz,waste:S.ws,inv:S.inv,parking:S.pk,maint:S.pm,incidents:S.sos,wObjects:S.wObj,wMeters:S.wMet,wPeriods:S.wPerD,log:S.log};
   const dl=await claude.use('downloads').catch(()=>null);if(!dl){toast('Завантаження файлів тут недоступне');return;}
   try{await dl.save({filename:'ducks-lake-backup-'+ymd(new Date())+'.json',data:new Blob([JSON.stringify(data,null,1)],{type:'application/json'})});devLog('Експорт бази');}catch(e){if(e&&e.code!=='declined')toast('Не вдалося зберегти файл');}}
