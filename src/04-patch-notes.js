@@ -111,7 +111,7 @@ function openMenu(){
   const kids=[meCard('menu-me',()=>go('profile')),notesChip('nc-menu')];
   for(const [lbl,ids] of NAV_GROUPS){const v=ids.filter(tabVisible);if(!v.length)continue;
     kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),null,b?el('span',{class:'badge',text:b}):null);}));}
-  if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn());
+  if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn(),ggBtn());
   const m=el('div',{class:'menu',role:'menu'},kids.filter(Boolean));
   document.getElementById('menuRoot').replaceChildren(bg,m);document.getElementById('menuBtn').setAttribute('aria-expanded','true');
   document.addEventListener('keydown',menuEsc);m.querySelector('button').focus();
@@ -122,9 +122,14 @@ const I_SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4
 const I_MOON='<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>';
 const I_SUP='<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m5.6 5.6 3.6 3.6M14.8 14.8l3.6 3.6M14.8 9.2l3.6-3.6M5.6 18.4l3.6-3.6"/>';
 function isDarkNow(){const t=document.documentElement.getAttribute('data-theme');if(t)return t==='dark';return window.matchMedia('(prefers-color-scheme: dark)').matches;}
-function applyTheme(){let t=null;try{t=localStorage.getItem('dl.theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);applyV2();}
+function applyTheme(){let t=null;try{t=localStorage.getItem('dl.theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);applyV2();applyGG();}
 function v2On(){try{return localStorage.getItem('dl.v2')==='1';}catch(e){return false;}}
 function applyV2(){document.documentElement.classList.toggle('v2',v2On());}
+/* Graphite Glass (тест): вмикається класом html.gg лише в цьому браузері; шрифти Inter + JetBrains Mono вантажаться тільки тоді */
+function ggOn(){try{return localStorage.getItem('dl.gg')==='1';}catch(e){return false;}}
+function applyGG(){const on=ggOn();document.documentElement.classList.toggle('gg',on);if(on&&!document.getElementById('ggFont')){const l=document.createElement('link');l.id='ggFont';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap';document.head.append(l);}}
+function toggleGG(){const on=!ggOn();try{localStorage.setItem('dl.gg',on?'1':'0');if(on)localStorage.setItem('dl.v2','0');}catch(e){}applyV2();applyGG();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Graphite Glass увімкнено — бачите лише ви':'Повернуто поточний дизайн');}
+function ggBtn(){return el('button',{type:'button',role:'menuitem',onclick:toggleGG},svg('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z"/>'),el('span',{class:'grow',text:ggOn()?'Вимкнути Graphite Glass':'Graphite Glass (тест)'}));}
 function toggleV2(){const on=!v2On();try{localStorage.setItem('dl.v2',on?'1':'0');}catch(e){}applyV2();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Новий дизайн увімкнено — бачите лише ви':'Повернуто поточний дизайн');}
 function v2Btn(){return el('button',{type:'button',role:'menuitem',onclick:toggleV2},svg('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/>'),el('span',{class:'grow',text:v2On()?'Повернути поточний дизайн':'Новий дизайн (тест)'}));}
 function toggleTheme(){const nt=isDarkNow()?'light':'dark';document.documentElement.setAttribute('data-theme',nt);try{localStorage.setItem('dl.theme',nt);}catch(e){}renderHeaderBtns();if(WIDE.matches)renderTabs();requestAnimationFrame(placeInd);}
