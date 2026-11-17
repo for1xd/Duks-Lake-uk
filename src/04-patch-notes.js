@@ -6,6 +6,8 @@
    who: без поля — усім; 'uk' — Facility (менеджери, ст. менеджер, інженер, директор, Dev); 'meet' — директор, менеджер, Dev;
    'dev' — лише Dev; 'plan' — хто планує графік і ставить задачі; 'earn' — хто відмічає зміни */
 const NOTES=[
+ {v:'5.3',date:'17 листопада',title:'Новий дизайн',items:[
+  {e:'✨',t:'Graphite Glass для всіх',d:'Новий вигляд застосунку тепер основний. Якщо незвично — меню → «Вигляд» → «Повернути старий дизайн» (лише у вашому браузері).',who:''}]},
  {v:'5.2',date:'16 листопада',title:'Період споживання',items:[
   {e:'📅',t:'Дані — за той місяць, за який вони',d:'Вода й сміття: показники, зняті до 10-го числа, належать до попереднього місяця. На початку місяця облік відкривається на минулому місяці, під назвою місяця видно, коли знято дані.',who:'uk'},
   {e:'🗓',t:'Дата зняття в кожному записі',d:'Над таблицею — дата зняття (сьогодні, можна змінити на минулу) і підказка, до якого періоду підуть дані. В імпорті Excel можна обрати період для всього файлу.',who:'uk'}]},
@@ -114,7 +116,7 @@ function openMenu(){
   const kids=[meCard('menu-me',()=>go('profile')),notesChip('nc-menu')];
   for(const [lbl,ids] of NAV_GROUPS){const v=ids.filter(tabVisible);if(!v.length)continue;
     kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),null,b?el('span',{class:'badge',text:b}):null);}));}
-  if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn(),ggBtn());
+  kids.push(el('div',{class:'menu-lbl',text:'Вигляд'}),ggBtn());if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn());
   const m=el('div',{class:'menu',role:'menu'},kids.filter(Boolean));
   document.getElementById('menuRoot').replaceChildren(bg,m);document.body.classList.add('menu-open');document.getElementById('menuBtn').setAttribute('aria-expanded','true');
   document.addEventListener('keydown',menuEsc);m.querySelector('button').focus();
@@ -128,12 +130,12 @@ function isDarkNow(){const t=document.documentElement.getAttribute('data-theme')
 function applyTheme(){let t=null;try{t=localStorage.getItem('dl.theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);applyV2();applyGG();}
 function v2On(){try{return localStorage.getItem('dl.v2')==='1';}catch(e){return false;}}
 function applyV2(){document.documentElement.classList.toggle('v2',v2On());}
-/* Graphite Glass (тест): вмикається класом html.gg лише в цьому браузері */
-function ggOn(){try{return localStorage.getItem('dl.gg')==='1';}catch(e){return false;}}
+/* Graphite Glass — основний дизайн для всіх (клас html.gg); у меню «Вигляд» кожен може повернути старий у своєму браузері (dl.gg='0') */
+function ggOn(){try{return localStorage.getItem('dl.gg')!=='0'&&localStorage.getItem('dl.v2')!=='1';}catch(e){return true;}}
 function applyGG(){document.documentElement.classList.toggle('gg',ggOn());}
-function toggleGG(){const on=!ggOn();try{localStorage.setItem('dl.gg',on?'1':'0');if(on)localStorage.setItem('dl.v2','0');}catch(e){}applyV2();applyGG();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Graphite Glass увімкнено — бачите лише ви':'Повернуто поточний дизайн');}
-function ggBtn(){return el('button',{type:'button',role:'menuitem',onclick:toggleGG},svg('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z"/>'),el('span',{class:'grow',text:ggOn()?'Вимкнути Graphite Glass':'Graphite Glass (тест)'}));}
-function toggleV2(){const on=!v2On();try{localStorage.setItem('dl.v2',on?'1':'0');}catch(e){}applyV2();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Новий дизайн увімкнено — бачите лише ви':'Повернуто поточний дизайн');}
+function toggleGG(){const on=!ggOn();try{localStorage.setItem('dl.gg',on?'1':'0');if(on)localStorage.setItem('dl.v2','0');}catch(e){}applyV2();applyGG();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Увімкнено новий дизайн':'Повернуто старий дизайн — лише в цьому браузері');}
+function ggBtn(){return el('button',{type:'button',role:'menuitem',onclick:toggleGG},svg('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z"/>'),el('span',{class:'grow',text:ggOn()?'Повернути старий дизайн':'Увімкнути новий дизайн'}));}
+function toggleV2(){const on=!v2On();try{localStorage.setItem('dl.v2',on?'1':'0');}catch(e){}applyV2();applyGG();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Новий дизайн увімкнено — бачите лише ви':'Повернуто поточний дизайн');}
 function v2Btn(){return el('button',{type:'button',role:'menuitem',onclick:toggleV2},svg('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/>'),el('span',{class:'grow',text:v2On()?'Повернути поточний дизайн':'Новий дизайн (тест)'}));}
 function toggleTheme(){const nt=isDarkNow()?'light':'dark';document.documentElement.setAttribute('data-theme',nt);try{localStorage.setItem('dl.theme',nt);}catch(e){}renderHeaderBtns();if(WIDE.matches)renderTabs();requestAnimationFrame(placeInd);}
 function renderHeaderBtns(){const tb=document.getElementById('themeBtn');const dark=isDarkNow();tb.replaceChildren(svg(dark?I_SUN:I_MOON));tb.setAttribute('aria-label',dark?'Світла тема':'Темна тема');tb.title=dark?'Світла тема':'Темна тема';tb.onclick=toggleTheme;
