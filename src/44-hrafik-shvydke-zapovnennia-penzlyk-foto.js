@@ -6,11 +6,11 @@ const SC_BRUSH=[['','Вихідний'],['Д','Менеджер'],['8:00–13:00
 function scBrushes(){const extra=(S.scCustom||[]).filter(v=>!SC_BRUSH.some(b=>b[0]===v)).map(v=>[v,v.replace(/:00/g,'').replace('|',' + ')]);return SC_BRUSH.concat(extra);}
 function scToolbar(){const on=S.brush!=null;const cur=on?scBrushes().find(b=>b[0]===S.brush):null;
   return el('div',{class:'card sc-tools'+(on?' on':'')},
-    el('div',{class:'row between',style:'gap:8px'},
-      el('button',{type:'button',class:'btn sm'+(on?'':' ghost'),'aria-pressed':String(on),onclick:()=>{if(on){S.brush=null;scFlush();}else{S.brush='8:00–13:00';S.schedView='week';}render();}},svg('<path d="M18 2l4 4-11 11H7v-4z"/><path d="M7 17c-2 0-4 1-4 4 2 0 4-1 4-4z"/>'),on?' Готово':' Пензлик'),
-      el('div',{class:'row',style:'gap:6px'},
-        el('button',{type:'button',class:'btn ghost sm',onclick:scPhoto},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),' З фото'),
-        el('button',{type:'button',class:'btn ghost sm',onclick:()=>confirmSheet('Замінити графік цього тижня копією попереднього?','Скопіювати',copyPrevWeek)},'Як минулого тижня'))),
+    el('span',{class:'flabel',text:'Швидко заповнити тиждень'}),
+    el('div',{class:'sc-qa'},
+      el('button',{type:'button',class:'btn sm'+(on?'':' ghost'),'aria-pressed':String(on),title:'Вибрати зміну й торкатися клітинок',onclick:()=>{if(on){S.brush=null;scFlush();}else{S.brush='8:00–13:00';S.schedView='week';}render();}},svg('<path d="M18 2l4 4-11 11H7v-4z"/><path d="M7 17c-2 0-4 1-4 4 2 0 4-1 4-4z"/>'),el('span',{text:on?'Готово':'Пензлик'})),
+      el('button',{type:'button',class:'btn ghost sm',title:'Розпізнати графік з фото таблиці',onclick:scPhoto},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>'),el('span',{text:'З фото'})),
+      el('button',{type:'button',class:'btn ghost sm',title:'Скопіювати графік попереднього тижня','aria-label':'Як минулого тижня — скопіювати попередній тиждень',onclick:()=>confirmSheet('Замінити графік цього тижня копією попереднього?','Скопіювати',copyPrevWeek)},svg('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),el('span',{text:'Як минулого тижня'}))),
     on?el('div',{class:'sc-brushes'},scBrushes().map(([v,l])=>el('button',{type:'button',class:'sc-br'+(S.brush===v?' on':''),'aria-pressed':String(S.brush===v),onclick:()=>{S.brush=v;render();}},l)),
       el('button',{type:'button',class:'sc-br add',onclick:()=>{const t=prompt('Свій час, напр. 9:00–18:00 або 8–13, 17–20');if(t==null)return;const v=normShift(t);if(!v){toast('Не вдалося розібрати час');return;}S.scCustom=[...(S.scCustom||[]),v];S.brush=v;render();}},'+ Свій')):null,
     on?el('p',{class:'muted small',style:'margin:0',text:'Обрано: '+(cur?cur[1]:S.brush)+' — торкайтеся клітинок, щоб заповнити. Торкання імені заповнить увесь тиждень працівника.'}):null);}

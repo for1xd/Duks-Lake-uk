@@ -2,7 +2,7 @@
 // Розділ: карта території v2: Leaflet (CRS.Simple) поверх чистого фото, зони з db (map_zones), запасний варіант — MZ3 у коді.
 
 /* MZ3:BEGIN — карта території v2: Leaflet (CRS.Simple) поверх чистого фото, зони з db (map_zones), запасний варіант — MZ3 у коді.
-   Координати зон — пікселі фото 960×640 (x вправо, y вниз); у Leaflet latlng = [640 − y, x]. Карта зараз відкрита лише для Dev. */
+   Координати зон — пікселі фото 960×640 (x вправо, y вниз); у Leaflet latlng = [640 − y, x]. Доступ: MAP_ROLES (mapOpen), редагування — canZoneEdit. */
 const MZ_W=960,MZ_H=640;
 const MZ_TY={g:{n:'Газон / трава',c:'#46c25f',l:'zones'},sh:{n:'Клумба / кущі',c:'#1f7a3a',l:'zones'},tr:{n:'Дерева / посадки',c:'#9aa83a',l:'zones'},
   st:{n:'Каміння / гравій',c:'#b3a796',l:'zones'},s:{n:'Плитка / доріжка',c:'#d5d9dc',l:'zones'},w:{n:'Берег',c:'#2bc0b4',l:'zones'},
@@ -26,7 +26,8 @@ function mzTasks(id){return mzTasksAll(id).filter(t=>!isDone(t));}
 function mzStatus(id){const today=ymd(new Date());const L=mzTasksAll(id);const open=L.filter(t=>!isDone(t));
   if(open.some(t=>t.due&&t.due<today))return 'over';if(open.length)return 'open';if(L.some(t=>isDone(t)&&t.doneAt&&ymd(new Date(t.doneAt))===today))return 'done';return 'none';}
 function canZoneEdit(){return isDev();}
-function mapOpen(){return isDev();}
+/* карту бачать клінери, садівники, менеджери, директор (Віталій), CEO (Богдан) і Dev; редагування зон — лише Dev (canZoneEdit) */
+const MAP_ROLES=['cleaner','gardener','manager','senior','director','ceo','dev'];function mapOpen(){return hasAny(MAP_ROLES);}
 function zoneTag(t){const zs=tZones(t).map(mzById).filter(Boolean);if(!zs.length)return null;const z=zs[0];const txt=zs.length>1?'Зони '+zs.map(x=>x.n).join(', '):z.name;
   if(!mapOpen())return el('span',{class:'zone-tag t-'+z.t},el('i'),txt);
   return el('button',{type:'button',class:'zone-tag t-'+z.t,title:'Показати на карті',onclick:e=>{e.stopPropagation();S.mzSel=z.id;S.mzMulti=null;S.mzFocus=z.id;go('map');}},el('i'),txt,' · на карті');}
@@ -338,7 +339,36 @@ function mzPanel(id){const z=mzGet(id);if(!z)return el('div',{class:'mz-pan card
     mzTaskable(z)?[el('h3',{class:'mz-sub',text:'Відкриті задачі · '+open.length}),open.length?el('div',{class:'stack',style:'gap:8px'},open.map(taskRow)):el('p',{class:'muted small',style:'margin:0',text:'Відкритих задач немає.'}),
       el('h3',{class:'mz-sub',text:'Виконано за 30 днів · '+done.length}),done.length?el('div',{class:'mz-done'},done.slice(0,8).map(t=>el('div',{class:'mz-dr'},el('span',{},el('b',{text:t.title}),el('small',{class:'muted',text:dm(ymd(new Date(t.doneAt)))})),
         el('div',{class:'mz-th'},(t.photos||[]).slice(-2).map(p=>el('button',{type:'button',class:'thumb','aria-label':'Фото «після»',onclick:()=>viewPhoto(p.id)},el('img',{src:p.thumb,alt:''}))))))):el('p',{class:'muted small',style:'margin:0',text:'Ще нічого не виконано.'}),
-      can?el('button',{class:'btn mz-go',type:'button',onclick:()=>{closeSheet();newTask({zones:[id]});}},'Призначити задачу'):null]:el('p',{class:'muted small',style:'margin:0',text:'Орієнтир на карті — задачі сюди не ставляться.'}));}
+      mzCanSelf()?el('button',{class:'btn mz-go',type:'button',onclick:()=>mzSelfReport(id)},'Відзвітувати про роботу'):null,
+      can?el('button',{class:'btn mz-go'+(mzCanSelf()?' ghost':''),type:'button',onclick:()=>{closeSheet();newTask({zones:[id]});}},'Призначити задачу'):null]:el('p',{class:'muted small',style:'margin:0',text:'Орієнтир на карті — задачі сюди не ставляться.'}));}
+/* клінер / садівник сам звітує про роботу на зоні: створюється вже виконана задача з фото, вона йде у «Виконані» на оцінку */
+function mzCanSelf(){return !!myStaff()&&hasAny(['cleaner','gardener']);}
+function mzSelfReport(id){const z=mzGet(id);const m=myStaff();if(!z||!m)return;
+  const ti=el('input',{id:'zsT',maxlength:'80',autocomplete:'off',placeholder:'напр. Прибрано листя'});
+  const chips=el('div',{class:'zm-chips'},['Прибрано листя','Прибрано сміття','Скошено траву','Полито','Підметено доріжки'].map(s=>el('button',{type:'button',class:'tkchip',onclick:()=>{ti.value=s;ti.focus();}},s)));
+  const note=el('textarea',{id:'zsN',maxlength:'500',placeholder:'Деталі (необов’язково)'});
+  const files=[];const prev=el('div',{class:'thumbs'});const inp=el('input',{id:'zsF',type:'file',accept:'image/*',multiple:true,style:'padding:8px'});
+  inp.addEventListener('change',()=>{for(const f of inp.files){if(files.length>=4)break;files.push(f);}inp.value='';prev.replaceChildren(...files.map(f=>el('span',{class:'thumb'},el('img',{src:URL.createObjectURL(f),alt:''}))));});
+  const go=el('button',{class:'btn',type:'button',style:'flex:1'},'Надіслати звіт');
+  go.addEventListener('click',async()=>{const title=ti.value.trim();if(!title){toast('Напишіть, що зроблено');ti.focus();return;}if(!files.length){toast('Додайте фото «після» — для робіт на карті це обов’язково');return;}
+    go.disabled=true;go.textContent='Надсилаю…';const now=Date.now();
+    try{const ref=await S.db.collection('tasks').add({title,zone:null,zones:[id],note:'',refPhotos:[],assignees:[m.id],assignee:m.id,doneMap:{[m.id]:{at:now}},due:ymd(new Date()),done:true,doneAt:now,doneBy:S.myId,report:note.value.trim()||null,photos:[],selfReport:true,createdBy:S.myId,createdAt:now});
+      const ph=[];for(const f of files){const img=await loadImg(f);const ref2=await S.db.collection('photos').add({taskId:ref.id,img:shrinkFit(img),by:S.myId,at:Date.now()});ph.push({id:ref2.id,thumb:shrink(img,220,0.6),staffId:m.id});}
+      await S.db.doc('tasks/'+ref.id).update({photos:ph});closeSheet();toast('Звіт надіслано — його оцінять у «Виконаних»');devLog('Карта: звіт про роботу · '+(z.number||z.name)+' · '+title);}
+    catch(e){go.disabled=false;go.textContent='Надіслати звіт';toast('Немає зв’язку — звіт не надіслано, спробуйте ще раз');}});
+  openSheet(el('h2',{text:'Звіт про роботу'}),el('p',{class:'muted',style:'margin:0',text:(z.number?'Зона '+z.number+' · ':'')+z.name}),
+    el('label',{for:'zsT'},'Що зроблено',ti),chips,el('label',{for:'zsN'},'Коментар',note),el('label',{for:'zsF'},'Фото «після» (обов’язково, до 4)',inp),prev,
+    el('div',{class:'row'},go,el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати')));}
+/* міні-карта зони для картки задачі: шматок знімка навколо зони з її контуром */
+function zoneMini(t){const z=mzGet(tZones(t)[0]);if(!z||!z.polygon||z.polygon.length<3)return null;const b=mzBox(z);
+  let w=b[2]-b[0],h=b[3]-b[1];const pad=Math.max(20,Math.max(w,h)*.2);w+=pad*2;h+=pad*2;
+  /* пропорція рамки 1:1…2:1 під форму зони; рамка не виходить за знімок, щоб не було порожніх смуг */
+  const ar=Math.min(2,Math.max(1,w/h));if(w<h*ar)w=h*ar;else h=w/ar;const k=Math.min(1,MZ_W/w,MZ_H/h);w*=k;h*=k;
+  const cl=(v,mx)=>Math.max(0,Math.min(mx,v));const x0=cl((b[0]+b[2])/2-w/2,MZ_W-w),y0=cl((b[1]+b[3])/2-h/2,MZ_H-h);
+  const ring=r=>'M'+r.map(p=>p[0]+','+p[1]).join('L')+'Z';const d=[z.polygon,...(z.holes||[]),...(z.extra||[]).flat()].map(ring).join('');const c=(MZ_TY[z.type]||MZ_TY.g).c;
+  const box=el('button',{type:'button',class:'zmini','aria-label':'Показати зону на карті',onclick:e=>{e.stopPropagation();if(!mapOpen())return;S.mzSel=z.id;S.mzMulti=null;S.mzFocus=z.id;go('map');}});
+  box.style.aspectRatio=ar.toFixed(3);box.innerHTML='<svg viewBox="'+[x0,y0,w,h].map(v=>v.toFixed(1)).join(' ')+'" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="'+mzImgUrl()+'" x="0" y="0" width="'+MZ_W+'" height="'+MZ_H+'" preserveAspectRatio="none"/><path d="'+d+'" fill="'+c+'" fill-opacity=".28" fill-rule="evenodd" stroke="'+c+'" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg>';
+  return box;}
 function mzPanelSheet(id){openSheet(mzPanel(id));const sh=document.querySelector('#sheetRoot .sheet');if(sh)sh.classList.add('mz-sheet');
   requestAnimationFrame(()=>{const h=sh?sh.getBoundingClientRect().height:0;const box=MZM&&MZM.host.getBoundingClientRect();const cover=box?Math.max(0,box.bottom-(innerHeight-h)):0;mzFocusOn(id,cover);});}
 function mzMultiPanel(){const ids=[...S.mzMulti];const zs=ids.map(mzGet).filter(Boolean);
