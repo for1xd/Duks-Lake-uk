@@ -100,7 +100,8 @@ if(window.visualViewport)visualViewport.addEventListener('resize',()=>setTimeout
 document.addEventListener('load',e=>{if(e.target&&e.target.tagName==='IMG'&&S.tab==='chat'&&S.chatStick){const sc=SC();if(sc)sc.scrollTop=sc.scrollHeight;}},true);
 addEventListener('resize',()=>setTimeout(fitChatPad,60));
 if(window.ResizeObserver){const _ro=new ResizeObserver(()=>fitChatPad());setTimeout(()=>{const c=document.getElementById('composer');if(c)_ro.observe(c);},0);}
-function placeAside(){const a=document.querySelector('.chataside'),g=document.querySelector('.chatgrid');if(!a||!g)return;const r=g.getBoundingClientRect();a.style.left=(r.right-a.offsetWidth)+'px';}
+function placeAside(){const a=document.querySelector('.chataside'),g=document.querySelector('.chatgrid');if(!a||!g)return;const r=g.getBoundingClientRect();a.style.left=(r.right-a.offsetWidth)+'px';
+  /* панель чатів — під шапкою, якою б високою вона не була (Graphite Glass має вищу шапку) */const h=document.querySelector('header.top');const top=Math.max(96,Math.round((h?h.getBoundingClientRect().bottom:84)+12));a.style.setProperty('top',top+'px','important');a.style.maxHeight=(innerHeight-top-20)+'px';}
 addEventListener('resize',()=>requestAnimationFrame(placeAside));
 function placeComposer(){setTimeout(fitChatPad,0);requestAnimationFrame(placeAside);const c=document.getElementById('composer');if(!c)return;const col=document.querySelector('.chatcol');
   if(WIDE.matches&&S.tab==='chat'&&col){const r=col.getBoundingClientRect();c.style.setProperty('left',r.left+'px','important');c.style.setProperty('width',r.width+'px','important');c.style.setProperty('right','auto','important');
