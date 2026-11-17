@@ -24,6 +24,8 @@ WXL.page=function(ws,lastCol,titleRows,foot){ws.pageSetup={paperSize:9,orientati
 WXL.title=function(ws,text,cols,sub){ws.mergeCells(1,1,1,cols);const c=ws.getCell(1,1);c.value=text;c.font={name:WXL.FONT,size:14,bold:true,color:{argb:WXL.NAVY}};
   c.alignment={vertical:'middle',horizontal:'left',indent:1};ws.getRow(1).height=30;
   [].concat(sub||[]).forEach((t,i)=>{ws.mergeCells(2+i,1,2+i,cols);const s=ws.getCell(2+i,1);s.value=t;s.font={name:WXL.FONT,size:9,italic:true,color:{argb:WXL.C.note}};s.alignment={indent:1};});};
+/* «Показники знято: 01.11.2026 — 05.11.2026 · » — дати зняття за період споживання (data.taken) */
+WXL.taken=d=>d.taken?'Показники знято: '+d.taken+' · ':'';
 WXL.head=function(ws,row,labels){const r=ws.getRow(row);labels.forEach((h,i)=>{const c=r.getCell(i+1);c.value=h;c.font={name:WXL.FONT,size:10,bold:true,color:{argb:'FFFFFFFF'}};
   c.fill={type:'pattern',pattern:'solid',fgColor:{argb:WXL.NAVY}};c.alignment={vertical:'middle',horizontal:'center',wrapText:true};c.border=WXL.border();});r.height=34;};
 /* Аркуш будинку. full=true — додаються загальнобудинкові лічильники й рядок відхилення */
@@ -32,7 +34,7 @@ WXL.buildingSheet=function(wb,u,data,full,used){const res=u.meters.filter(m=>m.t
   const ws=wb.addWorksheet(name,{properties:{tabColor:{argb:full?'FF2F855A':WXL.NAVY}},views:[{state:'frozen',ySplit:3,xSplit:0,showGridLines:false}]});
   const H=['Поверх','Номер приміщення','Резидент','Номер лічильника','Показник на початок (м³)','Показник на кінець (м³)','Спожито (м³)'];
   ws.columns=[{width:9},{width:13},{width:34},{width:20},{width:15},{width:15},{width:14}];
-  WXL.title(ws,'Облік води | '+u.name+' | '+data.period.label,7,'Сформовано '+data.generatedAt+(u.sharedMainsWith&&full?' · загальнобудинкові лічильники — на аркуші «'+u.sharedMainsWith+'»':'')+(u.mainsOf?' · спільні лічильники для: '+u.mainsOf.join(', '):''));
+  WXL.title(ws,'Облік води | '+u.name+' | Період: '+data.period.label.toLowerCase(),7,WXL.taken(data)+'Сформовано '+data.generatedAt+(u.sharedMainsWith&&full?' · загальнобудинкові лічильники — на аркуші «'+u.sharedMainsWith+'»':'')+(u.mainsOf?' · спільні лічильники для: '+u.mainsOf.join(', '):''));
   WXL.head(ws,3,H);let r=4;const B=WXL.border();
   const put=(row,col,v,st)=>WXL.put(ws,row,col,v,st);
   const meterRow=(m,fill,label)=>{const noSer=!String(m.serial||'').trim();const hasRd=[m.start,m.end].some(v=>WXL.num(v));const noMeter=noSer&&!hasRd;const st={fill};
@@ -64,7 +66,7 @@ WXL.buildingSheet=function(wb,u,data,full,used){const res=u.meters.filter(m=>m.t
 /* Дашборд для «Повного обліку» */
 WXL.dashboard=function(ws,data,sums){const q=s=>"'"+s.replace(/'/g,"''")+"'!";
   ws.columns=[{width:56},{width:20},{width:20},{width:18},{width:14}];const B=WXL.border();
-  WXL.title(ws,'Облік води | Зведення | '+data.period.label,5,'Сформовано '+data.generatedAt+' · формули посилаються на аркуші будинків');
+  WXL.title(ws,'Облік води | Зведення | Період: '+data.period.label.toLowerCase(),5,WXL.taken(data)+'Сформовано '+data.generatedAt+' · формули посилаються на аркуші будинків');
   const put=(r,c,v,st)=>WXL.put(ws,r,c,v,st);
   const block=(r,text)=>{ws.mergeCells(r,1,r,5);const c=ws.getCell(r,1);c.value=text;c.font={name:WXL.FONT,size:12,bold:true,color:{argb:WXL.NAVY}};c.border={bottom:{style:'medium',color:{argb:WXL.NAVY}}};ws.getRow(r).height=22;};
     /* Блок 2 спершу рахуємо, щоб Блок 1 міг на нього посилатися */

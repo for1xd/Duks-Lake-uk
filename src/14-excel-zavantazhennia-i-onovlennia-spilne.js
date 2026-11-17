@@ -14,7 +14,12 @@ async function xlsxPick(){let X;try{X=await loadXlsx();}catch(e){toast('Не в�
     i.addEventListener('change',async()=>{const f=i.files&&i.files[0];i.remove();if(!f){res(null);return;}toast('Читаю файл…');try{const wb=X.read(await f.arrayBuffer(),{cellDates:true});res({wb,X,name:f.name});}catch(e){toast('Не вдалося прочитати файл');res(null);}});
     i.click();});}
 function sheetAoa(X,ws){return X.utils.sheet_to_json(ws,{header:1,raw:true,defval:null,blankrows:true});}
-function impPreview(title,file,lines,warn,apply){openSheet(el('h2',{text:title}),el('p',{class:'muted',style:'margin:0',text:'Файл: '+file}),
+/* bp: {mod,per,date,go(per,date)} — період споживання й дата зняття для всього файлу (вода, сміття) */
+function impBp(bp){if(!bp)return null;const w=bp.mod==='waste';const mi=el('input',{type:'month',value:bp.per,'aria-label':'Період споживання'});const di=el('input',{type:'date',value:bp.date,max:bpToday(),'aria-label':w?'Дата внесення':'Дата зняття'});
+  mi.addEventListener('change',()=>{if(/^\d{4}-\d{2}$/.test(mi.value)&&mi.value!==bp.per){closeSheet();bp.go(mi.value,bp.date);}});
+  di.addEventListener('change',()=>{let v=di.value||bpToday();if(v>bpToday())v=bpToday();closeSheet();bp.go(billingPeriod(v,bp.mod),v);});
+  return el('div',{class:'bp-imp'},el('div',{class:'grid2'},el('label',{},'Період споживання',mi),el('label',{},w?'Дата внесення':'Дата зняття',di)),el('span',{class:'muted small',text:bpHint(bp.date,bp.mod)+(billingPeriod(bp.date,bp.mod)!==bp.per?' · обрано вручну: '+perLabel(bp.per).toLowerCase():'')}));}
+function impPreview(title,file,lines,warn,apply,bp){openSheet(el('h2',{text:title}),el('p',{class:'muted',style:'margin:0',text:'Файл: '+file}),impBp(bp),
   el('div',{class:'imp-list'},lines.map(([k,v,c])=>el('div',{class:'imp-r'+(c?' '+c:'')},el('span',{text:k}),el('b',{text:v})))),
   warn&&warn.length?el('div',{class:'imp-warn'},warn.slice(0,8).map(w=>el('div',{text:w})),warn.length>8?el('div',{text:'…і ще '+(warn.length-8)}):null):null,
   el('p',{class:'muted small',style:'margin:0',text:'Дані розділу будуть замінені даними з файлу. Щоб повернути попередні — завантажте старий файл.'}),

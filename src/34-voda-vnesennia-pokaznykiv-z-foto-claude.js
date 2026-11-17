@@ -17,7 +17,7 @@ async function wPhotoImport(per){if(!S.wPerD[per]){toast('Спершу ство�
 async function wPhotoRun(per,files,sample,caps){const items=files.map((f,i)=>({i,f,thumb:null,full:null,blob:null,mid:null,val:null,ser:null,conf:null,note:'',on:false,err:null}));
   const prog=el('div',{class:'wp-prog'},el('b',{text:'Готую фото…'}),el('div',{class:'w-prog'},el('i',{style:'width:0%'})));const list=el('div',{class:'wp-list'});
   const saveBtn=el('button',{class:'btn',type:'button',disabled:true},'Зберегти показники');const sum=el('small',{class:'muted'});
-  openSheet(el('h2',{text:'Показники з фото'}),el('p',{class:'muted',style:'margin:0',text:perLabel(per)+' · '+files.length+' '+plural(files.length,'фото','фото','фото')+'. Перевірте розпізнане перед збереженням.'}),prog,list,el('div',{class:'wp-foot'},sum,saveBtn),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));
+  openSheet(el('h2',{text:'Показники з фото'}),el('p',{class:'muted',style:'margin:0',text:perLabel(per)+' · знято '+dm(bpDay('water'))+' · '+files.length+' '+plural(files.length,'фото','фото','фото')+'. Перевірте розпізнане перед збереженням.'}),prog,list,el('div',{class:'wp-foot'},sum,saveBtn),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));
   const setP=(t,p)=>{prog.firstChild.textContent=t;prog.querySelector('i').style.width=Math.round(p*100)+'%';};
   const maxB=(caps.images.maxBytes||5e6)*0.9;
   for(const it of items){try{const img=await loadImg(it.f);it.thumb=shrink(img,360,0.7);it.full=shrinkFit(img);let q=.85,mx=1600;it.blob=await wImgBlob(img,mx,q);while(it.blob&&it.blob.size>maxB&&mx>700){mx=Math.round(mx*.8);it.blob=await wImgBlob(img,mx,q);}}catch(e){it.err='Не вдалося відкрити фото';}setP('Готую фото… '+(it.i+1)+'/'+items.length,(it.i+1)/items.length*.15);}
@@ -51,7 +51,7 @@ async function wPhotoRun(per,files,sample,caps){const items=files.map((f,i)=>({i
   saveBtn.onclick=async()=>{const sel=items.filter(x=>x.on&&x.mid&&x.val!=null);if(!sel.length)return;const dup=used();if(Object.values(dup).some(v=>v>1)){toast('Один лічильник вибрано кілька разів — виправте');return;}
     saveBtn.disabled=true;saveBtn.textContent='Зберігаю…';const reads={};
     try{for(const it of sel){let ph=null;if(it.full){const ref=await S.db.collection('photos').add({img:it.full,kind:'water',per,meter:it.mid,by:S.myId,at:Date.now()});ph={id:ref.id,thumb:it.thumb};}
-        const cur=wRead(per,it.mid)||{};const prev=wPrevVal(per,it.mid);reads[it.mid]={e:it.val,ph,src:'photo',at:Date.now(),...(cur.s==null&&prev!=null?{s:prev}:{})};}
+        const cur=wRead(per,it.mid)||{};const prev=wPrevVal(per,it.mid);reads[it.mid]={e:it.val,ph,src:'photo',at:Date.now(),d:bpDay('water'),...(cur.s==null&&prev!=null?{s:prev}:{})};}
       await S.db.doc('wPeriods/'+per).update({reads,updatedAt:Date.now(),updatedBy:S.myId});
       S.wPerD[per].reads=S.wPerD[per].reads||{};for(const k in reads)S.wPerD[per].reads[k]={...(S.wPerD[per].reads[k]||{}),...reads[k]};
       if(typeof devLog==='function')devLog('Вода: внесено з фото '+sel.length+' показників');closeSheet();toast('Збережено '+sel.length+' '+plural(sel.length,'показник','показники','показників'));render();}

@@ -147,20 +147,20 @@ async function dzImport(per){const f=await xlsxPick();if(!f)return;const {wb,X}=
   impPreview('Оновити дебіторку · '+perLabel(per),f.name,lines,warn,async()=>{for(const id in res)await S.db.doc('dz/'+per+'_'+id).set({per,sheet:id,rows:res[id],at:Date.now(),by:S.myId});});}
 
 /* імпорт: сміття */
-async function wsImport(per){const f=await xlsxPick();if(!f)return;const {wb,X}=f;const got=[];const warn=[];
+async function wsImport(per,f,dt){dt=dt||bpDay('waste');f=f||await xlsxPick();if(!f)return;const {wb,X}=f;const got=[];const warn=[];
   for(const nm of wb.SheetNames){const a=sheetAoa(X,wb.Sheets[nm]);
     if(/локац/i.test(nm)){for(let i=1;i<a.length;i++){const R=a[i]||[];const t=strP(R[0]);if(!t||/^(сума|разом)/i.test(t))continue;got.push({bld:WS_LOC,floor:'',tenant:t,vol:numP(R[1],1)});}continue;}
     for(let i=0;i<a.length;i++)for(let c=0;c<(a[i]||[]).length;c++){const m=strP(a[i][c]).match(/^буд(?:инок|\.)?\s*([\d][\d.,\s]*)$/i);if(!m)continue;const b=m[1].replace(/\s/g,'');
       for(let j=i+2;j<a.length;j++){const R=a[j]||[];const fl=strP(R[c]),t=strP(R[c+1]);if(/^(буд|сума|разом)/i.test(fl))break;if(!t){if(!fl&&!strP(R[c+2]))break;continue;}got.push({bld:b,floor:fl,tenant:t,vol:numP(R[c+2],1)});}}}
   if(!got.length){toast('Не знайшов таблиці сміття у файлі');return;}
   const ex=wsRows(per);const used=new Set();const rows={};const st={nw:0,ch:0,del:0};
-  got.forEach((r,i)=>{const m=ex.find(x=>!used.has(x.id)&&x.bld===r.bld&&lc(x.tenant)===lc(r.tenant));let id;if(m){id=m.id;used.add(id);if((m.vol??null)!==(r.vol??null)||String(m.floor||'')!==r.floor)st.ch++;}else{id='w'+Date.now().toString(36)+'_'+i;st.nw++;}rows[id]={...r,order:i+1};});
+  got.forEach((r,i)=>{const m=ex.find(x=>!used.has(x.id)&&x.bld===r.bld&&lc(x.tenant)===lc(r.tenant));let id;if(m){id=m.id;used.add(id);if((m.vol??null)!==(r.vol??null)||String(m.floor||'')!==r.floor)st.ch++;}else{id='w'+Date.now().toString(36)+'_'+i;st.nw++;}rows[id]={...r,order:i+1,...(r.vol!=null?{d:dt}:{})};});
   st.del=ex.filter(x=>!used.has(x.id)).length;const tot=got.reduce((s,r)=>s+(+r.vol||0),0);const bl=wsBlds(got);
   impPreview('Оновити облік сміття · '+perLabel(per),f.name,[['Резидентів',String(got.length)],['Разом',fl(tot)+' л'],...bl.map(b=>[wsName(b),fl(got.filter(r=>r.bld===b).reduce((s,r)=>s+(+r.vol||0),0))+' л','sub']),['Зміни',chg(st)]],warn,
-    async()=>{await S.db.doc('waste/'+per).set({per,rows,at:Date.now(),by:S.myId});});}
+    async()=>{await S.db.doc('waste/'+per).set({per,rows,at:Date.now(),by:S.myId});},{mod:'waste',per,date:dt,go:(p,d)=>wsImport(p,f,d)});}
 
 /* імпорт: вода */
-async function wImport(per){if(!S.wPerD[per]){toast('Спочатку створіть період «'+perLabel(per)+'»');return;}const f=await xlsxPick();if(!f)return;const {wb,X}=f;
+async function wImport(per,f,dt){dt=dt||bpDay('water');if(!f&&!S.wPerD[per]){toast('Спочатку створіть період «'+perLabel(per)+'»');return;}f=f||await xlsxPick();if(!f)return;const {wb,X}=f;
   const reads={},upd=[],adds=[],warn=[];let nObj=0,nM=0,nF=0;const sn=x=>x.replace(/[\\/?*\[\]:]/g,' ').slice(0,31);
   for(const nm of wb.SheetNames){if(/підсумок/i.test(nm))continue;const o=S.wObj.find(x=>sn(x.name)===nm||x.name===nm||lc(sn(x.name))===lc(nm));if(!o){warn.push('Аркуш «'+nm+'»: такого об’єкта немає — пропущено');continue;}nObj++;
     const a=sheetAoa(X,wb.Sheets[nm]);const ms=S.wMet.filter(m=>m.obj===o.id);const used=new Set();
@@ -168,9 +168,11 @@ async function wImport(per){if(!S.wPerD[per]){toast('Спочатку створ
       const d={kind:/резидент/i.test(typ)?'res':'main',section:strP(R[1]),floor:strP(R[2]),room:strP(R[3]),tech:strP(R[4]),tenant:strP(R[5]),serial:strP(R[6]),note:strP(R[7])};const s=numP(R[8],3),e=numP(R[9],3);nM++;if(s!=null&&e!=null)nF++;
       let m=d.serial?ms.find(x=>!used.has(x.id)&&String(x.serial||'').trim()===d.serial):null;if(!m)m=ms.find(x=>!used.has(x.id)&&x.kind===d.kind&&lc(x.tenant)===lc(d.tenant)&&String(x.room||'')===d.room);
       if(!m)m=ms.find(x=>!used.has(x.id)&&x.kind===d.kind&&lc(x.tenant)===lc(d.tenant));
-      if(m){used.add(m.id);const diff={};['section','floor','room','tech','tenant','serial','note'].forEach(k=>{if(String(m[k]??'')!==d[k])diff[k]=d[k];});if(Object.keys(diff).length)upd.push([m.id,diff]);reads[m.id]={s,e};}
+      if(m){used.add(m.id);const diff={};['section','floor','room','tech','tenant','serial','note'].forEach(k=>{if(String(m[k]??'')!==d[k])diff[k]=d[k];});if(Object.keys(diff).length)upd.push([m.id,diff]);reads[m.id]={s,e,...(e!=null?{d:dt}:{})};}
       else adds.push({d:{...d,obj:o.id,active:true,order:(ms.length?Math.max(...ms.map(x=>x.order||0)):0)+adds.length+1},s,e});}}
   if(!nObj){toast('У файлі немає аркушів з об’єктами обліку води');return;}
   impPreview('Оновити облік води · '+perLabel(per),f.name,[['Об’єктів',String(nObj)],['Лічильників у файлі',String(nM)],['З показниками',String(nF)],['Змінено дані лічильників',String(upd.length)],['Нових лічильників',String(adds.length)]],warn,
     async()=>{const ad={};adds.forEach((x,k)=>{const id='m'+Date.now().toString(36)+k;ad[id]=x;});for(const id in ad)await S.db.doc('wMeters/'+id).set({...ad[id].d,at:Date.now()});
-      for(const [id,diff] of upd)await S.db.doc('wMeters/'+id).update(diff);const r2={...reads};for(const id in ad)r2[id]={s:ad[id].s,e:ad[id].e};await S.db.doc('wPeriods/'+per).update({reads:r2});});}
+      for(const [id,diff] of upd)await S.db.doc('wMeters/'+id).update(diff);const r2={...reads};for(const id in ad)r2[id]={s:ad[id].s,e:ad[id].e,...(ad[id].e!=null?{d:dt}:{})};
+      if(S.wPerD[per])await S.db.doc('wPeriods/'+per).update({reads:r2});else await S.db.doc('wPeriods/'+per).set({reads:r2,bill:null,at:Date.now(),by:S.myId});},
+    {mod:'water',per,date:dt,go:(p,d)=>wImport(p,f,d)});}
