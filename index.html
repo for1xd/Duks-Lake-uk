@@ -2032,6 +2032,7 @@ input,textarea,select,[contenteditable]{-webkit-user-select:text;user-select:tex
 
 .w-per{display:flex;align-items:center;gap:8px;padding:8px!important}.w-per .iconbtn{box-shadow:none;background:var(--surface-2)}
 .w-per-c{flex:1;display:flex;flex-direction:column;align-items:center;line-height:1.25}.w-per-c b{font-size:16px}
+.bp-wrap{display:flex;flex-direction:column;gap:8px}.bp-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 12px!important}.bp-d{display:flex;align-items:center;gap:8px;margin:0}.bp-d input{width:auto;min-height:40px}.bp-h{flex:1;min-width:180px;display:flex;flex-direction:column;gap:2px}.bp-warn{color:#b26b00}.bp-lnk{border:0;background:none;padding:0;font:inherit;color:var(--accent,#1F6F78);text-decoration:underline;cursor:pointer}.bp-imp{display:flex;flex-direction:column;gap:4px}.w-dt{display:block;font-size:11px;color:var(--muted)}
 .w-drop{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(135deg,#3E8FD6,#2BB3C9);flex:none}.w-drop svg{width:20px;height:20px}
 .w-drop.big{width:64px;height:64px;border-radius:20px}.w-drop.big svg{width:34px;height:34px}
 .w-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}@media (max-width:900px){.w-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -4478,6 +4479,9 @@ function initEdgeSwipe(){let st=null,raf=0;const app=()=>document.getElementById
    who: без поля — усім; 'uk' — Facility (менеджери, ст. менеджер, інженер, директор, Dev); 'meet' — директор, менеджер, Dev;
    'dev' — лише Dev; 'plan' — хто планує графік і ставить задачі; 'earn' — хто відмічає зміни */
 const NOTES=[
+ {v:'5.2',date:'16 листопада',title:'Період споживання',items:[
+  {e:'📅',t:'Дані — за той місяць, за який вони',d:'Вода й сміття: показники, зняті до 10-го числа, належать до попереднього місяця. На початку місяця облік відкривається на минулому місяці, під назвою місяця видно, коли знято дані.',who:'uk'},
+  {e:'🗓',t:'Дата зняття в кожному записі',d:'Над таблицею — дата зняття (сьогодні, можна змінити на минулу) і підказка, до якого періоду підуть дані. В імпорті Excel можна обрати період для всього файлу.',who:'uk'}]},
  {v:'5.1',date:'7 листопада',title:'Обхід будівель',items:[
   {e:'📸',t:'Щоденний фотозвіт',d:'Facility → Обхід будівель: фото насосної, ВРП і пожежного поста по кожній закріпленій будівлі. Працює й без зв’язку — звіт відправиться сам.',who:'uk'},
   {e:'✅',t:'Перевірка й Word-звіти',d:'Матриця покриття, погодження або повернення звіту, задача із зауваження. Тижневий і місячний звіт — у Word.',who:'uk'}]},
@@ -5308,7 +5312,52 @@ const UKS={
 const MON_NOM=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
 function perLabel(p){const [y,m]=p.split('-').map(Number);return MON_NOM[m-1]+' '+y;}
 function perShift(p,k){let [y,m]=p.split('-').map(Number);m+=k;while(m<1){m+=12;y--;}while(m>12){m-=12;y++;}return y+'-'+pad(m);}
-function wCurPer(){if(S.wPer)return S.wPer;const now=ymd(new Date()).slice(0,7);const ks=Object.keys(S.wPerD).filter(k=>k<=now).sort();return S.wPerD[now]?now:(ks.length?ks[ks.length-1]:now);}
+/* Період споживання (bp*) — період споживання (вода, сміття; електроенергія — коли з'явиться облік).
+   Показники знімають / дані вносять на початку місяця за попередній: дата 1..N-го числа → попередній місяць, після N → поточний.
+   N: settings/main.billDay = {all:10, water?, waste?, power?}; міняють керівники УК і Dev. Уся логіка періоду — лише тут. */
+const BP_DEF=10;
+function bpN(mod){const c=(S.cfg&&S.cfg.billDay)||{};const v=+(c[mod]!=null&&c[mod]!==''?c[mod]:c.all);return v>=1&&v<=28?v:BP_DEF;}
+function billingPeriod(date,mod){const s=typeof date==='string'?date:ymd(date||new Date());const p=s.slice(0,7);return +s.slice(8,10)<=bpN(mod)?perShift(p,-1):p;}
+function bpToday(){return ymd(new Date());}
+/* дата зняття / внесення, з якою зараз вносяться дані (за замовчуванням — сьогодні, лише в минуле) */
+function bpDay(mod){return (S.bpDate&&S.bpDate[mod])||bpToday();}
+function bpHint(d,mod){return 'Дані від '+dm(d)+' → період: '+perLabel(billingPeriod(d,mod)).toLowerCase();}
+function bpDmy(s){return s.slice(8,10)+'.'+s.slice(5,7)+'.'+s.slice(0,4);}
+/* дати зняття записів періоду: вода — reads[*].d (є кінцевий показник), сміття — rows[*].d або дата збереження обсягу */
+function bpRecDate(mod,r){if(!r)return null;if(r.d)return r.d;return mod==='waste'&&r.at?ymd(new Date(r.at)):null;}
+function bpRecs(mod,per){if(mod==='water'){const R=(S.wPerD[per]||{}).reads||{};return Object.keys(R).filter(k=>R[k]&&R[k].e!=null&&R[k].e!=='').map(k=>[k,R[k]]);}
+  if(mod==='waste'){const R=(S.ws[per]||{}).rows||{};return Object.keys(R).filter(k=>R[k]&&R[k].vol!=null).map(k=>[k,R[k]]);}return [];}
+function bpDates(mod,per){return [...new Set(bpRecs(mod,per).map(([,r])=>bpRecDate(mod,r)).filter(Boolean))].sort();}
+/* «01–05.11.2026», «03.11.2026», «28.10–05.11.2026»; long=true — «01.11.2026 — 05.11.2026» для Excel */
+function bpRange(ds,long,noYear){if(!ds.length)return '';const a=ds[0],b=ds[ds.length-1];if(long)return a===b?bpDmy(a):bpDmy(a)+' — '+bpDmy(b);
+  const y=noYear?'':'.'+b.slice(0,4);if(a===b)return dm(a)+y;return (a.slice(0,7)===b.slice(0,7)?a.slice(8,10):dm(a))+'–'+dm(b)+y;}
+function bpWord(mod){return mod==='waste'?'внесено':'знято';}
+/* перемикач місяця: показує період споживання + коли знято дані; під ним (для тих, хто вносить) — дата зняття й підказка правила */
+function bpBar(mod,per,exists,setPer){const ds=bpDates(mod,per);const w=mod==='waste';
+  const sub=!exists?'ще не створено':ds.length?(w?'вивезення · дані внесено ':'споживання · показники знято ')+bpRange(ds):bpRecs(mod,per).length?(w?'вивезення':'споживання'):'дані ще не внесено';
+  const bar=el('div',{class:'w-per card'},
+    el('button',{class:'iconbtn',type:'button','aria-label':'Попередній місяць',onclick:()=>{setPer(perShift(per,-1));render();}},svg('<path d="M15 5l-7 7 7 7"/>')),
+    el('div',{class:'w-per-c'},el('b',{text:perLabel(per)}),el('span',{class:'muted small',text:sub})),
+    el('button',{class:'iconbtn',type:'button','aria-label':'Наступний місяць',onclick:()=>{setPer(perShift(per,1));render();}},svg('<path d="m9 5 7 7-7 7"/>')));
+  if(!canW())return bar;
+  const d=bpDay(mod),bp=billingPeriod(d,mod);
+  const di=el('input',{type:'date',value:d,max:bpToday(),'aria-label':w?'Дата внесення даних':'Дата зняття показників'});
+  di.addEventListener('change',()=>{let v=di.value||bpToday();if(v>bpToday()){v=bpToday();toast('Дата не може бути в майбутньому');}S.bpDate={...(S.bpDate||{}),[mod]:v};setPer(billingPeriod(v,mod));render();});
+  return el('div',{class:'bp-wrap'},bar,el('div',{class:'card bp-row'},
+    el('label',{class:'bp-d'},el('span',{class:'muted small',text:w?'Дата внесення':'Дата зняття'}),di),
+    el('div',{class:'bp-h'},el('span',{class:'small',text:bpHint(d,mod)}),bp!==per?el('span',{class:'bp-warn small'},'Зараз відкрито '+perLabel(per).toLowerCase()+' · ',el('button',{type:'button',class:'bp-lnk',onclick:()=>{setPer(bp);render();}},'перейти до '+perLabel(bp).toLowerCase())):null),
+    el('button',{class:'btn ghost sm',type:'button',title:'Правило періоду',onclick:bpEdit},'до '+bpN(mod)+'-го')));}
+/* правило N-го числа: одне спільне + за потреби окремо для модуля */
+function bpEdit(){if(!canW()){toast('Змінювати правило можуть керівники');return;}const c=(S.cfg&&S.cfg.billDay)||{};
+  const mk=(k,lbl,ph)=>{const i=el('input',{type:'number',min:'1',max:'28',inputmode:'numeric',value:c[k]==null?'':String(c[k]),placeholder:ph});return [i,el('label',{},lbl,i)];};
+  const [a,aL]=mk('all','Для всіх модулів',String(BP_DEF)),[wv,wL]=mk('water','Вода (порожньо — як для всіх)','як для всіх'),[ws,sL]=mk('waste','Сміття (порожньо — як для всіх)','як для всіх');
+  openSheet(el('h2',{text:'Правило періоду'}),el('p',{class:'muted small',style:'margin:0',text:'Дані, зняті або внесені з 1-го до N-го числа, належать до попереднього місяця; після N-го — до поточного. Уже внесені записи не переносяться — для цього є інструмент у Dev.'}),aL,el('div',{class:'grid2'},wL,sL),
+    el('button',{class:'btn',type:'button',onclick:()=>{const n=i=>{const t=i.value.trim();if(t==='')return null;const v=Math.round(+t);return v>=1&&v<=28?v:NaN;};const bd={all:n(a)==null?BP_DEF:n(a),water:n(wv),waste:n(ws)};
+      if(Object.values(bd).some(v=>Number.isNaN(v))){toast('Число від 1 до 28');return;}closeSheet();S.cfg={...(S.cfg||{}),billDay:bd};render();
+      write(()=>S.db.doc('settings/main').set({...(S.cfg||{}),billDay:bd,updatedAt:Date.now(),updatedBy:S.myId||''}),'Правило: до '+bd.all+'-го числа — попередній місяць');}},'Зберегти'),
+    el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
+/* кінець: період споживання */
+function wCurPer(){return S.wPer||billingPeriod(bpDay('water'),'water');}
 function wRead(per,mid){const d=S.wPerD[per];return d&&d.reads&&d.reads[mid]||null;}
 function wCons(per,mid){const r=wRead(per,mid);if(!r||r.s==null||r.e==null||r.s===''||r.e==='')return null;return Math.round((+r.e-+r.s)*1000)/1000;}
 function fm3(v){if(v==null)return '—';const r=Math.round(v*100)/100;return r.toLocaleString('uk-UA',{maximumFractionDigits:2});}
@@ -5320,15 +5369,12 @@ function wStats(per,oid){const ms=S.wMet.filter(m=>m.obj===oid);const sum=a=>a.r
 function canW(){return isUK();}
 function wSetRead(per,mid,field,val){const v=val===''?null:Math.round(parseFloat(String(val).replace(',','.'))*1000)/1000;if(val!==''&&isNaN(v)){toast('Введіть число');return;}
   if(field==='e'){const old=(wRead(per,mid)||{}).e;const nx=perShift(per,1);const nd=S.wPerD[nx];if(nd){const nr=(nd.reads||{})[mid]||{};if(nr.s==null||nr.s===''||(old!=null&&+nr.s===+old)){nd.reads=nd.reads||{};nd.reads[mid]={...nr,s:v};write(()=>S.db.doc('wPeriods/'+nx).update({reads:{[mid]:{s:v}}}));}}}
-  S.wPerD[per]=S.wPerD[per]||{reads:{}};S.wPerD[per].reads=S.wPerD[per].reads||{};S.wPerD[per].reads[mid]={...(S.wPerD[per].reads[mid]||{}),[field]:v};
-  write(()=>S.db.doc('wPeriods/'+per).update({reads:{[mid]:{[field]:v}},updatedAt:Date.now(),updatedBy:S.myId}));}
+  S.wPerD[per]=S.wPerD[per]||{reads:{}};S.wPerD[per].reads=S.wPerD[per].reads||{};const rec={[field]:v,...(field==='e'?{d:bpDay('water')}:{})};S.wPerD[per].reads[mid]={...(S.wPerD[per].reads[mid]||{}),...rec};
+  write(()=>S.db.doc('wPeriods/'+per).update({reads:{[mid]:rec},updatedAt:Date.now(),updatedBy:S.myId}));}
 function wNewPeriod(per){const ks=Object.keys(S.wPerD).filter(k=>k<per).sort();const prev=ks[ks.length-1];const reads={};
   if(prev){const pr=S.wPerD[prev].reads||{};for(const m of S.wMet){const r=pr[m.id];if(r&&r.e!=null)reads[m.id]={s:r.e,e:null};}}
   write(()=>S.db.doc('wPeriods/'+per).set({reads,bill:null,at:Date.now(),by:S.myId}),'Період «'+perLabel(per)+'» створено');}
-function wPerBar(per){const exists=!!S.wPerD[per];return el('div',{class:'w-per card'},
-  el('button',{class:'iconbtn',type:'button','aria-label':'Попередній місяць',onclick:()=>{S.wPer=perShift(per,-1);render();}},svg('<path d="M15 5l-7 7 7 7"/>')),
-  el('div',{class:'w-per-c'},el('b',{text:perLabel(per)}),el('span',{class:'muted small',text:exists?'звітний період':'ще не створено'})),
-  el('button',{class:'iconbtn',type:'button','aria-label':'Наступний місяць',onclick:()=>{S.wPer=perShift(per,1);render();}},svg('<path d="m9 5 7 7-7 7"/>')));}
+function wPerBar(per){return bpBar('water',per,!!S.wPerD[per],p=>{S.wPer=p;});}
 /* Зведення та баланс: скільки води з рахунку Водоканалу перевиставлено резидентам, а скільки — нестача УК */
 function wBalance(per,actual,mains,billIn,uahIn){const P=S.wPerD[per]||{};const norm=P.tolPct!=null&&!isNaN(+P.tolPct)?+P.tolPct:5;
   const R=54,C=2*Math.PI*R;const NS='http://www.w3.org/2000/svg';const mk=(t,a)=>{const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);return n;};
@@ -5404,7 +5450,7 @@ function waterObject(oid){const o=S.wObj.find(x=>x.id===oid);if(!o)return [el('d
       el('span',{class:'w-tn'},el('b',{text:m.tenant||(m.kind==='main'?'Загальнобудинковий':'—')}),m.note?el('small',{text:m.note}):null,m.kind==='main'?el('em',{text:m.active===false?'не діючий':'загальнобудинковий'}):null),
       el('span',{class:'w-sn',text:m.serial||'немає лічильника'}),
       noM?el('span',{class:'w-nm'}):wNumIn(per,m,'s',ro),noM?el('span',{class:'w-nm'}):wNumIn(per,m,'e',ro),
-      el('span',{class:'w-c'},c==null?'—':fm3(c),c!=null&&c<0?el('small',{text:'кінець < початку'}):null,(()=>{const rd=wRead(per,m.id)||{};return rd.ph?el('button',{type:'button',class:'w-phb',title:'Фото лічильника','aria-label':'Фото лічильника',onclick:()=>viewPhoto(rd.ph.id)},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>')):null;})()),
+      el('span',{class:'w-c'},c==null?'—':fm3(c),c!=null&&c<0?el('small',{text:'кінець < початку'}):null,(()=>{const rd=wRead(per,m.id)||{};return rd.d&&rd.e!=null?[el('small',{class:'w-dt',text:'знято '+dm(rd.d)}),rd.ph?el('button',{type:'button',class:'w-phb',title:'Фото лічильника','aria-label':'Фото лічильника',onclick:()=>viewPhoto(rd.ph.id)},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>')):null]:rd.ph?el('button',{type:'button',class:'w-phb',title:'Фото лічильника','aria-label':'Фото лічильника',onclick:()=>viewPhoto(rd.ph.id)},svg('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>')):null;})()),
       canW()?el('button',{type:'button',class:'w-ed','aria-label':'Редагувати',onclick:()=>wMeterSheet(m,oid)},svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>')):el('span'));};
   const mains=ms.filter(m=>m.kind==='main'&&match(m));if(mains.length)tbl.append(el('div',{class:'w-grp',text:'Загальнобудинкові лічильники'}),...mains.map(row));
   const secs=o.sections&&o.sections.length?o.sections:[null];
@@ -5741,18 +5787,15 @@ const WS_LOC='Окремо на локації';const WS_ORD=['1.3','1.2','2','4
 const WS_PAL=[['#2a78d6','#3987e5'],['#eb6834','#d95926'],['#1baf7a','#199e70'],['#eda100','#c98500'],['#6250d6','#9085e9'],['#e87ba4','#d55181'],['#008300','#008300'],['#e34948','#e66767']];
 function fl(v){return v==null||isNaN(v)?'—':Math.round(v).toLocaleString('uk-UA');}
 function wsPers(){return Object.keys(S.ws).filter(k=>S.ws[k]&&S.ws[k].rows).sort();}
-function wsCurPer(){if(S.wsPer)return S.wsPer;const now=ymd(new Date()).slice(0,7);const ps=wsPers().filter(p=>p<=now);return ps.length?ps[ps.length-1]:ymd(new Date()).slice(0,7);}
+function wsCurPer(){return S.wsPer||billingPeriod(bpDay('waste'),'waste');}
 function wsRows(per){const d=S.ws[per];if(!d||!d.rows)return [];return Object.entries(d.rows).filter(([,r])=>r).map(([id,r])=>({id,...r,bld:dzBld(r.bld)||WS_LOC})).sort((a,b)=>(a.order||0)-(b.order||0));}
 function wsBlds(rows){const set=[...new Set(rows.map(r=>r.bld))];return set.sort((a,b)=>{const k=x=>x===WS_LOC?999:WS_ORD.includes(x)?WS_ORD.indexOf(x):100;return k(a)-k(b)||a.localeCompare(b,'uk',{numeric:true});});}
 function wsAllBlds(){const all=new Set();wsPers().forEach(p=>wsRows(p).forEach(r=>all.add(r.bld)));return wsBlds([...all].map(b=>({bld:b})));}
 function wsCol(b){const i=wsAllBlds().indexOf(b);const c=WS_PAL[(i<0?0:i)%WS_PAL.length];return c[dzDark()?1:0];}
 function wsName(b){return b===WS_LOC?WS_LOC:'Будинок '+b;}
-function wsPerBar(per){const exists=!!S.ws[per];return el('div',{class:'w-per card'},
-  el('button',{class:'iconbtn',type:'button','aria-label':'Попередній місяць',onclick:()=>{S.wsPer=perShift(per,-1);render();}},svg('<path d="M15 5l-7 7 7 7"/>')),
-  el('div',{class:'w-per-c'},el('b',{text:perLabel(per)}),el('span',{class:'muted small',text:exists?'звітний період':'ще не створено'})),
-  el('button',{class:'iconbtn',type:'button','aria-label':'Наступний місяць',onclick:()=>{S.wsPer=perShift(per,1);render();}},svg('<path d="m9 5 7 7-7 7"/>')));}
+function wsPerBar(per){return bpBar('waste',per,!!S.ws[per],p=>{S.wsPer=p;});}
 function wsSetVol(per,id,raw){const t=String(raw).trim().replace(/\s/g,'').replace(',','.');const v=t===''||t==='-'?null:Math.round(parseFloat(t)*10)/10;if(t!==''&&t!=='-'&&isNaN(v)){toast('Введіть число, л');render();return;}
-  write(()=>S.db.doc('waste/'+per).update({rows:{[id]:{vol:v,at:Date.now(),by:S.myId}}}),'Збережено');}
+  write(()=>S.db.doc('waste/'+per).update({rows:{[id]:{vol:v,d:bpDay('waste'),at:Date.now(),by:S.myId}}}),'Збережено');}
 function wasteView(){const per=wsCurPer();const out=[wsPerBar(per)];const can=canW();
   if(!S.ws[per]){out.push(el('div',{class:'card empty'},el('span',{class:'w-drop big',style:'background:linear-gradient(135deg,#2E8B5E,#7BC47F)'},svg(UKS.waste.ic)),el('h2',{text:'Період ще не створено'}),
     el('p',{class:'muted',text:'Перенесемо резидентів, які користуються вивозом, з попереднього місяця — залишиться внести обсяги. Нових додасте з еталонної бази.'}),can?el('button',{class:'btn',type:'button',onclick:()=>wsNewPeriod(per)},'Створити «'+perLabel(per)+'»'):null));return out;}
@@ -5827,7 +5870,7 @@ function wsTable(per,rows,blds,can){const q=(S.wsQ||'').toLowerCase();S.wsOpen=S
     sec.append(head);
     if(open)rs.forEach(r=>{const legacy=!r.rid;
       sec.append(el('div',{class:'wst-row',role:'row'},el('span',{class:'wst-fl',text:r.floor||'—'}),el('span',{class:'wst-rm',text:r.room||'—'}),
-        el('button',{type:'button',class:'wst-tn'+(can?' ed':''),onclick:()=>can?wsEdit(per,r):null},el('b',{text:r.tenant||'—'}),legacy?el('small',{class:'wst-warn',text:'не прив’язано до еталону'}):(sm&&+r.vol>0?el('span',{class:'ws-share'},el('span',{style:'width:'+(r.vol/sm*100)+'%;background:'+wsCol(b)})):null)),
+        el('button',{type:'button',class:'wst-tn'+(can?' ed':''),onclick:()=>can?wsEdit(per,r):null},el('b',{text:r.tenant||'—'}),legacy?el('small',{class:'wst-warn',text:'не прив’язано до еталону'}):[r.vol!=null&&bpRecDate('waste',r)?el('small',{class:'muted',text:'внесено '+dm(bpRecDate('waste',r))}):null,(sm&&+r.vol>0?el('span',{class:'ws-share'},el('span',{style:'width:'+(r.vol/sm*100)+'%;background:'+wsCol(b)})):null)]),
         can?(()=>{const i=el('input',{type:'text',inputmode:'decimal',class:'w-in ws-in','data-k':'ws.'+r.id,'aria-label':'Обсяг сміття '+r.tenant,value:r.vol==null?'':String(r.vol).replace('.',','),placeholder:'—'});
           i.addEventListener('focus',()=>i.select());i.addEventListener('change',()=>wsSetVol(per,r.id,i.value));i.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const all=[...document.querySelectorAll('.ws-in')];const k=all.indexOf(i);if(all[k+1])all[k+1].focus();else i.blur();}});return i;})()
         :el('span',{class:'ws-v'+(r.vol==null?' nil':''),text:r.vol==null?'—':fl(r.vol)})));});
@@ -5840,7 +5883,7 @@ function wsEdit(per,r){const isNew=!r;r=r||{};const blds=wsAllBlds();
   if(r.rid){tn.disabled=true;bl.disabled=true;}
   openSheet(el('h2',{text:isNew?'Новий резидент':'Редагувати резидента'}),r.rid?el('p',{class:'muted small',style:'margin:0',text:'Назва й будинок — з еталонної бази OPEX'+(r.room?' · приміщення '+r.room:'')}):(!isNew?el('button',{class:'btn ghost sm',type:'button',onclick:()=>{closeSheet();wsPick(per,r);}},'Прив’язати до еталону OPEX'):null),el('datalist',{id:'wsBl'},[...new Set([...WS_ORD,...blds,WS_LOC])].map(x=>el('option',{value:x}))),tnL,el('div',{class:'grid2'},blL,flL),voL,
     el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:()=>{const t=vo.value.trim().replace(/\s/g,'').replace(',','.');const v=t===''||t==='-'?null:Math.round(parseFloat(t)*10)/10;if(t!==''&&t!=='-'&&isNaN(v)){toast('Обсяг: введіть число');return;}
-      const d={tenant:tn.value.trim(),bld:r.rid?r.bld:(dzBld(bl.value)||WS_LOC),floor:fl_.value.trim(),vol:v,at:Date.now(),by:S.myId};if(r.rid)d.tenant=r.tenant;if(!d.tenant){toast('Вкажіть резидента');return;}closeSheet();
+      const d={tenant:tn.value.trim(),bld:r.rid?r.bld:(dzBld(bl.value)||WS_LOC),floor:fl_.value.trim(),vol:v,at:Date.now(),by:S.myId};if(v!=null&&v!==r.vol)d.d=bpDay('waste');if(r.rid)d.tenant=r.tenant;if(!d.tenant){toast('Вкажіть резидента');return;}closeSheet();
       if(isNew){d.order=wsRows(per).reduce((a,x)=>Math.max(a,x.order||0),0)+1;write(()=>S.db.doc('waste/'+per).update({rows:{['w'+Date.now().toString(36)]:d}}),'Додано');}
       else write(()=>S.db.doc('waste/'+per).update({rows:{[r.id]:d}}),'Збережено');}},isNew?'Додати':'Зберегти'),
       !isNew?el('button',{class:'btn danger',type:'button',onclick:()=>confirmSheet('Прибрати «'+r.tenant+'» з цього місяця?','Прибрати',()=>write(()=>S.db.doc('waste/'+per).update({rows:{[r.id]:null}}),'Видалено'))},'Видалити'):null),
@@ -5850,27 +5893,28 @@ function wsNewPeriod(per){const prev=wsPers().filter(p=>p<per).pop();const rows=
 /* Excel для бухгалтерії: одна вертикальна таблиця + підсумок по будинках */
 function wsXlsx(ExcelJS,per,rows){const wb=new ExcelJS.Workbook();wb.creator='Duck’s Lake';wb.created=new Date();
   const NAVY='FF1A365D',LINE='FFB8C4D2',B=()=>{const s={style:'thin',color:{argb:LINE}};return {top:s,left:s,bottom:s,right:s};};
-  const ws=wb.addWorksheet('Облік сміття',{views:[{state:'frozen',ySplit:1,showGridLines:false}],properties:{tabColor:{argb:'FF2E8B5E'}}});
-  ws.columns=[{header:'Об’єкт (Будинок)',key:'b',width:22},{header:'Поверх',key:'f',width:9},{header:'Номер приміщення',key:'r',width:16},{header:'Орендар',key:'t',width:40},{header:'Обсяг сміття за місяць (л)',key:'v',width:18}];
-  const h=ws.getRow(1);h.height=32;h.eachCell(c=>{c.font={name:'Calibri',size:11,bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};c.alignment={vertical:'middle',horizontal:'center',wrapText:true};c.border=B();});
+  const ws=wb.addWorksheet('Облік сміття',{views:[{state:'frozen',ySplit:3,showGridLines:false}],properties:{tabColor:{argb:'FF2E8B5E'}}});
+  ws.columns=[{key:'b',width:22},{key:'f',width:9},{key:'r',width:16},{key:'t',width:40},{key:'v',width:18}];
+  const tk=bpRange(bpDates('waste',per),true);WXL.title(ws,'Облік сміття · Період: '+perLabel(per).toLowerCase(),5,(tk?'Дані внесено: '+tk+' · ':'')+'Сформовано '+dmy(new Date()));
+  const h=ws.getRow(3);['Об’єкт (Будинок)','Поверх','Номер приміщення','Орендар','Обсяг сміття за місяць (л)'].forEach((t,i)=>{h.getCell(i+1).value=t;});h.height=32;h.eachCell(c=>{c.font={name:'Calibri',size:11,bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};c.alignment={vertical:'middle',horizontal:'center',wrapText:true};c.border=B();});
   const order=wsBlds(rows);const nk=v=>{const n=parseFloat(String(v||'').replace(',','.'));return isNaN(n)?1e9:n;};
   const sorted=[...rows].sort((a,b)=>order.indexOf(a.bld)-order.indexOf(b.bld)||nk(a.floor)-nk(b.floor)||nk(a.room)-nk(b.room)||(a.order||0)-(b.order||0));
   const num=v=>v===''||v==null?null:(/^\d+$/.test(String(v))?+v:String(v));let zebra=false,prev=null;
   sorted.forEach(r=>{if(r.bld!==prev){zebra=!zebra;prev=r.bld;}const row=ws.addRow({b:r.bld===WS_LOC?WS_LOC:'Будинок '+r.bld,f:num(r.floor),r:num(r.room),t:r.tenant||'',v:r.vol==null||r.vol===''?null:+r.vol});
     row.eachCell({includeEmpty:true},(c,i)=>{c.border=B();c.font={name:'Calibri',size:11};c.alignment={vertical:'middle',horizontal:i===4||i===1?'left':i===5?'right':'center',wrapText:i===4};if(zebra)c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF5F8FC'}};});
     row.getCell(5).numFmt='#,##0';});
-  const last=ws.rowCount;const tr=ws.addRow({b:'РАЗОМ',v:{formula:'SUM(E2:E'+Math.max(2,last)+')',result:rows.reduce((a,r)=>a+(+r.vol||0),0)}});
+  const last=ws.rowCount;const tr=ws.addRow({b:'РАЗОМ',v:{formula:'SUM(E4:E'+Math.max(4,last)+')',result:rows.reduce((a,r)=>a+(+r.vol||0),0)}});
   ws.mergeCells(tr.number,1,tr.number,4);tr.height=22;
   for(let i=1;i<=5;i++){const c=tr.getCell(i);c.border={...B(),top:{style:'medium',color:{argb:NAVY}}};c.font={name:'Calibri',size:12,bold:true};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFDCE6F1'}};c.alignment={vertical:'middle',horizontal:i===5?'right':'left',indent:i===1?1:0};}
   tr.getCell(5).numFmt='#,##0';
-  ws.autoFilter={from:{row:1,column:1},to:{row:Math.max(1,last),column:5}};
-  ws.pageSetup={paperSize:9,orientation:'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,printTitlesRow:'1:1',margins:{left:0.4,right:0.4,top:0.5,bottom:0.6,header:0.3,footer:0.3}};
-  ws.headerFooter={oddHeader:'&L&B Облік сміття · '+perLabel(per),oddFooter:'&LDuck’s Lake&RСторінка &P з &N'};
+  ws.autoFilter={from:{row:3,column:1},to:{row:Math.max(3,last),column:5}};
+  ws.pageSetup={paperSize:9,orientation:'portrait',fitToPage:true,fitToWidth:1,fitToHeight:0,printTitlesRow:'1:3',margins:{left:0.4,right:0.4,top:0.5,bottom:0.6,header:0.3,footer:0.3}};
+  ws.headerFooter={oddHeader:'&L&B Облік сміття · період '+perLabel(per).toLowerCase(),oddFooter:'&LDuck’s Lake&RСторінка &P з &N'};
   /* Підсумок по будинках — формули SUMIF по основній таблиці */
   const s2=wb.addWorksheet('Підсумок по будинках',{views:[{state:'frozen',ySplit:1,showGridLines:false}]});
   s2.columns=[{header:'Об’єкт (Будинок)',key:'b',width:24},{header:'Резидентів',key:'n',width:12},{header:'Обсяг за місяць (л)',key:'v',width:20}];
   s2.getRow(1).eachCell(c=>{c.font={bold:true,color:{argb:'FFFFFFFF'}};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:NAVY}};c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border=B();});s2.getRow(1).height=28;
-  const R="'Облік сміття'!";order.forEach(b=>{const name=b===WS_LOC?WS_LOC:'Будинок '+b;const rs=rows.filter(r=>r.bld===b);const row=s2.addRow({b:name,n:{formula:'COUNTIF('+R+'$A$2:$A$'+last+',A'+(s2.rowCount+1)+')',result:rs.length},v:{formula:'SUMIF('+R+'$A$2:$A$'+last+',A'+(s2.rowCount+1)+','+R+'$E$2:$E$'+last+')',result:rs.reduce((a,r)=>a+(+r.vol||0),0)}});
+  const R="'Облік сміття'!";order.forEach(b=>{const name=b===WS_LOC?WS_LOC:'Будинок '+b;const rs=rows.filter(r=>r.bld===b);const row=s2.addRow({b:name,n:{formula:'COUNTIF('+R+'$A$4:$A$'+last+',A'+(s2.rowCount+1)+')',result:rs.length},v:{formula:'SUMIF('+R+'$A$4:$A$'+last+',A'+(s2.rowCount+1)+','+R+'$E$4:$E$'+last+')',result:rs.reduce((a,r)=>a+(+r.vol||0),0)}});
     row.eachCell(c=>{c.border=B();});row.getCell(3).numFmt='#,##0';row.getCell(2).alignment={horizontal:'center'};});
   const l2=s2.rowCount;const t2=s2.addRow({b:'РАЗОМ',n:{formula:'SUM(B2:B'+l2+')',result:rows.length},v:{formula:'SUM(C2:C'+l2+')',result:rows.reduce((a,r)=>a+(+r.vol||0),0)}});
   t2.eachCell(c=>{c.border={...B(),top:{style:'medium',color:{argb:NAVY}}};c.font={bold:true};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFDCE6F1'}};});t2.getCell(3).numFmt='#,##0';t2.getCell(2).alignment={horizontal:'center'};
@@ -5892,7 +5936,12 @@ async function xlsxPick(){let X;try{X=await loadXlsx();}catch(e){toast('Не в�
     i.addEventListener('change',async()=>{const f=i.files&&i.files[0];i.remove();if(!f){res(null);return;}toast('Читаю файл…');try{const wb=X.read(await f.arrayBuffer(),{cellDates:true});res({wb,X,name:f.name});}catch(e){toast('Не вдалося прочитати файл');res(null);}});
     i.click();});}
 function sheetAoa(X,ws){return X.utils.sheet_to_json(ws,{header:1,raw:true,defval:null,blankrows:true});}
-function impPreview(title,file,lines,warn,apply){openSheet(el('h2',{text:title}),el('p',{class:'muted',style:'margin:0',text:'Файл: '+file}),
+/* bp: {mod,per,date,go(per,date)} — період споживання й дата зняття для всього файлу (вода, сміття) */
+function impBp(bp){if(!bp)return null;const w=bp.mod==='waste';const mi=el('input',{type:'month',value:bp.per,'aria-label':'Період споживання'});const di=el('input',{type:'date',value:bp.date,max:bpToday(),'aria-label':w?'Дата внесення':'Дата зняття'});
+  mi.addEventListener('change',()=>{if(/^\d{4}-\d{2}$/.test(mi.value)&&mi.value!==bp.per){closeSheet();bp.go(mi.value,bp.date);}});
+  di.addEventListener('change',()=>{let v=di.value||bpToday();if(v>bpToday())v=bpToday();closeSheet();bp.go(billingPeriod(v,bp.mod),v);});
+  return el('div',{class:'bp-imp'},el('div',{class:'grid2'},el('label',{},'Період споживання',mi),el('label',{},w?'Дата внесення':'Дата зняття',di)),el('span',{class:'muted small',text:bpHint(bp.date,bp.mod)+(billingPeriod(bp.date,bp.mod)!==bp.per?' · обрано вручну: '+perLabel(bp.per).toLowerCase():'')}));}
+function impPreview(title,file,lines,warn,apply,bp){openSheet(el('h2',{text:title}),el('p',{class:'muted',style:'margin:0',text:'Файл: '+file}),impBp(bp),
   el('div',{class:'imp-list'},lines.map(([k,v,c])=>el('div',{class:'imp-r'+(c?' '+c:'')},el('span',{text:k}),el('b',{text:v})))),
   warn&&warn.length?el('div',{class:'imp-warn'},warn.slice(0,8).map(w=>el('div',{text:w})),warn.length>8?el('div',{text:'…і ще '+(warn.length-8)}):null):null,
   el('p',{class:'muted small',style:'margin:0',text:'Дані розділу будуть замінені даними з файлу. Щоб повернути попередні — завантажте старий файл.'}),
@@ -6046,20 +6095,20 @@ async function dzImport(per){const f=await xlsxPick();if(!f)return;const {wb,X}=
   impPreview('Оновити дебіторку · '+perLabel(per),f.name,lines,warn,async()=>{for(const id in res)await S.db.doc('dz/'+per+'_'+id).set({per,sheet:id,rows:res[id],at:Date.now(),by:S.myId});});}
 
 /* імпорт: сміття */
-async function wsImport(per){const f=await xlsxPick();if(!f)return;const {wb,X}=f;const got=[];const warn=[];
+async function wsImport(per,f,dt){dt=dt||bpDay('waste');f=f||await xlsxPick();if(!f)return;const {wb,X}=f;const got=[];const warn=[];
   for(const nm of wb.SheetNames){const a=sheetAoa(X,wb.Sheets[nm]);
     if(/локац/i.test(nm)){for(let i=1;i<a.length;i++){const R=a[i]||[];const t=strP(R[0]);if(!t||/^(сума|разом)/i.test(t))continue;got.push({bld:WS_LOC,floor:'',tenant:t,vol:numP(R[1],1)});}continue;}
     for(let i=0;i<a.length;i++)for(let c=0;c<(a[i]||[]).length;c++){const m=strP(a[i][c]).match(/^буд(?:инок|\.)?\s*([\d][\d.,\s]*)$/i);if(!m)continue;const b=m[1].replace(/\s/g,'');
       for(let j=i+2;j<a.length;j++){const R=a[j]||[];const fl=strP(R[c]),t=strP(R[c+1]);if(/^(буд|сума|разом)/i.test(fl))break;if(!t){if(!fl&&!strP(R[c+2]))break;continue;}got.push({bld:b,floor:fl,tenant:t,vol:numP(R[c+2],1)});}}}
   if(!got.length){toast('Не знайшов таблиці сміття у файлі');return;}
   const ex=wsRows(per);const used=new Set();const rows={};const st={nw:0,ch:0,del:0};
-  got.forEach((r,i)=>{const m=ex.find(x=>!used.has(x.id)&&x.bld===r.bld&&lc(x.tenant)===lc(r.tenant));let id;if(m){id=m.id;used.add(id);if((m.vol??null)!==(r.vol??null)||String(m.floor||'')!==r.floor)st.ch++;}else{id='w'+Date.now().toString(36)+'_'+i;st.nw++;}rows[id]={...r,order:i+1};});
+  got.forEach((r,i)=>{const m=ex.find(x=>!used.has(x.id)&&x.bld===r.bld&&lc(x.tenant)===lc(r.tenant));let id;if(m){id=m.id;used.add(id);if((m.vol??null)!==(r.vol??null)||String(m.floor||'')!==r.floor)st.ch++;}else{id='w'+Date.now().toString(36)+'_'+i;st.nw++;}rows[id]={...r,order:i+1,...(r.vol!=null?{d:dt}:{})};});
   st.del=ex.filter(x=>!used.has(x.id)).length;const tot=got.reduce((s,r)=>s+(+r.vol||0),0);const bl=wsBlds(got);
   impPreview('Оновити облік сміття · '+perLabel(per),f.name,[['Резидентів',String(got.length)],['Разом',fl(tot)+' л'],...bl.map(b=>[wsName(b),fl(got.filter(r=>r.bld===b).reduce((s,r)=>s+(+r.vol||0),0))+' л','sub']),['Зміни',chg(st)]],warn,
-    async()=>{await S.db.doc('waste/'+per).set({per,rows,at:Date.now(),by:S.myId});});}
+    async()=>{await S.db.doc('waste/'+per).set({per,rows,at:Date.now(),by:S.myId});},{mod:'waste',per,date:dt,go:(p,d)=>wsImport(p,f,d)});}
 
 /* імпорт: вода */
-async function wImport(per){if(!S.wPerD[per]){toast('Спочатку створіть період «'+perLabel(per)+'»');return;}const f=await xlsxPick();if(!f)return;const {wb,X}=f;
+async function wImport(per,f,dt){dt=dt||bpDay('water');if(!f&&!S.wPerD[per]){toast('Спочатку створіть період «'+perLabel(per)+'»');return;}f=f||await xlsxPick();if(!f)return;const {wb,X}=f;
   const reads={},upd=[],adds=[],warn=[];let nObj=0,nM=0,nF=0;const sn=x=>x.replace(/[\\/?*\[\]:]/g,' ').slice(0,31);
   for(const nm of wb.SheetNames){if(/підсумок/i.test(nm))continue;const o=S.wObj.find(x=>sn(x.name)===nm||x.name===nm||lc(sn(x.name))===lc(nm));if(!o){warn.push('Аркуш «'+nm+'»: такого об’єкта немає — пропущено');continue;}nObj++;
     const a=sheetAoa(X,wb.Sheets[nm]);const ms=S.wMet.filter(m=>m.obj===o.id);const used=new Set();
@@ -6067,12 +6116,14 @@ async function wImport(per){if(!S.wPerD[per]){toast('Спочатку створ
       const d={kind:/резидент/i.test(typ)?'res':'main',section:strP(R[1]),floor:strP(R[2]),room:strP(R[3]),tech:strP(R[4]),tenant:strP(R[5]),serial:strP(R[6]),note:strP(R[7])};const s=numP(R[8],3),e=numP(R[9],3);nM++;if(s!=null&&e!=null)nF++;
       let m=d.serial?ms.find(x=>!used.has(x.id)&&String(x.serial||'').trim()===d.serial):null;if(!m)m=ms.find(x=>!used.has(x.id)&&x.kind===d.kind&&lc(x.tenant)===lc(d.tenant)&&String(x.room||'')===d.room);
       if(!m)m=ms.find(x=>!used.has(x.id)&&x.kind===d.kind&&lc(x.tenant)===lc(d.tenant));
-      if(m){used.add(m.id);const diff={};['section','floor','room','tech','tenant','serial','note'].forEach(k=>{if(String(m[k]??'')!==d[k])diff[k]=d[k];});if(Object.keys(diff).length)upd.push([m.id,diff]);reads[m.id]={s,e};}
+      if(m){used.add(m.id);const diff={};['section','floor','room','tech','tenant','serial','note'].forEach(k=>{if(String(m[k]??'')!==d[k])diff[k]=d[k];});if(Object.keys(diff).length)upd.push([m.id,diff]);reads[m.id]={s,e,...(e!=null?{d:dt}:{})};}
       else adds.push({d:{...d,obj:o.id,active:true,order:(ms.length?Math.max(...ms.map(x=>x.order||0)):0)+adds.length+1},s,e});}}
   if(!nObj){toast('У файлі немає аркушів з об’єктами обліку води');return;}
   impPreview('Оновити облік води · '+perLabel(per),f.name,[['Об’єктів',String(nObj)],['Лічильників у файлі',String(nM)],['З показниками',String(nF)],['Змінено дані лічильників',String(upd.length)],['Нових лічильників',String(adds.length)]],warn,
     async()=>{const ad={};adds.forEach((x,k)=>{const id='m'+Date.now().toString(36)+k;ad[id]=x;});for(const id in ad)await S.db.doc('wMeters/'+id).set({...ad[id].d,at:Date.now()});
-      for(const [id,diff] of upd)await S.db.doc('wMeters/'+id).update(diff);const r2={...reads};for(const id in ad)r2[id]={s:ad[id].s,e:ad[id].e};await S.db.doc('wPeriods/'+per).update({reads:r2});});}
+      for(const [id,diff] of upd)await S.db.doc('wMeters/'+id).update(diff);const r2={...reads};for(const id in ad)r2[id]={s:ad[id].s,e:ad[id].e,...(ad[id].e!=null?{d:dt}:{})};
+      if(S.wPerD[per])await S.db.doc('wPeriods/'+per).update({reads:r2});else await S.db.doc('wPeriods/'+per).set({reads:r2,bill:null,at:Date.now(),by:S.myId});},
+    {mod:'water',per,date:dt,go:(p,d)=>wImport(p,f,d)});}
 
 /* ---------- Облік ресурсів: інвентар ---------- */
 const INV_CATS=[['tech','Садова та прибиральна техніка','🚜'],['attach','Навісне обладнання','🔩'],['hand','Ручний інвентар','🧹'],['home','Побутова техніка','🧺'],['furn','Меблі та літня зона','⛱️'],['light','Освітлення та гірлянди','💡'],
@@ -7329,6 +7380,7 @@ function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{cla
     el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'Помилки за 24 год'}),el('b',{class:e1.length?'crit':'',text:String(e1.length)}),el('small',{class:'muted',text:errs.length+' у журналі'})),
     el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'У мережі зараз'}),el('b',{text:String(onl.length)}),el('small',{class:'muted',text:onl.map(x=>x.name.split(' ')[0]).join(', ')||'нікого'})),
     el('div',{class:'card dz-k'},el('span',{class:'muted small',text:'Ваш пристрій'}),el('b',{style:'font-size:17px',text:(IS_TOUCH?'Сенсорний':'ПК')+' · '+innerWidth+'×'+innerHeight}),el('small',{class:'muted',text:(navigator.userAgent.match(/(Safari|Chrome|Firefox|Edg)\/[\d.]+/)||[''])[0]}))));
+  out.push(el('div',{class:'card row between'},el('div',{class:'stack',style:'gap:2px'},el('b',{text:'Перерахувати періоди за правилом N-го числа'}),el('span',{class:'muted small',text:'Вода, сміття: перенести вже внесені дані в місяць споживання · перегляд і резервна копія перед записом'})),el('button',{class:'btn sm ghost',type:'button',onclick:()=>bpmSheet('all')},'Відкрити')));
   // db stats
   const cnt=o=>Object.keys(o||{}).length;const dzRowsN=Object.values(S.dz||{}).reduce((a,d)=>a+cnt(d.rows),0);
   const stats=[['Колектив',S.staff.length],['Задачі',S.tasks.length],['Повідомлення (останні)',S.chat.length],['Відмітки змін',S.shifts.length],['Лічильники води',S.wMet.length],['Рядки дебіторки',dzRowsN],['Паркомісця',cnt((S.pk.main||{}).rows)],['Інвентар',cnt((S.inv.main||{}).rows)],['Записів журналу',L.length]];
@@ -7350,6 +7402,44 @@ function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{cla
   out.push(el('div',{class:'card dz-card'},el('div',{class:'dz-ch'},el('b',{text:'Що ще тут є для розробника'})),el('ul',{class:'dv-ul'},
     ['Журнал усіх збережень: хто, що, на якій сторінці, з якого пристрою','Автоматичний запис помилок JavaScript у користувачів (з файлом і рядком)','Експорт усієї бази в JSON — резервна копія одним кліком','Стан бази та активність людей — видно, хто реально користується'].map(t=>el('li',{text:t})))));
   return out;}
+/* Dev, bpm*: Dev: перерахувати періоди вже внесених даних за правилом N-го числа.
+   Нічого не переноситься автоматично: перегляд «було → стане», резервна копія JSON, потім запис і рядок у журналі.
+   Записи без дати внесення та ті, де в цільовому місяці вже є дані, не переносяться — «потребує уточнення». */
+const BPM_MODS=[['water','Вода'],['power','Електроенергія'],['waste','Сміття'],['all','Усі']];
+function bpmPlan(mods){const moves=[],unclear=[];
+  for(const mod of mods){const pers=Object.keys(mod==='water'?(S.wPerD||{}):mod==='waste'?(S.ws||{}):{}).sort();
+    for(const per of pers){const wr=mod==='waste'?wsRows(per):null;
+      for(const [id,r] of bpRecs(mod,per)){let label=id,key=null;
+        if(mod==='water'){const m=S.wMet.find(x=>x.id===id);label=m?wMeterLabel(m):'лічильник '+id;}else{const x=wr.find(y=>y.id===id);label=(r.tenant||'—')+(x?' · '+wsName(x.bld):'');key=x?wsKey(x):null;}
+        const d=bpRecDate(mod,r);if(!d){unclear.push({mod,per,label,why:'немає дати внесення'});continue;}
+        const to=billingPeriod(d,mod);if(to===per)continue;let tid=id;
+        if(mod==='water'){const t=wRead(to,id);if(t&&t.e!=null&&t.e!==''){unclear.push({mod,per,label,why:'у «'+perLabel(to)+'» вже є показник'});continue;}}
+        else{const t=key&&wsRows(to).find(y=>wsKey(y)===key);if(t&&t.vol!=null){unclear.push({mod,per,label,why:'у «'+perLabel(to)+'» вже є обсяг'});continue;}if(t)tid=t.id;}
+        moves.push({mod,per,to,id,tid,rec:{...r,d},label});}}}
+  return {moves,unclear};}
+async function bpmApply(P){const grp={};P.moves.forEach(m=>{const k=m.mod+'|'+m.to;(grp[k]=grp[k]||[]).push(m);});
+  for(const k in grp){const [mod,to]=k.split('|');const ms=grp[k];
+    if(mod==='water'){const reads={};ms.forEach(m=>{reads[m.tid]=m.rec;});if(S.wPerD[to])await S.db.doc('wPeriods/'+to).update({reads,updatedAt:Date.now(),updatedBy:S.myId});else await S.db.doc('wPeriods/'+to).set({reads,bill:null,at:Date.now(),by:S.myId});}
+    else{const rows={};ms.forEach(m=>{rows[m.tid]=m.rec;});if(S.ws[to])await S.db.doc('waste/'+to).update({rows});else await S.db.doc('waste/'+to).set({per:to,rows,at:Date.now(),by:S.myId});}}
+  const src={};P.moves.forEach(m=>{const k=m.mod+'|'+m.per;(src[k]=src[k]||[]).push(m);});
+  for(const k in src){const [mod,per]=k.split('|');
+    if(mod==='water'){const reads={};src[k].forEach(m=>{reads[m.id]=null;});await S.db.doc('wPeriods/'+per).update({reads,updatedAt:Date.now(),updatedBy:S.myId});}
+    else{const rows={};src[k].forEach(m=>{rows[m.id]={vol:null,d:null};});await S.db.doc('waste/'+per).update({rows});}}}
+function bpmSheet(mod){mod=mod||'all';const mods=mod==='all'?['water','waste']:[mod];const P=bpmPlan(mods);const name=k=>(BPM_MODS.find(x=>x[0]===k)||[])[1];
+  const by={};P.moves.forEach(m=>{const k=m.mod+'|'+m.per+'|'+m.to;by[k]=(by[k]||0)+1;});
+  const lines=Object.keys(by).sort().map(k=>{const [md,a,b]=k.split('|');return el('div',{class:'imp-r'},el('span',{text:name(md)+': '+perLabel(a)+' → '+perLabel(b)}),el('b',{text:String(by[k])}));});
+  openSheet(el('h2',{text:'Перерахувати періоди'}),el('p',{class:'muted small',style:'margin:0',text:'Правило: дані від 1-го до N-го числа належать до попереднього місяця (вода — до '+bpN('water')+'-го, сміття — до '+bpN('waste')+'-го). Записи переносяться за датою зняття / внесення.'}),
+    el('div',{class:'sg sm',role:'group','aria-label':'Модуль'},BPM_MODS.map(([k,l])=>el('button',{type:'button','aria-pressed':String(k===mod),onclick:()=>{closeSheet();bpmSheet(k);}},l))),
+    mod==='power'?el('p',{class:'muted',style:'margin:0',text:'В «Електроенергії» ще немає внесених даних — переносити нічого.'}):null,
+    el('div',{class:'imp-list'},lines.length?lines:el('div',{class:'imp-r'},el('span',{text:'Переносити нічого — усі датовані записи вже у своєму періоді'}),el('b',{text:'0'}))),
+    P.unclear.length?el('div',{class:'imp-warn'},el('div',{},el('b',{text:'Потребує уточнення: '+P.unclear.length+' (не переносяться)'})),P.unclear.slice(0,12).map(u=>el('div',{text:name(u.mod)+' · '+perLabel(u.per)+' · '+u.label+' — '+u.why})),P.unclear.length>12?el('div',{text:'…і ще '+(P.unclear.length-12)}):null):null,
+    P.moves.length?el('button',{class:'btn',type:'button',onclick:async()=>{
+      const dl=await claude.use('downloads').catch(()=>null);if(!dl){toast('Без резервної копії не застосовую: завантаження файлів недоступне');return;}
+      try{await dl.save({filename:'ducks-lake-periody-backup-'+ymd(new Date())+'.json',data:new Blob([JSON.stringify({exportedAt:new Date().toISOString(),billDay:(S.cfg||{}).billDay||null,wPeriods:S.wPerD,waste:S.ws,plan:P.moves.map(m=>({mod:m.mod,from:m.per,to:m.to,id:m.id,toId:m.tid,label:m.label,date:m.rec.d}))},null,1)],{type:'application/json'})});}
+      catch(e){toast('Резервну копію не збережено — нічого не змінено');return;}
+      closeSheet();await write(()=>bpmApply(P),'Перерахунок періодів ('+mods.map(name).join(', ')+'): перенесено '+P.moves.length+', потребує уточнення '+P.unclear.length);}},'Зберегти копію і застосувати ('+P.moves.length+')'):null,
+    el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
+/* кінець bpm */
 async function devExport(){const data={exportedAt:new Date().toISOString(),staff:S.staff,tasks:S.tasks,chat:S.chat,shifts:S.shifts,dz:S.dz,waste:S.ws,inv:S.inv,parking:S.pk,maint:S.pm,incidents:S.sos,wObjects:S.wObj,wMeters:S.wMet,wPeriods:S.wPerD,log:S.log};
   const dl=await claude.use('downloads').catch(()=>null);if(!dl){toast('Завантаження файлів тут недоступне');return;}
   try{await dl.save({filename:'ducks-lake-backup-'+ymd(new Date())+'.json',data:new Blob([JSON.stringify(data,null,1)],{type:'application/json'})});devLog('Експорт бази');}catch(e){if(e&&e.code!=='declined')toast('Не вдалося зберегти файл');}}
@@ -7564,8 +7654,8 @@ function mtHi0(D){const H=[];const mo=mtMonLow(D.per);
   else H.push(['✅','За '+mo+' екстрених ситуацій не було.']);
   if(D.sos.crit)H.push(['⚠️','Критичних ситуацій: '+D.sos.crit+'. Найчастіше — '+D.sos.cats.slice().sort((a,b)=>b.v-a.v)[0].n.toLowerCase()+'.']);
   if(D.debt){const ch=D.debtPrev?mtPct(D.debt.total,D.debtPrev.total):null;H.push(['₴','Дебіторська заборгованість — '+uah(D.debt.total,true)+' ₴ у '+D.debt.cnt+' '+plural(D.debt.cnt,'резидента','резидентів','резидентів')+(ch!=null?' ('+(ch<=0?'↓ ':'↑ ')+Math.abs(Math.round(ch))+'% до '+mtMonLow(D.debtPrev.per)+')':'')+(D.debt.rate!=null?'. Зібрано '+Math.round(D.debt.rate)+'% нарахувань.':'.')]);}
-  if(D.waste){const ch=D.wastePrev?mtPct(D.waste.total,D.wastePrev.total):null;H.push(['🗑','Вивезено '+fl(D.waste.total)+' л сміття'+(ch!=null?' ('+(ch<=0?'↓ ':'↑ ')+Math.abs(Math.round(ch))+'%)':'')+(D.waste.top[0]?'. Найбільше — '+D.waste.top[0].n+' ('+fl(D.waste.top[0].v)+' л).':'.')]);}
-  if(D.water){const w=D.water;H.push(['💧','Споживання води — '+fm3(w.total)+' м³'+(w.gotP!=null?'; перевиставлено резидентам '+Math.round(w.gotP)+'% рахунку Водоканалу'+(w.loss>0?', нестача УК '+fm3(w.loss)+' м³'+(w.price?' (≈ '+Math.round(w.loss*w.price).toLocaleString('uk-UA')+' грн)':''):''):'; внесено '+w.f+' з '+w.t+' показників')+'.']);}
+  if(D.waste&&D.waste.per===D.per){const ch=D.wastePrev?mtPct(D.waste.total,D.wastePrev.total):null;H.push(['🗑','Вивезено '+fl(D.waste.total)+' л сміття'+(ch!=null?' ('+(ch<=0?'↓ ':'↑ ')+Math.abs(Math.round(ch))+'%)':'')+(D.waste.top[0]?'. Найбільше — '+D.waste.top[0].n+' ('+fl(D.waste.top[0].v)+' л).':'.')]);}
+  if(D.water&&D.water.per===D.per){const w=D.water;H.push(['💧','Споживання води — '+fm3(w.total)+' м³'+(w.gotP!=null?'; перевиставлено резидентам '+Math.round(w.gotP)+'% рахунку Водоканалу'+(w.loss>0?', нестача УК '+fm3(w.loss)+' м³'+(w.price?' (≈ '+Math.round(w.loss*w.price).toLocaleString('uk-UA')+' грн)':''):''):'; внесено '+w.f+' з '+w.t+' показників')+'.']);}
   if(D.debt&&D.debt.over>0)H.push(['⚖️','Критична дебіторська заборгованість (понад 30 днів або старий борг) — '+uah(D.debt.over,true)+' ₴.']);
   if(D.cons&&(D.cons.outs||D.cons.low.length))H.push(['🧴','Витратні матеріали: '+D.cons.outs+' '+plural(D.cons.outs,'видача','видачі','видач')+' за місяць'+(D.cons.top[0]?', найчастіше — '+D.cons.top[0].n:'')+(D.cons.low.length?'; закінчуються: '+D.cons.low.slice(0,3).map(x=>x.name).join(', '):'')+'.']);
   if(D.park)H.push(['🅿️','Паркінг заповнений на '+Math.round(D.park.occ)+'%: '+D.park.c.busy+' в оренді, '+D.park.c.free+' вільних.']);
@@ -7620,12 +7710,12 @@ function viewMeet(){if(!canMeet())return [el('div',{class:'card empty'},el('p',{
   out.push(el('div',{class:'card mt-signc'},rpSign(per,false)));
   return out;}
 function mtSecHead(id,note){const u=UKS[id];return el('div',{class:'mt-sh'},el('span',{class:'uk-ic',style:'--c1:'+u.c1+';--c2:'+u.c2},svg(u.ic)),el('div',{},el('h3',{text:u.name}),note?el('small',{class:'muted',text:note}):null));}
-function mtDataNote(p,per){return p?(p===per?'дані за '+perLabel(p).toLowerCase():'останні дані: '+perLabel(p).toLowerCase()):'немає даних';}
+function mtDataNote(p,per,mod){const r=p&&mod?bpRange(bpDates(mod,p),false,true):'';return p?(p===per?'дані за '+perLabel(p).toLowerCase():'останні дані: '+perLabel(p).toLowerCase())+(r?(mod==='waste'?' · дані внесено ':' · показники на ')+r:''):'немає даних';}
 function mtOblScreen(D){const o=[];const per=D.per;
-  if(D.waste){const w=D.waste;o.push(el('div',{class:'card mt-card'},mtSecHead('waste',mtDataNote(w.per,per)),
+  if(D.waste){const w=D.waste;o.push(el('div',{class:'card mt-card'},mtSecHead('waste',mtDataNote(w.per,per,'waste')),
     el('div',{class:'mt-ks'},mtKpi('Вивезено',fl(w.total)+' л',mtDelta(w.total,D.wastePrev&&D.wastePrev.total,true)),mtKpi('Резидентів з вивозом',String(w.cnt),'з '+w.all),mtKpi('Середньо на резидента',w.cnt?fl(w.total/w.cnt)+' л':'—')),
     el('div',{class:'mt-2 in'},el('div',{},el('h4',{text:'По будинках'}),mtBars(w.blds,v=>fl(v)+' л')),el('div',{},el('h4',{text:'Топ-5 резидентів'}),mtBars(w.top.slice(0,5).map(x=>({n:x.n,v:x.v})),v=>fl(v)+' л')))));}
-  if(D.water){const w=D.water;o.push(el('div',{class:'card mt-card'},mtSecHead('water',mtDataNote(w.per,per)),
+  if(D.water){const w=D.water;o.push(el('div',{class:'card mt-card'},mtSecHead('water',mtDataNote(w.per,per,'water')),
     el('div',{class:'mt-ks'},...mtWaterKpis(w,D)),mtWaterBal(w),
     mtBars(w.objs.map(x=>({n:x.n,v:x.v||0})),v=>fm3(v)+' м³')));}
   if(D.park){const p=D.park;o.push(el('div',{class:'card mt-card'},mtSecHead('park','поточний стан'),
@@ -7705,9 +7795,9 @@ function mtRpBlocks(D,O){O=O||MT_ALL();const B=[];const per=D.per;const sec=(id,
   else B.push(el('p',{class:'rp-mut',text:'За '+mtMonLow(per)+' екстрених ситуацій не було.'}));
   if(D.pm&&(O.pmSum||O.pmList||O.pmPlan))B.push(...pmRpBlocks(D.pm,O,false));
   if(O.debt||O.waste||O.water||O.park||O.inv||O.cons)B.push({h2:'Облік'});
-  if(O.waste&&D.waste){const w=D.waste;B.push(el('div',{class:'rp-card'},sec('waste',mtDataNote(w.per,per)),kp([mtKpi('Вивезено',fl(w.total)+' л',mtDelta(w.total,D.wastePrev&&D.wastePrev.total,true)),mtKpi('Резидентів з вивозом',String(w.cnt),'з '+w.all),mtKpi('Середньо на резидента',w.cnt?fl(w.total/w.cnt)+' л':'—')]),
+  if(O.waste&&D.waste){const w=D.waste;B.push(el('div',{class:'rp-card'},sec('waste',mtDataNote(w.per,per,'waste')),kp([mtKpi('Вивезено',fl(w.total)+' л',mtDelta(w.total,D.wastePrev&&D.wastePrev.total,true)),mtKpi('Резидентів з вивозом',String(w.cnt),'з '+w.all),mtKpi('Середньо на резидента',w.cnt?fl(w.total/w.cnt)+' л':'—')]),
     el('div',{class:'rp-2 in'},el('div',{},el('h4',{text:'По будинках'}),mtBars(w.blds,v=>fl(v)+' л')),el('div',{},el('h4',{text:'Топ-5 резидентів'}),mtBars(w.top.slice(0,5),v=>fl(v)+' л')))));}
-  if(O.water&&D.water){const w=D.water;B.push(el('div',{class:'rp-card'},sec('water',mtDataNote(w.per,per)),kp(mtWaterKpis(w,D)),mtWaterBal(w),mtBars(w.objs.map(x=>({n:x.n,v:x.v||0})),v=>fm3(v)+' м³')));}
+  if(O.water&&D.water){const w=D.water;B.push(el('div',{class:'rp-card'},sec('water',mtDataNote(w.per,per,'water')),kp(mtWaterKpis(w,D)),mtWaterBal(w),mtBars(w.objs.map(x=>({n:x.n,v:x.v||0})),v=>fm3(v)+' м³')));}
   if(O.cons&&D.cons)B.push(el('div',{class:'rp-card'},...mtConsBody(D.cons,true)));
   if(O.park&&D.park){const p=D.park;B.push(el('div',{class:'rp-card'},sec('park','поточний стан'),kp([mtKpi('Заповненість',Math.round(p.occ)+'%'),mtKpi('Усього місць',String(p.n)),mtKpi('Вільні',String(p.c.free))]),mtStack([{n:'Зайнято',v:p.c.busy,c:'#2a78d6'},{n:'Службові (УК)',v:p.c.uk,c:'#1baf7a'},{n:'Бронь',v:p.c.res,c:'#eda100'},{n:'Вільні',v:p.c.free,c:'#b7c4c6'}])));}
   if(O.inv&&D.inv){const v=D.inv;B.push(el('div',{class:'rp-card'},sec('res',v.date?'інвентаризація від '+dm(v.date):'поточний стан'),kp([mtKpi('Позицій',String(v.n)),mtKpi('В експлуатації',String(v.use)),mtKpi('На зберіганні',String(v.store)),mtKpi('Потребують ремонту',String(v.fix.length))]),mtBars(v.cats.slice(0,6),x=>String(x)),v.fix.length?el('p',{class:'rp-mut',text:'На ремонт: '+v.fix.join(', ')}):null));}
@@ -8248,6 +8338,8 @@ WXL.page=function(ws,lastCol,titleRows,foot){ws.pageSetup={paperSize:9,orientati
 WXL.title=function(ws,text,cols,sub){ws.mergeCells(1,1,1,cols);const c=ws.getCell(1,1);c.value=text;c.font={name:WXL.FONT,size:14,bold:true,color:{argb:WXL.NAVY}};
   c.alignment={vertical:'middle',horizontal:'left',indent:1};ws.getRow(1).height=30;
   [].concat(sub||[]).forEach((t,i)=>{ws.mergeCells(2+i,1,2+i,cols);const s=ws.getCell(2+i,1);s.value=t;s.font={name:WXL.FONT,size:9,italic:true,color:{argb:WXL.C.note}};s.alignment={indent:1};});};
+/* «Показники знято: 01.11.2026 — 05.11.2026 · » — дати зняття за період споживання (data.taken) */
+WXL.taken=d=>d.taken?'Показники знято: '+d.taken+' · ':'';
 WXL.head=function(ws,row,labels){const r=ws.getRow(row);labels.forEach((h,i)=>{const c=r.getCell(i+1);c.value=h;c.font={name:WXL.FONT,size:10,bold:true,color:{argb:'FFFFFFFF'}};
   c.fill={type:'pattern',pattern:'solid',fgColor:{argb:WXL.NAVY}};c.alignment={vertical:'middle',horizontal:'center',wrapText:true};c.border=WXL.border();});r.height=34;};
 /* Аркуш будинку. full=true — додаються загальнобудинкові лічильники й рядок відхилення */
@@ -8256,7 +8348,7 @@ WXL.buildingSheet=function(wb,u,data,full,used){const res=u.meters.filter(m=>m.t
   const ws=wb.addWorksheet(name,{properties:{tabColor:{argb:full?'FF2F855A':WXL.NAVY}},views:[{state:'frozen',ySplit:3,xSplit:0,showGridLines:false}]});
   const H=['Поверх','Номер приміщення','Резидент','Номер лічильника','Показник на початок (м³)','Показник на кінець (м³)','Спожито (м³)'];
   ws.columns=[{width:9},{width:13},{width:34},{width:20},{width:15},{width:15},{width:14}];
-  WXL.title(ws,'Облік води | '+u.name+' | '+data.period.label,7,'Сформовано '+data.generatedAt+(u.sharedMainsWith&&full?' · загальнобудинкові лічильники — на аркуші «'+u.sharedMainsWith+'»':'')+(u.mainsOf?' · спільні лічильники для: '+u.mainsOf.join(', '):''));
+  WXL.title(ws,'Облік води | '+u.name+' | Період: '+data.period.label.toLowerCase(),7,WXL.taken(data)+'Сформовано '+data.generatedAt+(u.sharedMainsWith&&full?' · загальнобудинкові лічильники — на аркуші «'+u.sharedMainsWith+'»':'')+(u.mainsOf?' · спільні лічильники для: '+u.mainsOf.join(', '):''));
   WXL.head(ws,3,H);let r=4;const B=WXL.border();
   const put=(row,col,v,st)=>WXL.put(ws,row,col,v,st);
   const meterRow=(m,fill,label)=>{const noSer=!String(m.serial||'').trim();const hasRd=[m.start,m.end].some(v=>WXL.num(v));const noMeter=noSer&&!hasRd;const st={fill};
@@ -8288,7 +8380,7 @@ WXL.buildingSheet=function(wb,u,data,full,used){const res=u.meters.filter(m=>m.t
 /* Дашборд для «Повного обліку» */
 WXL.dashboard=function(ws,data,sums){const q=s=>"'"+s.replace(/'/g,"''")+"'!";
   ws.columns=[{width:56},{width:20},{width:20},{width:18},{width:14}];const B=WXL.border();
-  WXL.title(ws,'Облік води | Зведення | '+data.period.label,5,'Сформовано '+data.generatedAt+' · формули посилаються на аркуші будинків');
+  WXL.title(ws,'Облік води | Зведення | Період: '+data.period.label.toLowerCase(),5,WXL.taken(data)+'Сформовано '+data.generatedAt+' · формули посилаються на аркуші будинків');
   const put=(r,c,v,st)=>WXL.put(ws,r,c,v,st);
   const block=(r,text)=>{ws.mergeCells(r,1,r,5);const c=ws.getCell(r,1);c.value=text;c.font={name:WXL.FONT,size:12,bold:true,color:{argb:WXL.NAVY}};c.border={bottom:{style:'medium',color:{argb:WXL.NAVY}}};ws.getRow(r).height=22;};
     /* Блок 2 спершу рахуємо, щоб Блок 1 міг на нього посилатися */
@@ -8360,7 +8452,7 @@ let _xjP=null;function loadExcelJS(){if(window.ExcelJS)return Promise.resolve(wi
   return _xjP;}
 /* Дані для звітів (формат описано в docs/water-export.md) */
 function wExportData(per){const P=S.wPerD[per]||{};const n=v=>v==null||v===''||isNaN(+v)?null:+v;const d=new Date();
-  return {period:{key:per,label:perLabel(per)},generatedAt:pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes()),
+  return {period:{key:per,label:perLabel(per)},taken:bpRange(bpDates('water',per),true),generatedAt:pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes()),
     bill:{m3:n(P.bill),uah:n(P.billUah)},tolerancePct:n(P.tolPct)!=null?n(P.tolPct):5,
     buildings:S.wObj.map(o=>({id:o.id,name:o.name,meters:S.wMet.filter(m=>m.obj===o.id).sort((a,b)=>(a.order||0)-(b.order||0)).map(m=>{const r=wRead(per,m.id)||{};let s=n(r.s);const e=n(r.e);if(s==null&&e!=null)s=wPrevVal(per,m.id);
       return {id:m.id,type:m.kind==='main'?'common':'resident',active:m.active!==false,section:m.section||null,floor:m.floor||'',room:m.room||'',tenant:m.tenant||'',serial:m.serial||'',start:s,end:e};})})).filter(b=>b.meters.length)};}
@@ -8386,7 +8478,7 @@ async function wPhotoImport(per){if(!S.wPerD[per]){toast('Спершу ство�
 async function wPhotoRun(per,files,sample,caps){const items=files.map((f,i)=>({i,f,thumb:null,full:null,blob:null,mid:null,val:null,ser:null,conf:null,note:'',on:false,err:null}));
   const prog=el('div',{class:'wp-prog'},el('b',{text:'Готую фото…'}),el('div',{class:'w-prog'},el('i',{style:'width:0%'})));const list=el('div',{class:'wp-list'});
   const saveBtn=el('button',{class:'btn',type:'button',disabled:true},'Зберегти показники');const sum=el('small',{class:'muted'});
-  openSheet(el('h2',{text:'Показники з фото'}),el('p',{class:'muted',style:'margin:0',text:perLabel(per)+' · '+files.length+' '+plural(files.length,'фото','фото','фото')+'. Перевірте розпізнане перед збереженням.'}),prog,list,el('div',{class:'wp-foot'},sum,saveBtn),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));
+  openSheet(el('h2',{text:'Показники з фото'}),el('p',{class:'muted',style:'margin:0',text:perLabel(per)+' · знято '+dm(bpDay('water'))+' · '+files.length+' '+plural(files.length,'фото','фото','фото')+'. Перевірте розпізнане перед збереженням.'}),prog,list,el('div',{class:'wp-foot'},sum,saveBtn),el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));
   const setP=(t,p)=>{prog.firstChild.textContent=t;prog.querySelector('i').style.width=Math.round(p*100)+'%';};
   const maxB=(caps.images.maxBytes||5e6)*0.9;
   for(const it of items){try{const img=await loadImg(it.f);it.thumb=shrink(img,360,0.7);it.full=shrinkFit(img);let q=.85,mx=1600;it.blob=await wImgBlob(img,mx,q);while(it.blob&&it.blob.size>maxB&&mx>700){mx=Math.round(mx*.8);it.blob=await wImgBlob(img,mx,q);}}catch(e){it.err='Не вдалося відкрити фото';}setP('Готую фото… '+(it.i+1)+'/'+items.length,(it.i+1)/items.length*.15);}
@@ -8420,7 +8512,7 @@ async function wPhotoRun(per,files,sample,caps){const items=files.map((f,i)=>({i
   saveBtn.onclick=async()=>{const sel=items.filter(x=>x.on&&x.mid&&x.val!=null);if(!sel.length)return;const dup=used();if(Object.values(dup).some(v=>v>1)){toast('Один лічильник вибрано кілька разів — виправте');return;}
     saveBtn.disabled=true;saveBtn.textContent='Зберігаю…';const reads={};
     try{for(const it of sel){let ph=null;if(it.full){const ref=await S.db.collection('photos').add({img:it.full,kind:'water',per,meter:it.mid,by:S.myId,at:Date.now()});ph={id:ref.id,thumb:it.thumb};}
-        const cur=wRead(per,it.mid)||{};const prev=wPrevVal(per,it.mid);reads[it.mid]={e:it.val,ph,src:'photo',at:Date.now(),...(cur.s==null&&prev!=null?{s:prev}:{})};}
+        const cur=wRead(per,it.mid)||{};const prev=wPrevVal(per,it.mid);reads[it.mid]={e:it.val,ph,src:'photo',at:Date.now(),d:bpDay('water'),...(cur.s==null&&prev!=null?{s:prev}:{})};}
       await S.db.doc('wPeriods/'+per).update({reads,updatedAt:Date.now(),updatedBy:S.myId});
       S.wPerD[per].reads=S.wPerD[per].reads||{};for(const k in reads)S.wPerD[per].reads[k]={...(S.wPerD[per].reads[k]||{}),...reads[k]};
       if(typeof devLog==='function')devLog('Вода: внесено з фото '+sel.length+' показників');closeSheet();toast('Збережено '+sel.length+' '+plural(sel.length,'показник','показники','показників'));render();}
@@ -8690,7 +8782,7 @@ function ukStat(id){try{
   if(id==='water'){const per=wCurPer();if(!S.wPerD[per])return null;let f=0,t=0;S.wObj.forEach(o=>{const x=wStats(per,o.id);f+=x.filled;t+=x.total;});return [f+' / '+t,'показників · '+perLabel(per).split(' ')[0].toLowerCase()];}
   if(id==='park'){const rs=pkRows();if(!rs.length)return null;const b=rs.filter(r=>pkSt(r)!=='free').length;return [b+' / '+rs.length,'місць зайнято · '+(rs.length-b)+' вільних'];}
   if(id==='res'){const rs=invRows();if(!rs.length)return null;const d=invDoc();return [rs.length+' позицій','інвентар · '+(d.date?dm(d.date):'')];}
-  if(id==='waste'){const ps=wsPers();if(!ps.length)return null;const per=ps[ps.length-1];const v=wsRows(per).reduce((a,r)=>a+(+r.vol||0),0);return [fl(v)+' л','вивезено · '+perLabel(per).split(' ')[0].toLowerCase()];}
+  if(id==='waste'){const per=wsCurPer();if(!S.ws[per]||!S.ws[per].rows)return null;const v=wsRows(per).reduce((a,r)=>a+(+r.vol||0),0);return [fl(v)+' л','вивезено · '+perLabel(per).split(' ')[0].toLowerCase()];}
   if(id==='debt'){const ps=dzPers();if(!ps.length)return null;const per=ps[ps.length-1];let d=0,n=new Set();DZ_SHEETS.forEach(sh=>dzRows(per,sh.id).forEach(r=>{const c=dzCalc(r);if(c.debt>0.004){d+=c.debt;n.add(r.tenant);}}));return [uah(d,true)+' ₴',n.size+' боржників · '+perLabel(per).split(' ')[0].toLowerCase()];}
 }catch(e){}return null;}
 const FG=[
@@ -9471,8 +9563,8 @@ async function inspWaterSend(d,pt){/* показник у «Облік → Во�
   try{const b=inspB(d.buildingId);if(!b)return 'немає будинку';const oid=b.fac==='2'||b.fac==='4'?'b24':'b'+String(b.fac).replace('.','');
     const ms=(S.wMet||[]).filter(m=>m.obj===oid&&m.kind==='main'&&m.active!==false&&(oid!=='b24'||!m.section||String(m.section).includes(b.fac)));
     if(ms.length!==1)return ms.length?'кілька загальнобудинкових лічильників — внесіть вручну':'не знайдено загальнобудинковий лічильник';
-    const per=d.date.slice(0,7);if(!S.wPerD||!S.wPerD[per])return 'період «'+perLabel(per)+'» в обліку води ще не створено';
-    await S.db.doc('wPeriods/'+per).update({reads:{[ms[0].id]:{e:+pt.meterValue}},updatedAt:Date.now(),updatedBy:S.myId});return 'ok';}catch(e){return 'помилка запису';}}
+    const per=billingPeriod(d.date,'water');if(!S.wPerD||!S.wPerD[per])return 'період «'+perLabel(per)+'» в обліку води ще не створено';
+    await S.db.doc('wPeriods/'+per).update({reads:{[ms[0].id]:{e:+pt.meterValue,d:d.date}},updatedAt:Date.now(),updatedBy:S.myId});return 'ok';}catch(e){return 'помилка запису';}}
 /* ---------- черга на телефоні (IndexedDB з запасним варіантом у пам’яті): невідправлені фото й зміни точок ---------- */
 const IDBX={p:null,mem:new Map(),
   open(){if(this.p)return this.p;this.p=new Promise(res=>{try{const r=indexedDB.open('dl-insp',1);r.onupgradeneeded=()=>{try{r.result.createObjectStore('drafts',{keyPath:'id'});}catch(e){}};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);r.onblocked=()=>res(null);}catch(e){res(null);}});return this.p;},

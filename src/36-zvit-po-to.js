@@ -79,7 +79,7 @@ function ukStat(id){try{
   if(id==='water'){const per=wCurPer();if(!S.wPerD[per])return null;let f=0,t=0;S.wObj.forEach(o=>{const x=wStats(per,o.id);f+=x.filled;t+=x.total;});return [f+' / '+t,'показників · '+perLabel(per).split(' ')[0].toLowerCase()];}
   if(id==='park'){const rs=pkRows();if(!rs.length)return null;const b=rs.filter(r=>pkSt(r)!=='free').length;return [b+' / '+rs.length,'місць зайнято · '+(rs.length-b)+' вільних'];}
   if(id==='res'){const rs=invRows();if(!rs.length)return null;const d=invDoc();return [rs.length+' позицій','інвентар · '+(d.date?dm(d.date):'')];}
-  if(id==='waste'){const ps=wsPers();if(!ps.length)return null;const per=ps[ps.length-1];const v=wsRows(per).reduce((a,r)=>a+(+r.vol||0),0);return [fl(v)+' л','вивезено · '+perLabel(per).split(' ')[0].toLowerCase()];}
+  if(id==='waste'){const per=wsCurPer();if(!S.ws[per]||!S.ws[per].rows)return null;const v=wsRows(per).reduce((a,r)=>a+(+r.vol||0),0);return [fl(v)+' л','вивезено · '+perLabel(per).split(' ')[0].toLowerCase()];}
   if(id==='debt'){const ps=dzPers();if(!ps.length)return null;const per=ps[ps.length-1];let d=0,n=new Set();DZ_SHEETS.forEach(sh=>dzRows(per,sh.id).forEach(r=>{const c=dzCalc(r);if(c.debt>0.004){d+=c.debt;n.add(r.tenant);}}));return [uah(d,true)+' ₴',n.size+' боржників · '+perLabel(per).split(' ')[0].toLowerCase()];}
 }catch(e){}return null;}
 const FG=[

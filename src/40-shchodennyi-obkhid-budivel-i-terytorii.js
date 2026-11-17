@@ -42,8 +42,8 @@ async function inspWaterSend(d,pt){/* показник у «Облік → Во�
   try{const b=inspB(d.buildingId);if(!b)return 'немає будинку';const oid=b.fac==='2'||b.fac==='4'?'b24':'b'+String(b.fac).replace('.','');
     const ms=(S.wMet||[]).filter(m=>m.obj===oid&&m.kind==='main'&&m.active!==false&&(oid!=='b24'||!m.section||String(m.section).includes(b.fac)));
     if(ms.length!==1)return ms.length?'кілька загальнобудинкових лічильників — внесіть вручну':'не знайдено загальнобудинковий лічильник';
-    const per=d.date.slice(0,7);if(!S.wPerD||!S.wPerD[per])return 'період «'+perLabel(per)+'» в обліку води ще не створено';
-    await S.db.doc('wPeriods/'+per).update({reads:{[ms[0].id]:{e:+pt.meterValue}},updatedAt:Date.now(),updatedBy:S.myId});return 'ok';}catch(e){return 'помилка запису';}}
+    const per=billingPeriod(d.date,'water');if(!S.wPerD||!S.wPerD[per])return 'період «'+perLabel(per)+'» в обліку води ще не створено';
+    await S.db.doc('wPeriods/'+per).update({reads:{[ms[0].id]:{e:+pt.meterValue,d:d.date}},updatedAt:Date.now(),updatedBy:S.myId});return 'ok';}catch(e){return 'помилка запису';}}
 /* ---------- черга на телефоні (IndexedDB з запасним варіантом у пам’яті): невідправлені фото й зміни точок ---------- */
 const IDBX={p:null,mem:new Map(),
   open(){if(this.p)return this.p;this.p=new Promise(res=>{try{const r=indexedDB.open('dl-insp',1);r.onupgradeneeded=()=>{try{r.result.createObjectStore('drafts',{keyPath:'id'});}catch(e){}};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);r.onblocked=()=>res(null);}catch(e){res(null);}});return this.p;},

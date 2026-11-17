@@ -75,8 +75,8 @@ function mtHi0(D){const H=[];const mo=mtMonLow(D.per);
   else H.push(['✅','За '+mo+' екстрених ситуацій не було.']);
   if(D.sos.crit)H.push(['⚠️','Критичних ситуацій: '+D.sos.crit+'. Найчастіше — '+D.sos.cats.slice().sort((a,b)=>b.v-a.v)[0].n.toLowerCase()+'.']);
   if(D.debt){const ch=D.debtPrev?mtPct(D.debt.total,D.debtPrev.total):null;H.push(['₴','Дебіторська заборгованість — '+uah(D.debt.total,true)+' ₴ у '+D.debt.cnt+' '+plural(D.debt.cnt,'резидента','резидентів','резидентів')+(ch!=null?' ('+(ch<=0?'↓ ':'↑ ')+Math.abs(Math.round(ch))+'% до '+mtMonLow(D.debtPrev.per)+')':'')+(D.debt.rate!=null?'. Зібрано '+Math.round(D.debt.rate)+'% нарахувань.':'.')]);}
-  if(D.waste){const ch=D.wastePrev?mtPct(D.waste.total,D.wastePrev.total):null;H.push(['🗑','Вивезено '+fl(D.waste.total)+' л сміття'+(ch!=null?' ('+(ch<=0?'↓ ':'↑ ')+Math.abs(Math.round(ch))+'%)':'')+(D.waste.top[0]?'. Найбільше — '+D.waste.top[0].n+' ('+fl(D.waste.top[0].v)+' л).':'.')]);}
-  if(D.water){const w=D.water;H.push(['💧','Споживання води — '+fm3(w.total)+' м³'+(w.gotP!=null?'; перевиставлено резидентам '+Math.round(w.gotP)+'% рахунку Водоканалу'+(w.loss>0?', нестача УК '+fm3(w.loss)+' м³'+(w.price?' (≈ '+Math.round(w.loss*w.price).toLocaleString('uk-UA')+' грн)':''):''):'; внесено '+w.f+' з '+w.t+' показників')+'.']);}
+  if(D.waste&&D.waste.per===D.per){const ch=D.wastePrev?mtPct(D.waste.total,D.wastePrev.total):null;H.push(['🗑','Вивезено '+fl(D.waste.total)+' л сміття'+(ch!=null?' ('+(ch<=0?'↓ ':'↑ ')+Math.abs(Math.round(ch))+'%)':'')+(D.waste.top[0]?'. Найбільше — '+D.waste.top[0].n+' ('+fl(D.waste.top[0].v)+' л).':'.')]);}
+  if(D.water&&D.water.per===D.per){const w=D.water;H.push(['💧','Споживання води — '+fm3(w.total)+' м³'+(w.gotP!=null?'; перевиставлено резидентам '+Math.round(w.gotP)+'% рахунку Водоканалу'+(w.loss>0?', нестача УК '+fm3(w.loss)+' м³'+(w.price?' (≈ '+Math.round(w.loss*w.price).toLocaleString('uk-UA')+' грн)':''):''):'; внесено '+w.f+' з '+w.t+' показників')+'.']);}
   if(D.debt&&D.debt.over>0)H.push(['⚖️','Критична дебіторська заборгованість (понад 30 днів або старий борг) — '+uah(D.debt.over,true)+' ₴.']);
   if(D.cons&&(D.cons.outs||D.cons.low.length))H.push(['🧴','Витратні матеріали: '+D.cons.outs+' '+plural(D.cons.outs,'видача','видачі','видач')+' за місяць'+(D.cons.top[0]?', найчастіше — '+D.cons.top[0].n:'')+(D.cons.low.length?'; закінчуються: '+D.cons.low.slice(0,3).map(x=>x.name).join(', '):'')+'.']);
   if(D.park)H.push(['🅿️','Паркінг заповнений на '+Math.round(D.park.occ)+'%: '+D.park.c.busy+' в оренді, '+D.park.c.free+' вільних.']);
@@ -131,12 +131,12 @@ function viewMeet(){if(!canMeet())return [el('div',{class:'card empty'},el('p',{
   out.push(el('div',{class:'card mt-signc'},rpSign(per,false)));
   return out;}
 function mtSecHead(id,note){const u=UKS[id];return el('div',{class:'mt-sh'},el('span',{class:'uk-ic',style:'--c1:'+u.c1+';--c2:'+u.c2},svg(u.ic)),el('div',{},el('h3',{text:u.name}),note?el('small',{class:'muted',text:note}):null));}
-function mtDataNote(p,per){return p?(p===per?'дані за '+perLabel(p).toLowerCase():'останні дані: '+perLabel(p).toLowerCase()):'немає даних';}
+function mtDataNote(p,per,mod){const r=p&&mod?bpRange(bpDates(mod,p),false,true):'';return p?(p===per?'дані за '+perLabel(p).toLowerCase():'останні дані: '+perLabel(p).toLowerCase())+(r?(mod==='waste'?' · дані внесено ':' · показники на ')+r:''):'немає даних';}
 function mtOblScreen(D){const o=[];const per=D.per;
-  if(D.waste){const w=D.waste;o.push(el('div',{class:'card mt-card'},mtSecHead('waste',mtDataNote(w.per,per)),
+  if(D.waste){const w=D.waste;o.push(el('div',{class:'card mt-card'},mtSecHead('waste',mtDataNote(w.per,per,'waste')),
     el('div',{class:'mt-ks'},mtKpi('Вивезено',fl(w.total)+' л',mtDelta(w.total,D.wastePrev&&D.wastePrev.total,true)),mtKpi('Резидентів з вивозом',String(w.cnt),'з '+w.all),mtKpi('Середньо на резидента',w.cnt?fl(w.total/w.cnt)+' л':'—')),
     el('div',{class:'mt-2 in'},el('div',{},el('h4',{text:'По будинках'}),mtBars(w.blds,v=>fl(v)+' л')),el('div',{},el('h4',{text:'Топ-5 резидентів'}),mtBars(w.top.slice(0,5).map(x=>({n:x.n,v:x.v})),v=>fl(v)+' л')))));}
-  if(D.water){const w=D.water;o.push(el('div',{class:'card mt-card'},mtSecHead('water',mtDataNote(w.per,per)),
+  if(D.water){const w=D.water;o.push(el('div',{class:'card mt-card'},mtSecHead('water',mtDataNote(w.per,per,'water')),
     el('div',{class:'mt-ks'},...mtWaterKpis(w,D)),mtWaterBal(w),
     mtBars(w.objs.map(x=>({n:x.n,v:x.v||0})),v=>fm3(v)+' м³')));}
   if(D.park){const p=D.park;o.push(el('div',{class:'card mt-card'},mtSecHead('park','поточний стан'),
@@ -216,9 +216,9 @@ function mtRpBlocks(D,O){O=O||MT_ALL();const B=[];const per=D.per;const sec=(id,
   else B.push(el('p',{class:'rp-mut',text:'За '+mtMonLow(per)+' екстрених ситуацій не було.'}));
   if(D.pm&&(O.pmSum||O.pmList||O.pmPlan))B.push(...pmRpBlocks(D.pm,O,false));
   if(O.debt||O.waste||O.water||O.park||O.inv||O.cons)B.push({h2:'Облік'});
-  if(O.waste&&D.waste){const w=D.waste;B.push(el('div',{class:'rp-card'},sec('waste',mtDataNote(w.per,per)),kp([mtKpi('Вивезено',fl(w.total)+' л',mtDelta(w.total,D.wastePrev&&D.wastePrev.total,true)),mtKpi('Резидентів з вивозом',String(w.cnt),'з '+w.all),mtKpi('Середньо на резидента',w.cnt?fl(w.total/w.cnt)+' л':'—')]),
+  if(O.waste&&D.waste){const w=D.waste;B.push(el('div',{class:'rp-card'},sec('waste',mtDataNote(w.per,per,'waste')),kp([mtKpi('Вивезено',fl(w.total)+' л',mtDelta(w.total,D.wastePrev&&D.wastePrev.total,true)),mtKpi('Резидентів з вивозом',String(w.cnt),'з '+w.all),mtKpi('Середньо на резидента',w.cnt?fl(w.total/w.cnt)+' л':'—')]),
     el('div',{class:'rp-2 in'},el('div',{},el('h4',{text:'По будинках'}),mtBars(w.blds,v=>fl(v)+' л')),el('div',{},el('h4',{text:'Топ-5 резидентів'}),mtBars(w.top.slice(0,5),v=>fl(v)+' л')))));}
-  if(O.water&&D.water){const w=D.water;B.push(el('div',{class:'rp-card'},sec('water',mtDataNote(w.per,per)),kp(mtWaterKpis(w,D)),mtWaterBal(w),mtBars(w.objs.map(x=>({n:x.n,v:x.v||0})),v=>fm3(v)+' м³')));}
+  if(O.water&&D.water){const w=D.water;B.push(el('div',{class:'rp-card'},sec('water',mtDataNote(w.per,per,'water')),kp(mtWaterKpis(w,D)),mtWaterBal(w),mtBars(w.objs.map(x=>({n:x.n,v:x.v||0})),v=>fm3(v)+' м³')));}
   if(O.cons&&D.cons)B.push(el('div',{class:'rp-card'},...mtConsBody(D.cons,true)));
   if(O.park&&D.park){const p=D.park;B.push(el('div',{class:'rp-card'},sec('park','поточний стан'),kp([mtKpi('Заповненість',Math.round(p.occ)+'%'),mtKpi('Усього місць',String(p.n)),mtKpi('Вільні',String(p.c.free))]),mtStack([{n:'Зайнято',v:p.c.busy,c:'#2a78d6'},{n:'Службові (УК)',v:p.c.uk,c:'#1baf7a'},{n:'Бронь',v:p.c.res,c:'#eda100'},{n:'Вільні',v:p.c.free,c:'#b7c4c6'}])));}
   if(O.inv&&D.inv){const v=D.inv;B.push(el('div',{class:'rp-card'},sec('res',v.date?'інвентаризація від '+dm(v.date):'поточний стан'),kp([mtKpi('Позицій',String(v.n)),mtKpi('В експлуатації',String(v.use)),mtKpi('На зберіганні',String(v.store)),mtKpi('Потребують ремонту',String(v.fix.length))]),mtBars(v.cats.slice(0,6),x=>String(x)),v.fix.length?el('p',{class:'rp-mut',text:'На ремонт: '+v.fix.join(', ')}):null));}
