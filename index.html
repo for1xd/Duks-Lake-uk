@@ -4153,7 +4153,8 @@ const ROLES=[
   {id:'engineer',name:'Головний інженер'},
   {id:'director',name:'Директор'},
   {id:'ceo',name:'CEO Asgard'},
-  {id:'dev',name:'Dev'}
+  {id:'dev',name:'Dev'},
+  {id:'test',name:'Тест'}   // тестовий доступ: права як у менеджера (див. hasAny)
 ];
 const ROLE_NAME=Object.fromEntries(ROLES.map(r=>[r.id,r.name]));
 const PLANNERS=['manager','director','dev'];   // can edit schedule and assign tasks
@@ -4234,7 +4235,7 @@ function myRoles(){if(S.asRole&&realDev())return [S.asRole];return myRolesReal()
 function setAsRole(r){S.asRole=r||null;try{r?sessionStorage.setItem('dl.as',r):sessionStorage.removeItem('dl.as');}catch(e){}if(r&&!tabVisible(S.tab))S.tab='today';S.fg=null;S.ukSec=null;render();toast(r?'Перегляд як «'+ROLE_NAME[r]+'»':'Повернулися до своєї ролі');}
 function asBar(){let b=document.getElementById('asBar');if(!S.asRole||!realDev()){if(b)b.remove();return;}if(!b){b=el('div',{id:'asBar',role:'status'});document.body.append(b);}
   const ap=typeof inspAsPerson==='function'?inspAsPerson():null;b.replaceChildren(el('span',{text:'👁 Перегляд як: '+ROLE_NAME[S.asRole]+(ap?' ('+ap.name+')':'')}),el('button',{type:'button',onclick:()=>setAsRole(null)},'Вийти'));}
-function hasAny(list){const r=myRoles();return r?r.some(x=>list.includes(x)):S.isOwner;}
+function hasAny(list){const r=myRoles();return r?r.some(x=>list.includes(x)||(x==='test'&&list.includes('manager'))):S.isOwner;}
 function canPlan(){return hasAny(PLANNERS);}
 const TASKERS=['manager','senior','engineer','director','dev'];
 function canTask(){return hasAny(TASKERS);}
