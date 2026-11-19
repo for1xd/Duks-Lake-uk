@@ -54,7 +54,8 @@ function viewSos(){if(S.tab==='sos'){const t=Date.now();setTimeout(()=>{try{loca
   out.push(el('div',{class:'sos-per'},el('span',{class:'flabel',text:'Період звіту'}),el('div',{class:'sos-perl'},
     el('button',{type:'button',class:'dz-chip','aria-pressed':String(per==='all'),onclick:()=>{S.sosPer='all';render();}},'Усі за весь час'),
     [['w:'+wk0,'Цей тиждень · '+wLbl(wk0)],['w:'+wk1,'Минулий тиждень · '+wLbl(wk1)]].map(([k,l])=>el('button',{type:'button',class:'dz-chip','aria-pressed':String(per===k),onclick:()=>{S.sosPer=k;render();}},l)),
-    pers.map(k=>el('button',{type:'button',class:'dz-chip','aria-pressed':String(per===k),onclick:()=>{S.sosPer=k;render();}},perLabel(k)+(k===curP?' · поточний':''))))));
+    pers.map(k=>el('button',{type:'button',class:'dz-chip','aria-pressed':String(per===k),onclick:()=>{S.sosPer=k;render();}},perLabel(k)+(k===curP?' · поточний':'')))),
+    el('button',{class:'btn sm sos-rep',type:'button',onclick:()=>sosExportRep(pLbl,pL,solved)},svg('<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h6M9 17h6"/>'),' Сформувати звіт')));
   const sel=S.sosCat||'';
   out.push(el('div',{class:'sos-grid'},SOS_CAT.map(c=>{const n=op.filter(x=>x.cat===c.id).length;const all=L.filter(x=>x.cat===c.id).length;const cr=op.some(x=>x.cat===c.id&&x.sev==='crit');
     return el('button',{type:'button',class:'sos-t'+(sel===c.id?' on':'')+(cr?' cr':''),style:'--cc:'+c.c,onclick:()=>{S.sosCat=sel===c.id?'':c.id;render();setTimeout(()=>{const t=document.querySelector('.sos-list-h');if(t)t.scrollIntoView({behavior:'smooth',block:'start'});},50);}},
@@ -64,6 +65,23 @@ function viewSos(){if(S.tab==='sos'){const t=Date.now();setTimeout(()=>{try{loca
     el('div',{class:'sg sm'},[['open','Відкриті'],['done','Вирішені'],['all','Усі']].map(([k,l])=>el('button',{type:'button','aria-pressed':String(f===k),onclick:()=>{S.sosF=k;render();}},l))))));
   out.push(vis.length?el('div',{class:'sos-list'},vis.map(sosCard)):el('div',{class:'card empty'},el('p',{class:'muted',text:f==='open'?'Відкритих ситуацій немає 👍':'Записів поки немає.'}),el('button',{class:'btn ghost',type:'button',onclick:()=>sosEdit(null,sel||null)},'+ Повідомити про ситуацію')));
   return out;}
+/* Звіт екстрених ситуацій за вибраний період → Excel у стилі звіту по воді (ExcelJS + спільні WXL-хелпери).
+   «Ситуації» — зафіксовані в періоді; «Вирішено» — закриті в періоді (можуть бути зафіксовані раніше) */
+function sosRepXlsx(ExcelJS,lbl,L,solved){const wb=new ExcelJS.Workbook();wb.creator='Duck’s Lake';wb.created=new Date();const C=WXL.C,put=WXL.put;const now=new Date();const me=myStaff();
+  const when=t=>t?dmy(new Date(t))+' '+hm(t):'';const nm=id=>{const s=id&&staffById(id);return s?s.name:'';};
+  const lines=['Період: '+lbl.replace(/^за /,''),'Зафіксовано: '+L.length+' (критичних '+L.filter(x=>x.sev==='crit').length+', ще відкрито '+L.filter(sosOpen).length+') · вирішено в періоді: '+solved.length,'Сформовано: '+dmy(now)+' '+hm(now)+(me?' · '+me.name:'')];
+  const sheet=(name,H,widths,rows)=>{const ws=wb.addWorksheet(name,{properties:{tabColor:{argb:WXL.NAVY}},views:[{state:'frozen',ySplit:5,showGridLines:false}]});ws.columns=widths.map(width=>({width}));
+    WXL.title(ws,'Екстрені ситуації — звіт',H.length,lines);WXL.head(ws,5,H);ws.autoFilter={from:{row:5,column:1},to:{row:5,column:H.length}};WXL.page(ws,H.length,'1:5','екстрені ситуації');
+    if(!rows.length){ws.mergeCells(6,1,6,H.length);put(ws,6,1,'Записів за період немає',{align:{indent:1},font:{italic:true}});return;}
+    rows.forEach((v,i)=>{const fill=i%2?C.zebra:null;v.forEach((c,j)=>put(ws,6+i,j+1,c,{fill,align:{wrapText:true,vertical:'top',...(j===0?{horizontal:'center'}:{})}}));});};
+  const row=(x,i)=>{const hrs=x.doneAt&&sosT(x)?Math.round((x.doneAt-sosT(x))/36e5*10)/10:'';return [i+1,when(sosT(x)),sosCat(x.cat).n,x.title||'',[x.bld,x.place].filter(Boolean).join(', '),(SOS_SEV[x.sev]||[''])[0],(SOS_ST[x.status]||[''])[0],nm(x.sid),nm(x.resp),when(x.doneAt),hrs];};
+  const H=['№','Сталося','Блок','Що сталося','Де','Важливість','Статус','Повідомив','Відповідальний','Вирішено','Годин до вирішення'],W=[5,16,20,42,22,12,12,20,20,16,12];
+  sheet('Ситуації',H,W,L.slice().sort((a,b)=>sosT(a)-sosT(b)).map(row));
+  sheet('Вирішено',H,W,solved.slice().sort((a,b)=>a.doneAt-b.doneAt).map(row));
+  return wb;}
+async function sosExportRep(lbl,L,solved){toast('Готую файл…');let EJ;try{EJ=await loadExcelJS();}catch(e){toast('Не вдалося завантажити модуль Excel — перевірте інтернет');return;}
+  try{const buf=await sosRepXlsx(EJ,lbl,L,solved).xlsx.writeBuffer();await saveFile('Екстрені ситуації '+lbl.replace(/^за /,'')+'.xlsx',new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));}
+  catch(e){console.error(e);toast('Не вдалося сформувати файл');}}
 function sosEdit(x,cat){const isNew=!x;x=x||{cat:cat||'',sev:'mid',status:'open'};let photos=(x.photos||[]).slice();
   const UKR=['manager','senior','engineer','director','dev'];const uk=S.staff.filter(s=>UKR.includes(s.role)||UKR.includes(s.extraRole));
   const catBox=el('div',{class:'sos-pick'},SOS_CAT.map(c=>el('button',{type:'button',class:'sos-pc','aria-pressed':String(x.cat===c.id),style:'--cc:'+c.c,onclick:e=>{x.cat=c.id;catBox.querySelectorAll('.sos-pc').forEach(b=>b.setAttribute('aria-pressed',String(b===e.currentTarget)));}},el('span',{class:'sos-ti sm'},svg(c.ic)),el('span',{text:c.n}))));
