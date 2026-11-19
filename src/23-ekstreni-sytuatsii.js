@@ -38,9 +38,11 @@ function sosBadgeList(){if(!isUK())return [];const me=myStaff();const seen=sosSe
 function sosBadge(){return sosBadgeList().length;}
 function viewSos(){if(S.tab==='sos'){const t=Date.now();setTimeout(()=>{try{localStorage.setItem('dl.sosSeen',String(t));}catch(e){}if(typeof renderTabs==='function')renderTabs();},1500);}if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Розділ доступний менеджерам, старшому менеджеру, головному інженеру, директору та Dev.'}))];
   const L=(S.sos||[]).slice().sort((a,b)=>sosT(b)-sosT(a));const op=L.filter(sosOpen);const crit=op.filter(x=>x.sev==='crit');const mo=L.filter(x=>sosT(x)>=new Date(new Date().getFullYear(),new Date().getMonth(),1).getTime());
-  const curP=ymd(new Date()).slice(0,7);const per=S.sosPer||curP;const inP=ts=>per==='all'||(ts&&ymd(new Date(ts)).slice(0,7)===per);
+  const curP=ymd(new Date()).slice(0,7);const per=S.sosPer||curP;const wk0=mondayOf(new Date()),wk1=addDays(wk0,-7);const wLbl=w=>dm(w)+'–'+dm(addDays(w,6));
+  /* період: 'all', місяць 'YYYY-MM' або тиждень 'w:YYYY-MM-DD' (понеділок) */
+  const inP=ts=>{if(per==='all')return true;if(!ts)return false;const d=ymd(new Date(ts));if(per.startsWith('w:')){const w=per.slice(2);return d>=w&&d<=addDays(w,6);}return d.slice(0,7)===per;};
   const pers=[...new Set([curP,...L.map(x=>ymd(new Date(sosT(x))).slice(0,7)),...L.filter(x=>x.doneAt).map(x=>ymd(new Date(x.doneAt)).slice(0,7))])].sort().reverse();
-  const pL=L.filter(x=>inP(sosT(x)));const solved=L.filter(x=>x.status==='done'&&x.doneAt&&inP(x.doneAt));const pLbl=per==='all'?'за весь час':'за '+perLabel(per).toLowerCase();const out=[];
+  const pL=L.filter(x=>inP(sosT(x)));const solved=L.filter(x=>x.status==='done'&&x.doneAt&&inP(x.doneAt));const pLbl=per==='all'?'за весь час':per.startsWith('w:')?'за тиждень '+wLbl(per.slice(2)):'за '+perLabel(per).toLowerCase();const out=[];
   out.push(el('section',{class:'sos-hero'+(crit.length?' alarm':'')},el('div',{class:'sos-hl'},el('span',{class:'eyebrow',text:'Facility · реагування'}),el('h2',{text:crit.length?crit.length+' '+plural(crit.length,'критична ситуація','критичні ситуації','критичних ситуацій')+' зараз':op.length?op.length+' '+plural(op.length,'відкрита ситуація','відкриті ситуації','відкритих ситуацій'):'Усе спокійно'}),
       el('p',{text:op.length?'Опишіть, що сталося, — колеги одразу побачать і зможуть відреагувати.':'Відкритих аварійних ситуацій немає.'})),
     el('button',{class:'btn sos-new',type:'button',onclick:()=>sosEdit(null,S.sosCat||null)},svg('<path d="M12 5v14M5 12h14"/>'),' Повідомити про ситуацію')));
@@ -51,6 +53,7 @@ function viewSos(){if(S.tab==='sos'){const t=Date.now();setTimeout(()=>{try{loca
     el('div',{class:'card dz-k sos-solved'},el('span',{class:'muted small',text:'Вирішено '+pLbl}),el('b',{class:'ok',text:String(solved.length)}),el('small',{class:'muted',text:solved.length?'закрито успішно':'поки жодної'}))));
   out.push(el('div',{class:'sos-per'},el('span',{class:'flabel',text:'Період звіту'}),el('div',{class:'sos-perl'},
     el('button',{type:'button',class:'dz-chip','aria-pressed':String(per==='all'),onclick:()=>{S.sosPer='all';render();}},'Усі за весь час'),
+    [['w:'+wk0,'Цей тиждень · '+wLbl(wk0)],['w:'+wk1,'Минулий тиждень · '+wLbl(wk1)]].map(([k,l])=>el('button',{type:'button',class:'dz-chip','aria-pressed':String(per===k),onclick:()=>{S.sosPer=k;render();}},l)),
     pers.map(k=>el('button',{type:'button',class:'dz-chip','aria-pressed':String(per===k),onclick:()=>{S.sosPer=k;render();}},perLabel(k)+(k===curP?' · поточний':''))))));
   const sel=S.sosCat||'';
   out.push(el('div',{class:'sos-grid'},SOS_CAT.map(c=>{const n=op.filter(x=>x.cat===c.id).length;const all=L.filter(x=>x.cat===c.id).length;const cr=op.some(x=>x.cat===c.id&&x.sev==='crit');
