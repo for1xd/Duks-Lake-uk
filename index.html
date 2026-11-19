@@ -7523,8 +7523,8 @@ function sosRepXlsx(ExcelJS,lbl,L,solved){const wb=new ExcelJS.Workbook();wb.cre
     WXL.title(ws,'Екстрені ситуації — звіт',H.length,lines);WXL.head(ws,5,H);ws.autoFilter={from:{row:5,column:1},to:{row:5,column:H.length}};WXL.page(ws,H.length,'1:5','екстрені ситуації');
     if(!rows.length){ws.mergeCells(6,1,6,H.length);put(ws,6,1,'Записів за період немає',{align:{indent:1},font:{italic:true}});return;}
     rows.forEach((v,i)=>{const fill=i%2?C.zebra:null;v.forEach((c,j)=>put(ws,6+i,j+1,c,{fill,align:{wrapText:true,vertical:'top',...(j===0?{horizontal:'center'}:{})}}));});};
-  const row=(x,i)=>{const hrs=x.doneAt&&sosT(x)?Math.round((x.doneAt-sosT(x))/36e5*10)/10:'';return [i+1,when(sosT(x)),sosCat(x.cat).n,x.title||'',[x.bld,x.place].filter(Boolean).join(', '),(SOS_SEV[x.sev]||[''])[0],(SOS_ST[x.status]||[''])[0],nm(x.sid),nm(x.resp),when(x.doneAt),hrs];};
-  const H=['№','Сталося','Блок','Що сталося','Де','Важливість','Статус','Повідомив','Відповідальний','Вирішено','Годин до вирішення'],W=[5,16,20,42,22,12,12,20,20,16,12];
+  const row=(x,i)=>[i+1,when(sosT(x)),sosCat(x.cat).n.replace(/[\u00ad\u200b]/g,''),x.title||'',[x.bld,x.place].filter(Boolean).join(', '),(SOS_SEV[x.sev]||[''])[0],(SOS_ST[x.status]||[''])[0],nm(x.sid),nm(x.resp),when(x.doneAt)];
+  const H=['№','Сталося','Блок','Що сталося','Де','Важливість','Статус','Повідомив','Відповідальний','Вирішено'],W=[5,16,22,44,22,14,12,20,20,16];
   sheet('Ситуації',H,W,L.slice().sort((a,b)=>sosT(a)-sosT(b)).map(row));
   sheet('Вирішено',H,W,solved.slice().sort((a,b)=>a.doneAt-b.doneAt).map(row));
   return wb;}
