@@ -2,7 +2,7 @@
 // Розділ: Word: облік роботи за місяць
 
 /* ---------- Word: облік роботи за місяць ---------- */
-function wlReportSheet(){const now=new Date();const cur=ymd(now).slice(0,7);const mons=[...new Set([cur,...(S.wl||[]).map(x=>x.date.slice(0,7))])].sort().reverse();
+function wlReportSheet(){const now=new Date();const cur=ymd(now).slice(0,7);const ids=wlStaff().map(s=>s.id);const mons=[...new Set([cur,...(S.wl||[]).filter(x=>ids.includes(x.sid)||(x.with||[]).some(i=>ids.includes(i))).map(x=>x.date.slice(0,7))])].sort().reverse();
   let mon=now.getDate()<=5&&mons.includes(ymd(new Date(now.getFullYear(),now.getMonth()-1,1)).slice(0,7))?ymd(new Date(now.getFullYear(),now.getMonth()-1,1)).slice(0,7):cur;let who='all';
   const ppl=wlStaff();
   const go=el('button',{class:'btn',type:'button',onclick:async()=>{go.disabled=true;go.textContent='Формую…';const ok=await wlWord(mon,who==='all'?ppl.map(s=>s.id):[who]);if(ok)closeSheet();else{go.disabled=false;go.textContent='Сформувати Word';}}},'Сформувати Word');

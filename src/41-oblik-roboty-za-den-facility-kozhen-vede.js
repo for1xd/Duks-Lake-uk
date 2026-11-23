@@ -33,19 +33,20 @@ function wlTileStat(){if(!S.wlLoaded)return null;const t=ymd(new Date());const p
   return [done+' з '+ppl.length,'заповнили облік сьогодні'];}
 /* типові роботи людини: її найчастіші записи за всю історію (без різниці в пунктуації), доповнені запасними шаблонами */
 function wlTypical(sid){const cnt=new Map();const norm=t=>t.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim().slice(0,70);
-  wlOf(sid,'0000-00-00',ymd(new Date())).forEach(x=>{const k=norm(x.text)+'|'+x.loc;const c=cnt.get(k)||{n:0,t:{text:x.text.trim(),loc:x.loc,src:x.src,cat:x.cat,by:x.by,sla:x.sla}};c.n++;cnt.set(k,c);});
+  wlOf(sid,'0000-00-00',ymd(new Date())).forEach(x=>{const k=norm(x.text)+'|'+x.loc;const c=cnt.get(k)||{n:0,t:{text:x.text.trim(),loc:x.loc,src:x.src,cat:x.cat,by:x.by,sla:x.sla}};c.n++;c.t={text:x.text.trim(),loc:x.loc,src:x.src,cat:x.cat,by:x.by,sla:x.sla};cnt.set(k,c);});
   const L=[...cnt.values()].filter(c=>c.n>1).sort((a,b)=>b.n-a.n).slice(0,8).map(c=>c.t);
   WL_PRESET.forEach(p=>{if(L.length<6&&!L.some(t=>norm(t.text).slice(0,24)===norm(p.text).slice(0,24)&&t.loc===p.loc))L.push(p);});
   return L;}
 function wlPick(list,val,on,label,mode){const box=el('div',{class:'wl-grid'+(mode==='g3'?' wl-g3':mode==='row'?' wl-row3':''),role:'group','aria-label':label,lang:'uk'});
-  const draw=v=>box.replaceChildren(...list.map(([k,l,c])=>el('button',{type:'button',class:'dz-chip','aria-pressed':String(k===v),onclick:()=>{on(k);draw(k);}},c?el('span',{class:'wl-dot',style:'--cc:'+c,'aria-hidden':'true'}):null,l)));draw(val);return box;}
+  /* стан перемикаємо на місці, щоб не губився фокус клавіатури */
+  box.append(...list.map(([k,l,c])=>{const b=el('button',{type:'button',class:'dz-chip','aria-pressed':String(k===val),onclick:()=>{on(k);box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));}},c?el('span',{class:'wl-dot',style:'--cc:'+c,'aria-hidden':'true'}):null,l);return b;}));return box;}
 
 function wlView(){const ppl=wlStaff();const m=myStaff();const today=ymd(new Date());
   if(!S.wlSid||!ppl.some(s=>s.id===S.wlSid))S.wlSid=(m&&ppl.some(s=>s.id===m.id))?m.id:(ppl[0]||{}).id;
   if(!S.wlDay||S.wlDay>today)S.wlDay=today;const day=S.wlDay,sid=S.wlSid,p=staffById(sid),mine=!!m&&m.id===sid,canAdd=mine||canAdmin();
   const out=[el('section',{class:'uk-head',style:'--c1:#3E5F8A;--c2:#7A9CC6'},el('span',{class:'uk-ic big'},svg(WL_ICON)),el('div',{},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:'Облік роботи за день'}),el('p',{text:'Оберіть себе й наприкінці дня запишіть, що зроблено. Типові роботи додаються в один дотик, о 16:00 приходить нагадування.'}),el('button',{type:'button',class:'btn ghost sm wl-word',onclick:wlReportSheet},svg(WL_DOCX),' Звіт Word за місяць')))];
   if(!S.wlLoaded)return out.concat(el('div',{class:'card empty'},el('p',{class:'muted',text:'Завантаження…'})));
-  if(!p)return out.concat(el('div',{class:'card empty'},el('p',{class:'muted',text:'У команді Facility ще немає працівників.'})));
+  if(!p)return out.concat(el('div',{class:'card empty'},el('p',{class:'muted',text:'Працівників, які ведуть облік, не знайдено в списку команди.'})));
   out.push(el('div',{class:'wl-ppl',role:'group','aria-label':'Чий облік'},ppl.map(s=>{const n=wlOf(s.id,today).length;const due=wlDue(s.id);
     return el('button',{type:'button',class:'wl-p','aria-pressed':String(s.id===sid),onclick:()=>{S.wlSid=s.id;render();}},avatarP(s),
       el('span',{class:'wl-pt'},el('b',{text:s.name+(m&&m.id===s.id?' (ви)':'')}),el('small',{class:n?'online':due?'wl-due':'muted',text:n?'сьогодні '+n+' '+plural(n,'запис','записи','записів'):due?'ще не заповнено':'сьогодні без записів'})));})));
