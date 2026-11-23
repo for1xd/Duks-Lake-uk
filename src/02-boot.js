@@ -44,7 +44,7 @@ async function boot(){
   db.collection('poker').onSnapshot(q=>{S.pkT=q.docs.map(d=>({id:d.id,...d.data()}));try{pkProgress();}catch(e){}setTimeout(()=>pkClaimOwed(),400);setTimeout(()=>pkJanitor(),1500);if(S.tab==='fun'&&S.funGame==='poker')pkRefresh();},()=>{});
   db.collection('wallets').onSnapshot(q=>{S.wal={};q.docs.forEach(d=>{S.wal[d.id]=d.data();});if(S.tab==='fun'&&S.funGame==='poker')pkRefresh();},()=>{});
   db.collection('games').onSnapshot(q=>{S.games=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='fun')render();},e=>fail(e));
-  db.collection('wlog').onSnapshot(q=>{S.wl=q.docs.map(d=>({id:d.id,...d.data()}));S.wlLoaded=true;if(S.tab==='uk')render();else renderTabs();setTimeout(wlRemCheck,3000);},()=>{S.wlLoaded=true;});
+  db.collection('wlog').onSnapshot(q=>{S.wl=q.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.date&&typeof x.text==='string');S.wlLoaded=true;if(S.tab==='uk'&&(S.fg==='wlog'||!S.fg))render();else renderTabs();setTimeout(wlRemCheck,3000);},()=>{S.wlLoaded=true;});
   setInterval(wlRemCheck,10*60e3);
   db.collection('shifts').onSnapshot(q=>{S.shifts=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='shift'||S.tab==='today')render();},e=>fail(e));
   db.collection('tickets').onSnapshot(q=>{S.tickets=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==='support'||S.tab==='ticket')render();else renderTabs();},e=>fail(e));

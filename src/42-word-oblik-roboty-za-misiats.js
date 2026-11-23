@@ -25,7 +25,7 @@ async function wlDocx(D,mon,sids){const {Document,Packer,Paragraph,TextRun,Table
   const tbl=(rows,w)=>new Table({rows,width:{size:100,type:WidthType.PERCENTAGE},columnWidths:w});
   const [y,m]=mon.split('-').map(Number);const last=new Date(y,m,0).getDate();const from=mon+'-01',to=mon+'-'+pad(last);const per=perLabel(mon);const today=ymd(new Date());
   const days=Array.from({length:last},(_,i)=>mon+'-'+pad(i+1));const ppl=sids.map(staffById).filter(Boolean);const all=ppl.map(s=>({s,L:wlOf(s.id,from,to)}));
-  const tot=all.reduce((a,x)=>a+x.L.length,0);const me=myStaff();const kids=[];
+  const uniq=[...new Map(all.flatMap(x=>x.L).map(x=>[x.id,x])).values()];const tot=uniq.length;const me=myStaff();const kids=[];
   const role=s=>ROLE_NAME[s.role]||'';const slaN=k=>({A:'А',B:'В',C:'С'})[k]||'В';
   /* 1. титул */
   kids.push(P(T('DUCK’S LAKE · FACILITY ВІДДІЛ',{bold:true,color:C.acc,size:20}),{spacing:{before:1800,after:200}}),P(T('Облік роботи за місяць',{bold:true,size:56})),P(T(per,{size:34,color:C.acc}),{spacing:{after:500}}),
@@ -36,7 +36,7 @@ async function wlDocx(D,mon,sids){const {Document,Packer,Paragraph,TextRun,Table
   kids.push(tbl([new TableRow({tableHeader:true,children:['Працівник','Записів','Днів із записами','Термінових (А)','Не завершено'].map(hcell)}),
     ...all.map(({s,L})=>{const dd=new Set(L.map(x=>x.date)).size;const a=L.filter(x=>x.sla==='A').length;const op=L.filter(x=>x.st&&x.st!=='done').length;
       return new TableRow({children:[cell(P([T(s.name,{bold:true}),T(role(s)?'  ·  '+role(s):'',{color:C.mut,size:18})])),cell(String(L.length)),cell(String(dd)+' з '+last),cell(P(T(String(a),{bold:!!a,color:a?C.warn:C.ink}))),cell(P(T(String(op),{bold:!!op,color:op?C.amb:C.ink})))]});})],[5200,1700,2400,2300,2200]));
-  const byCat=WL_CAT.map(c=>[c,all.reduce((a,x)=>a+x.L.filter(z=>z.cat===c[0]).length,0)]).filter(z=>z[1]);
+  const byCat=WL_CAT.map(c=>[c,uniq.filter(z=>z.cat===c[0]).length]).filter(z=>z[1]);
   if(byCat.length){kids.push(P(T('За категоріями',{bold:true,size:24,color:C.acc}),{spacing:{before:260,after:80}}));
     kids.push(tbl([new TableRow({tableHeader:true,children:['Категорія','Записів','Частка'].map(hcell)}),...byCat.map(([c,n])=>new TableRow({children:[cell(P([T('■  ',{color:c[2].slice(1),size:22}),T(c[1])])),cell(String(n)),cell(Math.round(n*100/Math.max(1,tot))+'%')]}))],[8600,2600,2600]));}
   /* 3. по працівниках: кожен день місяця по порядку */
