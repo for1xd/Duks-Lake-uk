@@ -8,7 +8,7 @@ const SCX_PAL={
   sh:{am:['#DCF3E9','#0E6B4A'],pm:['#FCE6DA','#9A3A12'],full:['#DDE9FA','#1D4F96'],mg:['#EAE3F9','#4E348F']}},
  dark:{bg:'#0C1A1F',soft:'#13262D',fg:'#E6F0EF',mut:'#9DB3B8',line:'#25404A',acc:'#4FB3BC',accS:'#173F45',accInk:'#A7E1E5',head:'#173F45',headFg:'#E6F0EF',headMut:'#9DB3B8',we:'#14272D',warnBg:'#3D2E15',warnFg:'#F3CF92',
   sh:{am:['#173A2E','#7FE0B6'],pm:['#3D2418','#F6A982'],full:['#172E4A','#9CC6F5'],mg:['#2A2147','#C7B5F5']}}};
-const SCX_TYPE={am:'Ранкова до 13:00',pm:'Вечірня після 13:00',full:'Повний день',mg:'Менеджер 8:30–17:30'};
+const SCX_TYPE={am:'Ранок · до 13:00',pm:'Вечір · після 13:00',full:'Повний день',mg:'Менеджер · 8:30–17:30'};
 const SCX_GROUPS=[['manager','Менеджери'],['cleaner','Клінери'],['gardener','Садівники']];
 const SCX_DAYF=['Понеділок','Вівторок','Середа','Четвер','П’ятниця','Субота','Неділя'];
 function scxParse(p){if(p==='Д')return {t:'mg',a:8.5,b:17.5,txt:'8:30–17:30',h:9};const m=String(p).match(/(\d{1,2})(?::(\d{2}))?\s*[–-]\s*(\d{1,2})(?::(\d{2}))?/);
@@ -41,30 +41,38 @@ function scxMetrics(D,o){const m=[['Людей у графіку',String(D.rows.
   m.push(['Найменше персоналу',DS[D.minI]+' — '+D.staffOn(D.minI),'без менеджерів']);
   return el('div',{class:'scx-ms'},m.map(([l,v,s])=>el('div',{class:'scx-m'},el('span',{text:l}),el('b',{text:v}),s?el('small',{text:s}):null)));}
 function scxFoot(D){const me=myStaff();const d=new Date();
-  return el('div',{class:'scx-ft'},el('div',{class:'scx-lg'},D.used.map(t=>el('span',{},el('i',{class:'t-'+t}),SCX_TYPE[t]))),el('div',{class:'scx-gen',text:'Сформовано '+dmy(d)+' о '+pad(d.getHours())+':'+pad(d.getMinutes())+' · CRM Duck’s Lake'+(me?' · '+me.name:'')}));}
-/* --- 1. Тиждень, таблиця 1200×675 (×2) --- */
-function scxWeekTable(D,o){
-  const cell=(r,i)=>{const ps=r.days[i];if(!ps.length)return el('td',{class:'scx-c off'+(i>=5?' we':'')+(i===D.tIdx?' now':'')},el('span',{class:'scx-off',text:'вихідний'}));
+  return el('div',{class:'scx-ft'},el('div',{class:'scx-lg'},D.used.map(t=>el('span',{},el('i',{class:'t-'+t}),SCX_TYPE[t]))),el('div',{class:'scx-gen',text:'Сформовано '+dmy(d)+', '+pad(d.getHours())+':'+pad(d.getMinutes())+(me?' · '+me.name:'')}));}
+/* --- 1. Тиждень, таблиця 1200×675 (×2) — v2: лише потрібне, заокруглені картки --- */
+function scxPer(D){const a=parseYmd(D.ws),b=parseYmd(D.we);return a.getMonth()===b.getMonth()?a.getDate()+' – '+b.getDate()+' '+MON_G[b.getMonth()]+' '+b.getFullYear():a.getDate()+' '+MON_G[a.getMonth()]+' – '+b.getDate()+' '+MON_G[b.getMonth()]+' '+b.getFullYear();}
+function scxWeekTable(D,o){const nc=i=>(i>=5?' we':'')+(i===D.tIdx?' now':'');
+  const cell=(r,i)=>{const ps=r.days[i];if(!ps.length)return el('td',{class:'scx-c off'+nc(i)},el('span',{class:'scx-off'}));
     const tall=ps.find(x=>x.t==='mg'||x.t==='full');const top=ps.filter(x=>x.t==='am'||x.t==='note'),bot=ps.filter(x=>x.t==='pm');
     const box=el('div',{class:'scx-slots'});if(tall&&!top.length&&!bot.length)box.append(scxPlate(tall,true));
     else{box.append(el('div',{class:'scx-slot'},top[0]?scxPlate(top[0]):(tall?scxPlate(tall):'')),el('div',{class:'scx-slot'},bot[0]?scxPlate(bot[0]):(top[1]?scxPlate(top[1]):'')));}
-    return el('td',{class:'scx-c'+(i>=5?' we':'')+(i===D.tIdx?' now':'')},box);};
-  const ncol=8+(o.hrs?1:0);
-  const body=[];D.groups.forEach(g=>{if(g.n)body.push(el('tr',{class:'scx-g'},el('td',{colspan:String(ncol),text:g.n.toUpperCase()+' · '+g.rows.length})));
-    g.rows.forEach(r=>body.push(el('tr',{},el('td',{class:'scx-nm'},el('div',{class:'scx-who'},scxAv(r.s),el('div',{},el('b',{text:r.s.name}),scxRoleTag(r.s)))),
-      ...(r.empty?[el('td',{class:'scx-c scx-none',colspan:'7'},el('span',{text:'Немає змін цього тижня'}))]:DS.map((_,i)=>cell(r,i))),o.hrs?el('td',{class:'scx-hr'},el('b',{text:scxH(r.hrs)}),el('small',{text:'год'})):null)));});
-  const sumRow=(lbl,fn,warn)=>el('tr',{class:'scx-s'},el('td',{class:'scx-nm'},el('b',{text:lbl})),DS.map((_,i)=>{const n=fn(i);return el('td',{class:(i>=5?'we':'')+(i===D.tIdx?' now':'')},el('span',{class:'scx-n'+(warn&&n<2?' warn':''),text:String(n)}));}),o.hrs?el('td',{}):null);
-  const resp=D.hasDays?el('tr',{class:'scx-s rs'},el('td',{class:'scx-nm'},el('b',{text:'Відповідальний'})),DS.map((_,i)=>{const s=staffById(respOn(S.week,i));return el('td',{class:(i>=5?'we':'')},el('span',{class:'scx-rn',text:s?s.name:'—'}));}),o.hrs?el('td',{}):null):null;
-  const tb=el('table',{class:'scx-t'},el('colgroup',{},el('col',{style:'width:'+(o.hrs?178:188)+'px'}),DS.map(()=>el('col')),o.hrs?el('col',{style:'width:54px'}):null),
-    el('thead',{},el('tr',{},el('th',{class:'scx-nm',text:'Працівник'}),DS.map((d,i)=>el('th',{class:i===D.tIdx?'now':''},el('b',{text:d}),el('span',{text:dm(addDays(D.ws,i))}))),o.hrs?el('th',{text:'Годин'}):null)),
-    el('tbody',{},body,sumRow('Персонал на змінах',D.staffOn,true),sumRow('Усього на об’єкті',D.allOn,false),resp));
-  return el('div',{class:'scx scx-tbl',style:scxVars(o.th)},scxHead(D,o),scxMetrics(D,o),tb,el('p',{class:'scx-note',text:'«Персонал на змінах» — клінери й садівники, без менеджерів. Менше 2 людей підсвічено.'}),scxFoot(D));}
+    return el('td',{class:'scx-c'+nc(i)},box);};
+  const ncol=8+(o.hrs?1:0);const body=[];
+  D.groups.forEach(g=>{if(g.n)body.push(el('tr',{class:'scx-g'},el('td',{colspan:String(ncol)},el('span',{text:g.n}),el('i',{text:String(g.rows.length)}))));
+    g.rows.forEach(r=>body.push(el('tr',{class:'scx-r'},el('td',{class:'scx-nm'},el('div',{class:'scx-who'},scxAv(r.s),el('div',{},el('b',{text:r.s.name}),g.n?null:el('small',{text:roleName(r.s.role)||''})))),
+      ...(r.empty?[el('td',{class:'scx-c scx-none',colspan:'7'},el('span',{text:'Немає змін цього тижня'}))]:DS.map((_,i)=>cell(r,i))),o.hrs?el('td',{class:'scx-hr'},el('b',{text:scxH(r.hrs)})):null)));});
+  const foot=[el('tr',{class:'scx-s'},el('td',{class:'scx-nm'},el('b',{text:'На зміні'}),el('small',{text:'без менеджерів'})),
+    DS.map((_,i)=>{const n=D.staffOn(i);return el('td',{class:nc(i).trim()},el('span',{class:'scx-n'+(n<2?' warn':''),text:String(n)}));}),o.hrs?el('td',{class:'scx-hr'},el('b',{text:scxH(D.total)})):null)];
+  if(D.hasDays)foot.push(el('tr',{class:'scx-s rs'},el('td',{class:'scx-nm'},el('b',{text:'Відповідальний'})),DS.map((_,i)=>{const s=staffById(respOn(S.week,i));return el('td',{class:nc(i).trim()},el('span',{class:'scx-rn',text:s?s.name.split(' ')[0]:'—'}));}),o.hrs?el('td',{}):null));
+  const tb=el('table',{class:'scx-t'},el('colgroup',{},el('col',{style:'width:'+(o.hrs?186:200)+'px'}),DS.map(()=>el('col')),o.hrs?el('col',{style:'width:56px'}):null),
+    el('thead',{},el('tr',{},el('th',{class:'scx-nm'},'Працівник'),DS.map((d,i)=>el('th',{class:nc(i).trim()},el('span',{class:'scx-dh'},el('b',{text:d}),el('span',{text:dm(addDays(D.ws,i))})))),o.hrs?el('th',{class:'scx-hr'},'Годин'):null)),
+    el('tbody',{},body),el('tfoot',{},foot));
+  const resp=D.main?el('div',{class:'scx-resp'},el('small',{text:'Відповідальний за об’єкт'}),el('b',{text:D.main.name}),el('span',{text:D.hours})):D.hasDays?el('div',{class:'scx-resp'},el('small',{text:'Відповідальні за об’єкт'}),el('b',{text:'по днях — унизу таблиці'}),el('span',{text:D.hours})):null;
+  const me=myStaff();const now=new Date();
+  return el('div',{class:'scx scx-tbl scx-v2',style:scxVars(o.th)},
+    el('div',{class:'scx-top'},el('div',{class:'scx-tt'},el('div',{class:'scx-eb',text:'DUCK’S LAKE'}),el('h1',{text:'Графік змін'}),el('div',{class:'scx-per',text:scxPer(D)})),
+      el('div',{class:'scx-tr'},resp,el('div',{class:'scx-lg'},D.used.map(t=>el('span',{},el('i',{class:'t-'+t}),SCX_TYPE[t]))))),
+    el('div',{class:'scx-card'},tb),
+    el('div',{class:'scx-ft'},el('span',{text:'Сформовано '+dmy(now)+', '+pad(now.getHours())+':'+pad(now.getMinutes())+(me?' · '+me.name:'')}),el('span',{text:'Менше 2 людей на зміні підсвічено'})));}
 /* --- 2. Тиждень для телефону 1080×N --- */
 function scxWeekPhone(D,o){const blocks=DS.map((_,i)=>{const on=D.rows.filter(r=>r.days[i].length),off=D.rows.filter(r=>!r.days[i].length);
   return el('section',{class:'scx-day'+(i===D.tIdx?' now':'')},el('h2',{},el('span',{text:SCX_DAYF[i]+', '+dm(addDays(D.ws,i))}),i===D.tIdx?el('em',{text:'сьогодні'}):null),
     on.length?el('div',{class:'scx-ppl'},on.map(r=>el('div',{class:'scx-p'},scxAv(r.s,'big'),el('div',{class:'scx-pt'},el('b',{text:r.s.name}),el('span',{class:'scx-pr',text:roleName(r.s.role)||''})),el('div',{class:'scx-pp'},r.days[i].map(x=>scxPlate(x)))))):el('p',{class:'scx-empty',text:'Ніхто не працює'}),
     off.length?el('p',{class:'scx-offl'},el('b',{text:'Вихідні: '}),off.map(r=>r.s.name).join(', ')):null,
-    el('p',{class:'scx-cnt'},'На змінах: ',el('b',{class:D.staffOn(i)<2?'warn':'',text:String(D.staffOn(i))}),' · з менеджерами: ',el('b',{text:String(D.allOn(i))})),
+    el('p',{class:'scx-cnt'},'На зміні без менеджерів: ',el('b',{class:D.staffOn(i)<2?'warn':'',text:String(D.staffOn(i))})),
     D.hasDays?el('p',{class:'scx-offl'},el('b',{text:'Відповідальний: '}),(staffById(respOn(S.week,i))||{name:'—'}).name):null);});
   return el('div',{class:'scx scx-ph',style:scxVars(o.th)},scxHead(D,o,true),blocks,scxFoot(D));}
 /* --- 3. Один день 1080×1350 --- */
@@ -73,7 +81,7 @@ function scxDay(D,o,i){const on=D.rows.filter(r=>r.days[i].length);const sec=(t,
   const resp=staffById(respOn(S.week,i));const d=addDays(D.ws,i);
   return el('div',{class:'scx scx-dy',style:scxVars(o.th)},el('div',{class:'scx-top'},el('div',{class:'scx-tt'},el('div',{class:'scx-eb',text:'DUCK’S LAKE · FACILITY'}),el('h1',{},el('span',{text:i===D.tIdx?'Сьогодні на зміні':'На зміні'}),el('br'),el('span',{class:'scx-dd',text:DS[i]+' '+dm(d)})))),
     on.length?[sec('Ранок · до 13:00',x=>x.t==='am'||x.t==='note'),sec('Увесь день',x=>x.t==='mg'||x.t==='full'),sec('Вечір · після 13:00',x=>x.t==='pm')].filter(Boolean):el('p',{class:'scx-empty',text:'У цей день ніхто не працює'}),
-    el('div',{class:'scx-db'},el('div',{},el('small',{text:'Відповідальний за об’єкт'}),el('b',{text:resp?resp.name:'—'}),el('span',{text:D.hours})),el('div',{class:'scx-dn'},el('b',{class:D.staffOn(i)<2?'warn':'',text:String(D.staffOn(i))}),el('span',{text:'персонал'}),el('b',{text:String(D.allOn(i))}),el('span',{text:'усього'}))));}
+    el('div',{class:'scx-db'},el('div',{},el('small',{text:'Відповідальний за об’єкт'}),el('b',{text:resp?resp.name:'—'}),el('span',{text:D.hours})),el('div',{class:'scx-dn'},el('b',{class:D.staffOn(i)<2?'warn':'',text:String(D.staffOn(i))}),el('span',{text:'на зміні'}))));}
 const SCX_VAR={table:{n:'Тиждень — таблиця',d:'2400×1350 · ПК, друк',W:1200,H:675,sc:2,sfx:''},phone:{n:'Тиждень — для телефону',d:'1080 px · Telegram, Viber',W:1080,H:0,sc:1,sfx:'_телефон'},day:{n:'Один день',d:'1080×1350 · хто сьогодні на зміні',W:1080,H:1350,sc:1,sfx:''}};
 function scxBuild(ws,o){const D=scxData(ws,o);return o.v==='phone'?scxWeekPhone(D,o):o.v==='day'?scxDay(D,o,o.day):scxWeekTable(D,o);}
 function scxName(ws,o){const we=addDays(ws,6);if(o.v==='day')return 'Графік_DucksLake_'+DS[o.day]+'_'+dm(addDays(ws,o.day))+'.png';return 'Графік_DucksLake_'+dm(ws)+'–'+dm(we)+'.'+we.slice(0,4)+SCX_VAR[o.v].sfx+'.png';}
