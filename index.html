@@ -10,6 +10,7 @@ window.DL_LOGO_SVG='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg
 window.dlLogoHTML=function(o){o=o||{};var id='dlg'+(++dlLogoHTML.n);var h=DL_LOGO_SVG.replace('id="dlg"','id="'+id+'"').replace('url(#dlg)','url(#'+id+')')
   .replace('<svg ','<svg class="dl-logo'+(o.cls?' '+o.cls:'')+'" '+(o.label?'role="img" aria-label="'+o.label+'" ':'aria-hidden="true" focusable="false" '))
   .replace('<g ','<g style="stroke:#FFFFFF;stroke-width:6.4;fill:none;stroke-linecap:butt;stroke-linejoin:miter" ');
+  if(o.bare)h=h.replace(/<rect[^>]*\/>/,'').replace('stroke:#FFFFFF','stroke:currentColor');
   if(o.draw)h=h.replace('<path d="M34 30 L90 89"/>','<path class="dl-d" pathLength="1" d="M34 30 L90 89"/>').replace('<path d="M90.7 13 L90.7 93 L14 93"/>','<path class="dl-a" pathLength="156.7" d="M90.7 13 L90.7 93 L14 93"/>');
   return h;};dlLogoHTML.n=0;
 (function(){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='data:image/svg+xml,'+encodeURIComponent(DL_LOGO_SVG);document.head.appendChild(l);})();
@@ -46,6 +47,17 @@ window.dlLogoHTML=function(o){o=o||{};var id='dlg'+(++dlLogoHTML.n);var h=DL_LOG
 @keyframes dlsRing{0%{transform:scale(.9);opacity:0}15%{opacity:.55}100%{transform:scale(3.1);opacity:0}}
 @keyframes dlsSh{from{transform:translateX(-56px)}to{transform:translateX(160px)}}
 @media (prefers-reduced-motion:reduce){.dls-ring,.dls-bar i{display:none}.dls *{animation:none!important}.dls .dl-d,.dls .dl-a{stroke-dasharray:none!important;stroke-dashoffset:0!important}.dls,.dls.out{transform:none!important}.dls-st{transition:none}}
+/* екран завантаження під тему користувача (Graphite): темна — графіт, світла — срібло; логотип без квадрата */
+.dls{--dls-bg:linear-gradient(135deg,#121A22 0%,#2B3540 55%,#4C5863 100%);--dls-fg:#E8EDF1;--dls-sub:rgba(232,237,241,.68);--dls-line:rgba(232,237,241,.16);--dls-fill:#9FB6C7;--dls-ring:rgba(159,182,199,.45);--dls-btn:rgba(255,255,255,.10);background:var(--dls-bg)!important;color:var(--dls-fg)!important}
+:root[data-theme="light"] .dls{--dls-bg:linear-gradient(135deg,#F2F4F6 0%,#D6DDE3 55%,#B9C3CC 100%);--dls-fg:#1C232B;--dls-sub:rgba(28,35,43,.66);--dls-line:rgba(28,35,43,.14);--dls-fill:#3E5566;--dls-ring:rgba(62,85,102,.35);--dls-btn:rgba(28,35,43,.06)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .dls{--dls-bg:linear-gradient(135deg,#F2F4F6 0%,#D6DDE3 55%,#B9C3CC 100%);--dls-fg:#1C232B;--dls-sub:rgba(28,35,43,.66);--dls-line:rgba(28,35,43,.14);--dls-fill:#3E5566;--dls-ring:rgba(62,85,102,.35);--dls-btn:rgba(28,35,43,.06)}}
+.dls .dls-ic .dl-logo{box-shadow:none!important;color:var(--dls-fg)}
+.dls .dls-ring{border-color:var(--dls-ring)}
+.dls .dls-name,.dls .dls-st.hi,.dls .dls-err b{color:var(--dls-fg)}
+.dls .dls-beta{color:var(--dls-sub);border-color:var(--dls-line)}
+.dls .dls-st,.dls .dls-slow,.dls .dls-err{color:var(--dls-sub)}
+.dls .dls-bar{background:var(--dls-line)}.dls .dls-bar b{background:var(--dls-fill)}
+.dls button{border-color:var(--dls-line);background:var(--dls-btn);color:var(--dls-fg)}
 /* логотип-іконка в шапці / меню / героях: квадрат без заокруглень */
 .dl-logo{display:inline-block;flex:none;vertical-align:middle}
 svg.logo.dl-logo,.side-head .dl-logo,.hero2 .hero-brand .dl-logo{stroke:none}
@@ -4091,6 +4103,52 @@ html.gg .uk-tile:hover{filter:brightness(1.04)}html.gg .uk-tile:active{box-shado
 html.gg .uk-tt .uk-go{width:32px!important;height:32px!important}html.gg .uk-go{background:var(--gg-btn-hi),var(--gg-tint)!important;color:var(--fg)!important;box-shadow:inset 0 1px 0 var(--gg-rim-soft),inset 0 0 0 .5px var(--gg-rimd),0 0 0 1px var(--gg-rim),var(--gg-drop)!important}
 html.gg .card.empty{padding:22px 16px!important}
 @media (prefers-contrast:more){html.gg.gg{--gg-surf:var(--surface);--gg-tint:var(--surface-2)}}
+
+/* PNG-графік v2: таблиця */
+.scx-v2.scx-tbl{padding:36px 40px 28px;gap:16px}
+.scx-v2 .scx-top{align-items:flex-end}
+.scx-v2 .scx-eb{font-size:10px;letter-spacing:.16em}
+.scx-v2 h1{font-size:30px;margin:6px 0 4px}
+.scx-v2 .scx-per{font-size:14px;font-weight:700;color:var(--x-mut)}
+.scx-v2 .scx-tr{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.scx-v2 .scx-resp{margin:0;padding:9px 16px;border-radius:14px;align-items:flex-end}
+.scx-v2 .scx-resp small{font-size:8.5px}.scx-v2 .scx-resp b{font-size:14px}.scx-v2 .scx-resp span{font-size:10.5px}
+.scx-v2 .scx-lg{gap:12px;font-size:10px;font-weight:700;color:var(--x-mut)}.scx-v2 .scx-lg i{width:14px;height:10px;border-radius:4px}
+.scx-v2 .scx-card{border:1px solid var(--x-line);border-radius:18px;overflow:hidden;background:var(--x-bg)}
+.scx-v2 .scx-t th,.scx-v2 .scx-t td{border:0!important;padding:3px!important;background:transparent;text-transform:none!important;letter-spacing:0!important;color:var(--x-fg)}
+.scx-v2 .scx-t thead th{background:var(--x-soft)!important;color:var(--x-mut)!important;font-size:10px!important;font-weight:800!important;padding:9px 3px 8px!important;border-bottom:1px solid var(--x-line)!important;border-radius:0!important}
+.scx-v2 .scx-t thead th.scx-nm{text-align:left;padding-left:16px!important}
+.scx-v2 .scx-dh{display:inline-flex;flex-direction:column;align-items:center;gap:1px;padding:3px 12px;border-radius:10px;line-height:1.15}
+.scx-v2 .scx-dh b{font-size:11.5px;color:var(--x-fg);font-weight:800}.scx-v2 .scx-dh span{font-size:9.5px;color:var(--x-mut);font-weight:700}
+.scx-v2 .scx-t thead th.we .scx-dh b{color:var(--x-warnFg)}
+.scx-v2 .scx-t thead th.now .scx-dh{background:var(--x-acc)}.scx-v2 .scx-t thead th.now .scx-dh b,.scx-v2 .scx-t thead th.now .scx-dh span{color:var(--x-headFg)}
+.scx-v2 .scx-t td.we{background:var(--x-we)}
+.scx-v2 .scx-t td.now{background:var(--x-accS)!important;border:0!important}
+.scx-v2 .scx-t tr.scx-r td{border-top:1px solid var(--x-line)!important}
+.scx-v2 .scx-t tr.scx-g td{padding:9px 16px 4px!important;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase!important;color:var(--x-mut)}
+.scx-v2 .scx-t tr.scx-g td i{font-style:normal;margin-left:6px;padding:0 6px;border-radius:999px;background:var(--x-soft)}
+.scx-v2 .scx-t tbody tr.scx-g:first-child td{padding-top:8px!important}
+.scx-v2 .scx-t td.scx-nm{padding-left:14px!important}
+.scx-v2 .scx-av{width:22px!important;height:22px!important;font-size:10px!important}
+.scx-v2 .scx-who b{font-size:12px}.scx-v2 .scx-who small{font-size:8.5px;color:var(--x-mut);font-weight:700}
+.scx-v2 .scx-pl{border-radius:8px!important}
+.scx-v2 .scx-off{display:block;width:12px;height:3px;border-radius:3px;background:var(--x-line);margin:0 auto}
+.scx-v2 .scx-hr b{font-size:13px}
+.scx-v2 .scx-t tfoot td{background:var(--x-soft)!important;border-top:1px solid var(--x-line)!important;height:30px}
+.scx-v2 .scx-t tfoot td.now{background:var(--x-accS)!important}
+.scx-v2 .scx-t tfoot td.scx-nm{text-align:left}.scx-v2 .scx-t tfoot td.scx-nm b{display:block;font-size:10.5px}.scx-v2 .scx-t tfoot td.scx-nm small{display:block;font-size:8px;color:var(--x-mut);font-weight:700}
+.scx-v2 .scx-n{font-size:12px;min-width:26px;padding:2px 8px;background:var(--x-bg);border:1px solid var(--x-line)}
+.scx-v2 .scx-n.warn{border-color:transparent}
+.scx-v2 .scx-rn{font-size:9.5px}
+.scx-v2 .scx-ft{font-size:9.5px;font-weight:600}
+.scx-v2.tight{padding:24px 40px 18px;gap:10px}.scx-v2.tight h1{font-size:24px;margin:2px 0}.scx-v2.tight .scx-c{height:48px}.scx-v2.tight .scx-t tr.scx-g td{padding:5px 16px 2px!important}
+.scx-v2 .scx-card{flex:none}
+.scx-v2 .scx-t thead th.now,.scx-v2 .scx-t td.now,.scx-v2 .scx-t tbody tr:last-child td.now{border-left:0!important;border-right:0!important;border-top:0!important}
+.scx-v2 .scx-t thead th.now{border-bottom:1px solid var(--x-line)!important}
+.scx-v2 .scx-dh{display:block;width:62px;margin:0 auto;padding:4px 0;text-align:center}
+.scx-v2 .scx-dh b,.scx-v2 .scx-dh span{display:block}
+.scx-v2 .scx-t thead th.now .scx-dh b{color:var(--x-bg)!important}.scx-v2 .scx-t thead th.now .scx-dh span{color:var(--x-bg)!important;opacity:.85}
+.scx-v2 .scx-pl small{display:none}
 </style>
 
 <div id="dlSplash" class="dls" role="status" aria-live="polite" aria-label="Завантаження Duck’s Lake">
@@ -4105,8 +4163,9 @@ html.gg .card.empty{padding:22px 16px!important}
 </div>
 <script>
 /* Екран завантаження: етапи приходять із boot() (реальні події бази), мінімум ~700 мс показу, плавний вихід */
+try{var _t=localStorage.getItem('dl.theme');if(_t)document.documentElement.setAttribute('data-theme',_t);}catch(e){}/* тема користувача ще до першого кадру */
 window.DLS=(function(){var t0=performance.now(),root=document.getElementById('dlSplash'),$=function(i){return document.getElementById(i);};
-  var ic=$('dlsIc');ic.insertAdjacentHTML('beforeend',dlLogoHTML({draw:true}));
+  var ic=$('dlsIc');ic.insertAdjacentHTML('beforeend',dlLogoHTML({draw:true,bare:true}));
   var arm=ic.querySelector('.dl-a');if(arm)arm.addEventListener('animationend',function(){ic.querySelectorAll('.dl-d,.dl-a').forEach(function(p){p.removeAttribute('class');p.removeAttribute('pathLength');});});
   try{if(document.fonts&&document.fonts.check('700 15px Unbounded'))root.classList.add('uf');}catch(e){}
   var st=$('dlsSt'),bar=$('dlsBar'),fin=false,failed=false,greet=false,ft=null,cur=st.textContent;
@@ -4592,7 +4651,6 @@ function openMenu(){
   const kids=[meCard('menu-me',()=>go('profile')),notesChip('nc-menu')];
   for(const [lbl,ids] of NAV_GROUPS){const v=ids.filter(tabVisible);if(!v.length)continue;
     kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),null,b?el('span',{class:'badge',text:b}):null);}));}
-  kids.push(el('div',{class:'menu-lbl',text:'Вигляд'}),ggBtn());if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn());
   const m=el('div',{class:'menu',role:'menu'},kids.filter(Boolean));
   document.getElementById('menuRoot').replaceChildren(bg,m);document.body.classList.add('menu-open');document.getElementById('menuBtn').setAttribute('aria-expanded','true');
   document.addEventListener('keydown',menuEsc);m.querySelector('button').focus();
@@ -4604,10 +4662,10 @@ const I_MOON='<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>'
 const I_SUP='<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m5.6 5.6 3.6 3.6M14.8 14.8l3.6 3.6M14.8 9.2l3.6-3.6M5.6 18.4l3.6-3.6"/>';
 function isDarkNow(){const t=document.documentElement.getAttribute('data-theme');if(t)return t==='dark';return window.matchMedia('(prefers-color-scheme: dark)').matches;}
 function applyTheme(){let t=null;try{t=localStorage.getItem('dl.theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);applyV2();applyGG();}
-function v2On(){try{return localStorage.getItem('dl.v2')==='1';}catch(e){return false;}}
+function v2On(){return false;}
 function applyV2(){document.documentElement.classList.toggle('v2',v2On());}
 /* Graphite Glass — основний дизайн для всіх (клас html.gg); у меню «Вигляд» кожен може повернути старий у своєму браузері (dl.gg='0') */
-function ggOn(){try{return localStorage.getItem('dl.gg')!=='0'&&localStorage.getItem('dl.v2')!=='1';}catch(e){return true;}}
+function ggOn(){return true;}/* Graphite — єдиний дизайн (світла й темна теми) */
 function applyGG(){document.documentElement.classList.toggle('gg',ggOn());}
 function toggleGG(){const on=!ggOn();try{localStorage.setItem('dl.gg',on?'1':'0');if(on)localStorage.setItem('dl.v2','0');}catch(e){}applyV2();applyGG();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Увімкнено новий дизайн':'Повернуто старий дизайн — лише в цьому браузері');}
 function ggBtn(){return el('button',{type:'button',role:'menuitem',onclick:toggleGG},svg('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z"/>'),el('span',{class:'grow',text:ggOn()?'Повернути старий дизайн':'Увімкнути новий дизайн'}));}
@@ -10325,7 +10383,7 @@ const SCX_PAL={
   sh:{am:['#DCF3E9','#0E6B4A'],pm:['#FCE6DA','#9A3A12'],full:['#DDE9FA','#1D4F96'],mg:['#EAE3F9','#4E348F']}},
  dark:{bg:'#0C1A1F',soft:'#13262D',fg:'#E6F0EF',mut:'#9DB3B8',line:'#25404A',acc:'#4FB3BC',accS:'#173F45',accInk:'#A7E1E5',head:'#173F45',headFg:'#E6F0EF',headMut:'#9DB3B8',we:'#14272D',warnBg:'#3D2E15',warnFg:'#F3CF92',
   sh:{am:['#173A2E','#7FE0B6'],pm:['#3D2418','#F6A982'],full:['#172E4A','#9CC6F5'],mg:['#2A2147','#C7B5F5']}}};
-const SCX_TYPE={am:'Ранкова до 13:00',pm:'Вечірня після 13:00',full:'Повний день',mg:'Менеджер 8:30–17:30'};
+const SCX_TYPE={am:'Ранок · до 13:00',pm:'Вечір · після 13:00',full:'Повний день',mg:'Менеджер · 8:30–17:30'};
 const SCX_GROUPS=[['manager','Менеджери'],['cleaner','Клінери'],['gardener','Садівники']];
 const SCX_DAYF=['Понеділок','Вівторок','Середа','Четвер','П’ятниця','Субота','Неділя'];
 function scxParse(p){if(p==='Д')return {t:'mg',a:8.5,b:17.5,txt:'8:30–17:30',h:9};const m=String(p).match(/(\d{1,2})(?::(\d{2}))?\s*[–-]\s*(\d{1,2})(?::(\d{2}))?/);
@@ -10358,30 +10416,38 @@ function scxMetrics(D,o){const m=[['Людей у графіку',String(D.rows.
   m.push(['Найменше персоналу',DS[D.minI]+' — '+D.staffOn(D.minI),'без менеджерів']);
   return el('div',{class:'scx-ms'},m.map(([l,v,s])=>el('div',{class:'scx-m'},el('span',{text:l}),el('b',{text:v}),s?el('small',{text:s}):null)));}
 function scxFoot(D){const me=myStaff();const d=new Date();
-  return el('div',{class:'scx-ft'},el('div',{class:'scx-lg'},D.used.map(t=>el('span',{},el('i',{class:'t-'+t}),SCX_TYPE[t]))),el('div',{class:'scx-gen',text:'Сформовано '+dmy(d)+' о '+pad(d.getHours())+':'+pad(d.getMinutes())+' · CRM Duck’s Lake'+(me?' · '+me.name:'')}));}
-/* --- 1. Тиждень, таблиця 1200×675 (×2) --- */
-function scxWeekTable(D,o){
-  const cell=(r,i)=>{const ps=r.days[i];if(!ps.length)return el('td',{class:'scx-c off'+(i>=5?' we':'')+(i===D.tIdx?' now':'')},el('span',{class:'scx-off',text:'вихідний'}));
+  return el('div',{class:'scx-ft'},el('div',{class:'scx-lg'},D.used.map(t=>el('span',{},el('i',{class:'t-'+t}),SCX_TYPE[t]))),el('div',{class:'scx-gen',text:'Сформовано '+dmy(d)+', '+pad(d.getHours())+':'+pad(d.getMinutes())+(me?' · '+me.name:'')}));}
+/* --- 1. Тиждень, таблиця 1200×675 (×2) — v2: лише потрібне, заокруглені картки --- */
+function scxPer(D){const a=parseYmd(D.ws),b=parseYmd(D.we);return a.getMonth()===b.getMonth()?a.getDate()+' – '+b.getDate()+' '+MON_G[b.getMonth()]+' '+b.getFullYear():a.getDate()+' '+MON_G[a.getMonth()]+' – '+b.getDate()+' '+MON_G[b.getMonth()]+' '+b.getFullYear();}
+function scxWeekTable(D,o){const nc=i=>(i>=5?' we':'')+(i===D.tIdx?' now':'');
+  const cell=(r,i)=>{const ps=r.days[i];if(!ps.length)return el('td',{class:'scx-c off'+nc(i)},el('span',{class:'scx-off'}));
     const tall=ps.find(x=>x.t==='mg'||x.t==='full');const top=ps.filter(x=>x.t==='am'||x.t==='note'),bot=ps.filter(x=>x.t==='pm');
     const box=el('div',{class:'scx-slots'});if(tall&&!top.length&&!bot.length)box.append(scxPlate(tall,true));
     else{box.append(el('div',{class:'scx-slot'},top[0]?scxPlate(top[0]):(tall?scxPlate(tall):'')),el('div',{class:'scx-slot'},bot[0]?scxPlate(bot[0]):(top[1]?scxPlate(top[1]):'')));}
-    return el('td',{class:'scx-c'+(i>=5?' we':'')+(i===D.tIdx?' now':'')},box);};
-  const ncol=8+(o.hrs?1:0);
-  const body=[];D.groups.forEach(g=>{if(g.n)body.push(el('tr',{class:'scx-g'},el('td',{colspan:String(ncol),text:g.n.toUpperCase()+' · '+g.rows.length})));
-    g.rows.forEach(r=>body.push(el('tr',{},el('td',{class:'scx-nm'},el('div',{class:'scx-who'},scxAv(r.s),el('div',{},el('b',{text:r.s.name}),scxRoleTag(r.s)))),
-      ...(r.empty?[el('td',{class:'scx-c scx-none',colspan:'7'},el('span',{text:'Немає змін цього тижня'}))]:DS.map((_,i)=>cell(r,i))),o.hrs?el('td',{class:'scx-hr'},el('b',{text:scxH(r.hrs)}),el('small',{text:'год'})):null)));});
-  const sumRow=(lbl,fn,warn)=>el('tr',{class:'scx-s'},el('td',{class:'scx-nm'},el('b',{text:lbl})),DS.map((_,i)=>{const n=fn(i);return el('td',{class:(i>=5?'we':'')+(i===D.tIdx?' now':'')},el('span',{class:'scx-n'+(warn&&n<2?' warn':''),text:String(n)}));}),o.hrs?el('td',{}):null);
-  const resp=D.hasDays?el('tr',{class:'scx-s rs'},el('td',{class:'scx-nm'},el('b',{text:'Відповідальний'})),DS.map((_,i)=>{const s=staffById(respOn(S.week,i));return el('td',{class:(i>=5?'we':'')},el('span',{class:'scx-rn',text:s?s.name:'—'}));}),o.hrs?el('td',{}):null):null;
-  const tb=el('table',{class:'scx-t'},el('colgroup',{},el('col',{style:'width:'+(o.hrs?178:188)+'px'}),DS.map(()=>el('col')),o.hrs?el('col',{style:'width:54px'}):null),
-    el('thead',{},el('tr',{},el('th',{class:'scx-nm',text:'Працівник'}),DS.map((d,i)=>el('th',{class:i===D.tIdx?'now':''},el('b',{text:d}),el('span',{text:dm(addDays(D.ws,i))}))),o.hrs?el('th',{text:'Годин'}):null)),
-    el('tbody',{},body,sumRow('Персонал на змінах',D.staffOn,true),sumRow('Усього на об’єкті',D.allOn,false),resp));
-  return el('div',{class:'scx scx-tbl',style:scxVars(o.th)},scxHead(D,o),scxMetrics(D,o),tb,el('p',{class:'scx-note',text:'«Персонал на змінах» — клінери й садівники, без менеджерів. Менше 2 людей підсвічено.'}),scxFoot(D));}
+    return el('td',{class:'scx-c'+nc(i)},box);};
+  const ncol=8+(o.hrs?1:0);const body=[];
+  D.groups.forEach(g=>{if(g.n)body.push(el('tr',{class:'scx-g'},el('td',{colspan:String(ncol)},el('span',{text:g.n}),el('i',{text:String(g.rows.length)}))));
+    g.rows.forEach(r=>body.push(el('tr',{class:'scx-r'},el('td',{class:'scx-nm'},el('div',{class:'scx-who'},scxAv(r.s),el('div',{},el('b',{text:r.s.name}),g.n?null:el('small',{text:roleName(r.s.role)||''})))),
+      ...(r.empty?[el('td',{class:'scx-c scx-none',colspan:'7'},el('span',{text:'Немає змін цього тижня'}))]:DS.map((_,i)=>cell(r,i))),o.hrs?el('td',{class:'scx-hr'},el('b',{text:scxH(r.hrs)})):null)));});
+  const foot=[el('tr',{class:'scx-s'},el('td',{class:'scx-nm'},el('b',{text:'На зміні'}),el('small',{text:'без менеджерів'})),
+    DS.map((_,i)=>{const n=D.staffOn(i);return el('td',{class:nc(i).trim()},el('span',{class:'scx-n'+(n<2?' warn':''),text:String(n)}));}),o.hrs?el('td',{class:'scx-hr'},el('b',{text:scxH(D.total)})):null)];
+  if(D.hasDays)foot.push(el('tr',{class:'scx-s rs'},el('td',{class:'scx-nm'},el('b',{text:'Відповідальний'})),DS.map((_,i)=>{const s=staffById(respOn(S.week,i));return el('td',{class:nc(i).trim()},el('span',{class:'scx-rn',text:s?s.name.split(' ')[0]:'—'}));}),o.hrs?el('td',{}):null));
+  const tb=el('table',{class:'scx-t'},el('colgroup',{},el('col',{style:'width:'+(o.hrs?186:200)+'px'}),DS.map(()=>el('col')),o.hrs?el('col',{style:'width:56px'}):null),
+    el('thead',{},el('tr',{},el('th',{class:'scx-nm'},'Працівник'),DS.map((d,i)=>el('th',{class:nc(i).trim()},el('span',{class:'scx-dh'},el('b',{text:d}),el('span',{text:dm(addDays(D.ws,i))})))),o.hrs?el('th',{class:'scx-hr'},'Годин'):null)),
+    el('tbody',{},body),el('tfoot',{},foot));
+  const resp=D.main?el('div',{class:'scx-resp'},el('small',{text:'Відповідальний за об’єкт'}),el('b',{text:D.main.name}),el('span',{text:D.hours})):D.hasDays?el('div',{class:'scx-resp'},el('small',{text:'Відповідальні за об’єкт'}),el('b',{text:'по днях — унизу таблиці'}),el('span',{text:D.hours})):null;
+  const me=myStaff();const now=new Date();
+  return el('div',{class:'scx scx-tbl scx-v2',style:scxVars(o.th)},
+    el('div',{class:'scx-top'},el('div',{class:'scx-tt'},el('div',{class:'scx-eb',text:'DUCK’S LAKE'}),el('h1',{text:'Графік змін'}),el('div',{class:'scx-per',text:scxPer(D)})),
+      el('div',{class:'scx-tr'},resp,el('div',{class:'scx-lg'},D.used.map(t=>el('span',{},el('i',{class:'t-'+t}),SCX_TYPE[t]))))),
+    el('div',{class:'scx-card'},tb),
+    el('div',{class:'scx-ft'},el('span',{text:'Сформовано '+dmy(now)+', '+pad(now.getHours())+':'+pad(now.getMinutes())+(me?' · '+me.name:'')}),el('span',{text:'Менше 2 людей на зміні підсвічено'})));}
 /* --- 2. Тиждень для телефону 1080×N --- */
 function scxWeekPhone(D,o){const blocks=DS.map((_,i)=>{const on=D.rows.filter(r=>r.days[i].length),off=D.rows.filter(r=>!r.days[i].length);
   return el('section',{class:'scx-day'+(i===D.tIdx?' now':'')},el('h2',{},el('span',{text:SCX_DAYF[i]+', '+dm(addDays(D.ws,i))}),i===D.tIdx?el('em',{text:'сьогодні'}):null),
     on.length?el('div',{class:'scx-ppl'},on.map(r=>el('div',{class:'scx-p'},scxAv(r.s,'big'),el('div',{class:'scx-pt'},el('b',{text:r.s.name}),el('span',{class:'scx-pr',text:roleName(r.s.role)||''})),el('div',{class:'scx-pp'},r.days[i].map(x=>scxPlate(x)))))):el('p',{class:'scx-empty',text:'Ніхто не працює'}),
     off.length?el('p',{class:'scx-offl'},el('b',{text:'Вихідні: '}),off.map(r=>r.s.name).join(', ')):null,
-    el('p',{class:'scx-cnt'},'На змінах: ',el('b',{class:D.staffOn(i)<2?'warn':'',text:String(D.staffOn(i))}),' · з менеджерами: ',el('b',{text:String(D.allOn(i))})),
+    el('p',{class:'scx-cnt'},'На зміні без менеджерів: ',el('b',{class:D.staffOn(i)<2?'warn':'',text:String(D.staffOn(i))})),
     D.hasDays?el('p',{class:'scx-offl'},el('b',{text:'Відповідальний: '}),(staffById(respOn(S.week,i))||{name:'—'}).name):null);});
   return el('div',{class:'scx scx-ph',style:scxVars(o.th)},scxHead(D,o,true),blocks,scxFoot(D));}
 /* --- 3. Один день 1080×1350 --- */
@@ -10390,7 +10456,7 @@ function scxDay(D,o,i){const on=D.rows.filter(r=>r.days[i].length);const sec=(t,
   const resp=staffById(respOn(S.week,i));const d=addDays(D.ws,i);
   return el('div',{class:'scx scx-dy',style:scxVars(o.th)},el('div',{class:'scx-top'},el('div',{class:'scx-tt'},el('div',{class:'scx-eb',text:'DUCK’S LAKE · FACILITY'}),el('h1',{},el('span',{text:i===D.tIdx?'Сьогодні на зміні':'На зміні'}),el('br'),el('span',{class:'scx-dd',text:DS[i]+' '+dm(d)})))),
     on.length?[sec('Ранок · до 13:00',x=>x.t==='am'||x.t==='note'),sec('Увесь день',x=>x.t==='mg'||x.t==='full'),sec('Вечір · після 13:00',x=>x.t==='pm')].filter(Boolean):el('p',{class:'scx-empty',text:'У цей день ніхто не працює'}),
-    el('div',{class:'scx-db'},el('div',{},el('small',{text:'Відповідальний за об’єкт'}),el('b',{text:resp?resp.name:'—'}),el('span',{text:D.hours})),el('div',{class:'scx-dn'},el('b',{class:D.staffOn(i)<2?'warn':'',text:String(D.staffOn(i))}),el('span',{text:'персонал'}),el('b',{text:String(D.allOn(i))}),el('span',{text:'усього'}))));}
+    el('div',{class:'scx-db'},el('div',{},el('small',{text:'Відповідальний за об’єкт'}),el('b',{text:resp?resp.name:'—'}),el('span',{text:D.hours})),el('div',{class:'scx-dn'},el('b',{class:D.staffOn(i)<2?'warn':'',text:String(D.staffOn(i))}),el('span',{text:'на зміні'}))));}
 const SCX_VAR={table:{n:'Тиждень — таблиця',d:'2400×1350 · ПК, друк',W:1200,H:675,sc:2,sfx:''},phone:{n:'Тиждень — для телефону',d:'1080 px · Telegram, Viber',W:1080,H:0,sc:1,sfx:'_телефон'},day:{n:'Один день',d:'1080×1350 · хто сьогодні на зміні',W:1080,H:1350,sc:1,sfx:''}};
 function scxBuild(ws,o){const D=scxData(ws,o);return o.v==='phone'?scxWeekPhone(D,o):o.v==='day'?scxDay(D,o,o.day):scxWeekTable(D,o);}
 function scxName(ws,o){const we=addDays(ws,6);if(o.v==='day')return 'Графік_DucksLake_'+DS[o.day]+'_'+dm(addDays(ws,o.day))+'.png';return 'Графік_DucksLake_'+dm(ws)+'–'+dm(we)+'.'+we.slice(0,4)+SCX_VAR[o.v].sfx+'.png';}

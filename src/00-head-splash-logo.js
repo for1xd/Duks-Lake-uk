@@ -8,12 +8,14 @@ window.DL_LOGO_SVG='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg
 window.dlLogoHTML=function(o){o=o||{};var id='dlg'+(++dlLogoHTML.n);var h=DL_LOGO_SVG.replace('id="dlg"','id="'+id+'"').replace('url(#dlg)','url(#'+id+')')
   .replace('<svg ','<svg class="dl-logo'+(o.cls?' '+o.cls:'')+'" '+(o.label?'role="img" aria-label="'+o.label+'" ':'aria-hidden="true" focusable="false" '))
   .replace('<g ','<g style="stroke:#FFFFFF;stroke-width:6.4;fill:none;stroke-linecap:butt;stroke-linejoin:miter" ');
+  if(o.bare)h=h.replace(/<rect[^>]*\/>/,'').replace('stroke:#FFFFFF','stroke:currentColor');
   if(o.draw)h=h.replace('<path d="M34 30 L90 89"/>','<path class="dl-d" pathLength="1" d="M34 30 L90 89"/>').replace('<path d="M90.7 13 L90.7 93 L14 93"/>','<path class="dl-a" pathLength="156.7" d="M90.7 13 L90.7 93 L14 93"/>');
   return h;};dlLogoHTML.n=0;
 (function(){var l=document.createElement('link');l.rel='icon';l.type='image/svg+xml';l.href='data:image/svg+xml,'+encodeURIComponent(DL_LOGO_SVG);document.head.appendChild(l);})();
 /* Екран завантаження: етапи приходять із boot() (реальні події бази), мінімум ~700 мс показу, плавний вихід */
+try{var _t=localStorage.getItem('dl.theme');if(_t)document.documentElement.setAttribute('data-theme',_t);}catch(e){}/* тема користувача ще до першого кадру */
 window.DLS=(function(){var t0=performance.now(),root=document.getElementById('dlSplash'),$=function(i){return document.getElementById(i);};
-  var ic=$('dlsIc');ic.insertAdjacentHTML('beforeend',dlLogoHTML({draw:true}));
+  var ic=$('dlsIc');ic.insertAdjacentHTML('beforeend',dlLogoHTML({draw:true,bare:true}));
   var arm=ic.querySelector('.dl-a');if(arm)arm.addEventListener('animationend',function(){ic.querySelectorAll('.dl-d,.dl-a').forEach(function(p){p.removeAttribute('class');p.removeAttribute('pathLength');});});
   try{if(document.fonts&&document.fonts.check('700 15px Unbounded'))root.classList.add('uf');}catch(e){}
   var st=$('dlsSt'),bar=$('dlsBar'),fin=false,failed=false,greet=false,ft=null,cur=st.textContent;
