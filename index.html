@@ -1717,8 +1717,9 @@ html.hw body[data-tab="today"] #app .row.between>h2:first-child::after{content:"
 .hw-moon::before{width:10px;height:10px;left:14px;top:12px}.hw-moon::after{width:6px;height:6px;left:30px;top:28px}
 .hero2.has-duck{padding-bottom:30px!important}
 .hero-water{position:absolute;right:0;bottom:0;width:260px;height:64px;z-index:-1;opacity:.9;pointer-events:none;
-  background:radial-gradient(46px 12px at calc(100% - 62px) calc(100% - 22px),rgba(191,240,243,.28),transparent 100%),repeating-radial-gradient(84px 21px at calc(100% - 62px) calc(100% - 22px),transparent 0 9px,rgba(255,255,255,.15) 10px 11.5px,transparent 12.5px 21px);
-  -webkit-mask-image:radial-gradient(96px 24px at calc(100% - 62px) calc(100% - 22px),#000 35%,transparent 100%);mask-image:radial-gradient(96px 24px at calc(100% - 62px) calc(100% - 22px),#000 35%,transparent 100%)}
+  background:radial-gradient(46px 12px at calc(100% - var(--wx,62px)) calc(100% - 22px),var(--hw-glow,rgba(191,240,243,.28)),transparent 100%),repeating-radial-gradient(84px 21px at calc(100% - var(--wx,62px)) calc(100% - 22px),transparent 0 9px,var(--hw-ring,rgba(255,255,255,.15)) 10px 11.5px,transparent 12.5px 21px);
+  -webkit-mask-image:radial-gradient(80px 20px at calc(100% - var(--wx,62px)) calc(100% - 22px),#000 35%,transparent 100%);mask-image:radial-gradient(80px 20px at calc(100% - var(--wx,62px)) calc(100% - 22px),#000 35%,transparent 100%)}
+@media (max-width:520px){.hero-water{--wx:56px}}
 .hero-duck{position:absolute;right:16px;bottom:2px;width:92px;height:92px;z-index:-1;filter:drop-shadow(0 8px 10px rgba(6,40,44,.4));animation:duckBob 3.6s ease-in-out infinite;transform-origin:50% 90%}
 .hero2.has-duck .hero-logo{right:auto;left:-40px;opacity:.06}
 @media (max-width:520px){.hw-hero .hero-chips,.hero2.has-duck .hero-chips{max-width:calc(100% - 128px)}.hw-duck{width:70px;height:70px;right:72px}.hw-pump{width:88px!important;height:88px!important}.hero-duck{width:80px;height:80px}}
@@ -2438,7 +2439,7 @@ html.strict header.top{border-radius:16px!important}
 @media (min-width:900px){html.strict nav.tabs{border-radius:18px!important}}
 html.strict .btn{border-radius:12px}
 html.strict .uk-tile::after,html.strict .uk-hero::after{display:none}
-html.strict .hero-duck,html.strict:not(.hw) .hero2::before,html.strict:not(.hw) .hero2::after{display:none!important}
+html.strict .hero-duck,html.strict .hero-water,html.strict:not(.hw) .hero2::before,html.strict:not(.hw) .hero2::after{display:none!important}
 html.strict:not(.hw) .hero2{background:linear-gradient(135deg,#123E45 0%,#1A5A62 60%,#1F6F78 100%)!important}
 html.strict .hero-chips{flex-direction:row!important;flex-wrap:wrap}
 html.strict:not(.hw) .uk-hero{background:linear-gradient(135deg,#123E45,#1A5A62)!important}
@@ -3979,7 +3980,7 @@ html.gg.gg{--bg:#E3E8EC;--surface:#F3F6F8;--surface-2:#E7EBEF;--fg:#1C232B;--mut
   --gg-rim:rgba(255,255,255,.60);--gg-rimd:rgba(28,35,43,.16);--gg-rim-soft:rgba(255,255,255,.90);--gg-field-rim:rgba(28,35,43,.60);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,0));
   --gg-out:0 1px 2px rgba(28,35,43,.12),0 12px 32px -8px rgba(28,35,43,.22);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(28,35,43,.08);--gg-label:#3E4953;
   --gg-drop:0 6px 14px -6px rgba(28,35,43,.35);--gg-press:inset 0 2px 6px rgba(28,35,43,.22);--gg-well:inset 0 2px 5px rgba(28,35,43,.12);--gg-lift:0 2px 6px rgba(28,35,43,.18);--gg-txt-sh:0 1px 1px rgba(0,0,0,.18);
-  --gg-hero-a:#FAFBFC;--gg-hero-b:#C3CCD4;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#DEE4E9 50%,var(--gg-hero-b) 100%);--gg-hero-fg:#1C232B;--gg-hero-sub:rgba(28,35,43,.80);--gg-hero-chip:rgba(28,35,43,.08);--gg-hero-bar:rgba(28,35,43,.14);--gg-hero-fill:linear-gradient(90deg,#3E5566,#7A91A3);
+  --hw-ring:rgba(28,35,43,.16);--hw-glow:rgba(62,85,102,.16);--gg-hero-a:#FAFBFC;--gg-hero-b:#C3CCD4;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#DEE4E9 50%,var(--gg-hero-b) 100%);--gg-hero-fg:#1C232B;--gg-hero-sub:rgba(28,35,43,.80);--gg-hero-chip:rgba(28,35,43,.08);--gg-hero-bar:rgba(28,35,43,.14);--gg-hero-fill:linear-gradient(90deg,#3E5566,#7A91A3);
   --gg-sheet:linear-gradient(160deg,#F5F7F9,#DCE2E7);--gg-dim:rgba(20,28,36,.45);--gg-menu-shadow:-12px 0 32px rgba(28,35,43,.28);--gg-sheet-shadow:0 -10px 40px rgba(28,35,43,.25);
   --shadow:var(--gg-out);--app-grad:var(--gg-bg);color-scheme:light}
 @media (prefers-color-scheme:dark){html.gg.gg:not([data-theme="light"]){--bg:#1A2129;--surface:#2A3039;--surface-2:rgba(0,0,0,.22);--fg:#E8EDF1;--muted:#C4CDD5;--line:rgba(255,255,255,.12);
@@ -3989,7 +3990,7 @@ html.gg.gg{--bg:#E3E8EC;--surface:#F3F6F8;--surface-2:#E7EBEF;--fg:#1C232B;--mut
   --gg-rim:rgba(255,255,255,.10);--gg-rimd:rgba(0,0,0,.2);--gg-rim-soft:rgba(255,255,255,.18);--gg-field-rim:rgba(255,255,255,.40);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));
   --gg-out:0 1px 2px rgba(0,0,0,.15),0 12px 32px -8px rgba(0,0,0,.35);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(0,0,0,.18);--gg-label:#E0E6EB;
   --gg-drop:0 6px 14px -6px rgba(0,0,0,.50);--gg-press:inset 0 2px 6px rgba(0,0,0,.35);--gg-well:inset 0 2px 5px rgba(0,0,0,.30);--gg-lift:0 2px 6px rgba(0,0,0,.30);--gg-txt-sh:0 1px 1px rgba(0,0,0,.25);
-  --gg-hero-a:#3A4550;--gg-hero-b:#1B222A;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#262E37 55%,var(--gg-hero-b) 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
+  --hw-ring:rgba(255,255,255,.15);--hw-glow:rgba(191,240,243,.28);--gg-hero-a:#3A4550;--gg-hero-b:#1B222A;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#262E37 55%,var(--gg-hero-b) 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
   --gg-sheet:linear-gradient(160deg,#323A44,#1E252D);--gg-dim:rgba(8,12,16,.65);--gg-menu-shadow:-16px 0 48px rgba(0,0,0,.55);--gg-sheet-shadow:0 -10px 40px rgba(0,0,0,.40);color-scheme:dark}}
 html.gg.gg[data-theme="dark"]{--bg:#1A2129;--surface:#2A3039;--surface-2:rgba(0,0,0,.22);--fg:#E8EDF1;--muted:#C4CDD5;--line:rgba(255,255,255,.12);
   --accent:#7E95A8;--accent-fg:#0F1A22;--gg-focus:#B4C7D5;--accent-soft:rgba(159,182,199,.18);--accent-ink:#D3E0EA;--ok:#6CC59B;--warn:#EF8A7F;--amber:#E2B05A;--warn-soft:rgba(239,138,127,.16);--ok-soft:rgba(108,197,155,.16);--amber-soft:rgba(226,176,90,.18);--amber-ink:#F0CB8A;
@@ -3998,7 +3999,7 @@ html.gg.gg[data-theme="dark"]{--bg:#1A2129;--surface:#2A3039;--surface-2:rgba(0,
   --gg-rim:rgba(255,255,255,.10);--gg-rimd:rgba(0,0,0,.2);--gg-rim-soft:rgba(255,255,255,.18);--gg-field-rim:rgba(255,255,255,.40);--gg-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));--gg-btn-hi:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,0));
   --gg-out:0 1px 2px rgba(0,0,0,.15),0 12px 32px -8px rgba(0,0,0,.35);--gg-in:inset 0 1px 0 var(--gg-rim-soft),inset 0 -1px 0 rgba(0,0,0,.18);--gg-label:#E0E6EB;
   --gg-drop:0 6px 14px -6px rgba(0,0,0,.50);--gg-press:inset 0 2px 6px rgba(0,0,0,.35);--gg-well:inset 0 2px 5px rgba(0,0,0,.30);--gg-lift:0 2px 6px rgba(0,0,0,.30);--gg-txt-sh:0 1px 1px rgba(0,0,0,.25);
-  --gg-hero-a:#3A4550;--gg-hero-b:#1B222A;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#262E37 55%,var(--gg-hero-b) 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
+  --hw-ring:rgba(255,255,255,.15);--hw-glow:rgba(191,240,243,.28);--gg-hero-a:#3A4550;--gg-hero-b:#1B222A;--gg-hero:linear-gradient(160deg,var(--gg-hero-a) 0%,#262E37 55%,var(--gg-hero-b) 100%);--gg-hero-fg:#F1F4F7;--gg-hero-sub:rgba(241,244,247,.74);--gg-hero-chip:rgba(255,255,255,.10);--gg-hero-bar:rgba(255,255,255,.16);--gg-hero-fill:linear-gradient(90deg,#9FB6C7,#E8EDF1);
   --gg-sheet:linear-gradient(160deg,#323A44,#1E252D);--gg-dim:rgba(8,12,16,.65);--gg-menu-shadow:-16px 0 48px rgba(0,0,0,.55);--gg-sheet-shadow:0 -10px 40px rgba(0,0,0,.40);color-scheme:dark}
 html.gg body,html.gg #scroller{background:var(--gg-bg) fixed!important}
 html.gg body{font-variant-numeric:tabular-nums}
