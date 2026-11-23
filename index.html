@@ -1716,8 +1716,9 @@ html.hw body[data-tab="today"] #app .row.between>h2:first-child::after{content:"
 .hw-moon::before,.hw-moon::after{content:"";position:absolute;border-radius:50%;background:rgba(190,140,60,.28)}
 .hw-moon::before{width:10px;height:10px;left:14px;top:12px}.hw-moon::after{width:6px;height:6px;left:30px;top:28px}
 .hero2.has-duck{padding-bottom:30px!important}
-.hero-water{position:absolute;right:0;bottom:0;width:190px;height:46px;z-index:-1;opacity:.9;
-  background:radial-gradient(70% 60% at 60% 100%,rgba(191,240,243,.28),transparent 70%),repeating-radial-gradient(ellipse at 60% 120%,transparent 0 9px,rgba(255,255,255,.12) 10px 11px,transparent 12px 20px)}
+.hero-water{position:absolute;right:0;bottom:0;width:260px;height:64px;z-index:-1;opacity:.9;pointer-events:none;
+  background:radial-gradient(46px 12px at calc(100% - 62px) calc(100% - 22px),rgba(191,240,243,.28),transparent 100%),repeating-radial-gradient(84px 21px at calc(100% - 62px) calc(100% - 22px),transparent 0 9px,rgba(255,255,255,.15) 10px 11.5px,transparent 12.5px 21px);
+  -webkit-mask-image:radial-gradient(96px 24px at calc(100% - 62px) calc(100% - 22px),#000 35%,transparent 100%);mask-image:radial-gradient(96px 24px at calc(100% - 62px) calc(100% - 22px),#000 35%,transparent 100%)}
 .hero-duck{position:absolute;right:16px;bottom:2px;width:92px;height:92px;z-index:-1;filter:drop-shadow(0 8px 10px rgba(6,40,44,.4));animation:duckBob 3.6s ease-in-out infinite;transform-origin:50% 90%}
 .hero2.has-duck .hero-logo{right:auto;left:-40px;opacity:.06}
 @media (max-width:520px){.hw-hero .hero-chips,.hero2.has-duck .hero-chips{max-width:calc(100% - 128px)}.hw-duck{width:70px;height:70px;right:72px}.hw-pump{width:88px!important;height:88px!important}.hero-duck{width:80px;height:80px}}
