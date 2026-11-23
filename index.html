@@ -10305,8 +10305,8 @@ const WL_PRESET=[
   {text:'Робота з резидентами: розгляд і вирішення звернень',src:'Заявка резидента',cat:'adm',loc:'Вся локація'},
   {text:'Узгодження робіт і обстеження разом з підрядником',src:'Запит підрядника',cat:'eng',loc:'Вся локація'}];
 const WL_ROLES=['manager','senior','engineer','director','ceo','dev','test'];
-/* shortcut: облік ведуть лише ці працівники (Віктор Шепітько, Роман Мацібох); винести в налаштування, якщо склад зміниться */
-const WL_IDS=['s-viktor','f393bj1s3p4c1a0s48fq'];
+/* shortcut: облік ведуть лише ці працівники (Ігор Г., Богдан К., Роман Мацібох, Віктор Шепітько); винести в налаштування, якщо склад зміниться */
+const WL_IDS=['s-igor','s-bohdan','f393bj1s3p4c1a0s48fq','s-viktor'];
 function wlStaff(){return sortedStaff().filter(s=>WL_IDS.includes(s.id));}
 function wlTeam(){return sortedStaff().filter(s=>WL_ROLES.includes(s.role)||WL_ROLES.includes(s.extraRole));}
 function wlCat(id){return WL_CAT.find(c=>c[0]===id)||WL_CAT[WL_CAT.length-1];}
