@@ -116,7 +116,6 @@ function openMenu(){
   const kids=[meCard('menu-me',()=>go('profile')),notesChip('nc-menu')];
   for(const [lbl,ids] of NAV_GROUPS){const v=ids.filter(tabVisible);if(!v.length)continue;
     kids.push(el('div',{class:'menu-lbl',text:lbl}),...v.map(id=>{const t=T(id);const b=badgeFor(id);return el('button',{type:'button',role:'menuitem','aria-current':isCur(id)?'page':null,onclick:()=>go(id)},svg(t.icon),el('span',{class:'grow',text:tabName(t)}),null,b?el('span',{class:'badge',text:b}):null);}));}
-  kids.push(el('div',{class:'menu-lbl',text:'Вигляд'}),ggBtn());if(isDev())kids.push(el('div',{class:'menu-lbl',text:'Тест'}),v2Btn());
   const m=el('div',{class:'menu',role:'menu'},kids.filter(Boolean));
   document.getElementById('menuRoot').replaceChildren(bg,m);document.body.classList.add('menu-open');document.getElementById('menuBtn').setAttribute('aria-expanded','true');
   document.addEventListener('keydown',menuEsc);m.querySelector('button').focus();
@@ -128,10 +127,10 @@ const I_MOON='<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>'
 const I_SUP='<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m5.6 5.6 3.6 3.6M14.8 14.8l3.6 3.6M14.8 9.2l3.6-3.6M5.6 18.4l3.6-3.6"/>';
 function isDarkNow(){const t=document.documentElement.getAttribute('data-theme');if(t)return t==='dark';return window.matchMedia('(prefers-color-scheme: dark)').matches;}
 function applyTheme(){let t=null;try{t=localStorage.getItem('dl.theme');}catch(e){}if(t)document.documentElement.setAttribute('data-theme',t);applyV2();applyGG();}
-function v2On(){try{return localStorage.getItem('dl.v2')==='1';}catch(e){return false;}}
+function v2On(){return false;}
 function applyV2(){document.documentElement.classList.toggle('v2',v2On());}
 /* Graphite Glass — основний дизайн для всіх (клас html.gg); у меню «Вигляд» кожен може повернути старий у своєму браузері (dl.gg='0') */
-function ggOn(){try{return localStorage.getItem('dl.gg')!=='0'&&localStorage.getItem('dl.v2')!=='1';}catch(e){return true;}}
+function ggOn(){return true;}/* Graphite — єдиний дизайн (світла й темна теми) */
 function applyGG(){document.documentElement.classList.toggle('gg',ggOn());}
 function toggleGG(){const on=!ggOn();try{localStorage.setItem('dl.gg',on?'1':'0');if(on)localStorage.setItem('dl.v2','0');}catch(e){}applyV2();applyGG();closeMenu();render();requestAnimationFrame(placeInd);toast(on?'Увімкнено новий дизайн':'Повернуто старий дизайн — лише в цьому браузері');}
 function ggBtn(){return el('button',{type:'button',role:'menuitem',onclick:toggleGG},svg('<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z"/>'),el('span',{class:'grow',text:ggOn()?'Повернути старий дизайн':'Увімкнути новий дизайн'}));}
