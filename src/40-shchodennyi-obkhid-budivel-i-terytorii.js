@@ -648,29 +648,3 @@ function pwaCard(){let os=/iPhone|iPad|iPod/.test(navigator.userAgent)?'ios':'an
     and:['Відкрийте посилання на Duck’s Lake у Chrome.','Натисніть меню ⋮ у правому верхньому куті.','Оберіть «Додати на головний екран» (або «Установити застосунок»).','Підтвердьте «Додати» — на головному екрані з’явиться іконка Duck’s Lake.','Відкрийте застосунок з іконки, увійдіть своїм акаунтом Claude і оберіть своє ім’я в колективі. Дозвольте доступ до камери, коли телефон запитає.']};
   const seg=el('div',{class:'seg',role:'tablist'});const draw=()=>{seg.replaceChildren(...[['ios','iPhone (iOS)'],['and','Android']].map(([k,l])=>el('button',{type:'button',role:'tab','aria-selected':String(os===k),'aria-pressed':String(os===k),onclick:()=>{os=k;draw();}},l)));body.replaceChildren(...steps[os].map(t=>el('li',{text:t})));};draw();
   return el('div',{class:'card stack pwa'},el('h2',{text:'Встановити Duck’s Lake на телефон'}),el('p',{class:'muted',style:'margin:0',text:'Застосунок відкривається з іконки, як звичайна програма. Потрібно для обходу будівель і фото.'}),seg,body);}
-function openFg(id){S.hist.push(snap());S.fg=id;S.arB=null;S.arHi=null;SC().scrollTop=0;render();animIn(1);}
-function openUk(id){S.hist.push(snap());S.ukSec=id;S.fg='obl';SC().scrollTop=0;render();animIn(1);}
-function viewUK(){if(!isUK()&&inspIsWalker()){S.fg='insp';S.ukSec=null;return inspView();}if(!isUK())return [el('div',{class:'card empty'},el('p',{class:'muted',text:'Цей розділ доступний лише для управлінської компанії.'}))];
-  if(S.ukSec==='water')return S.wObjSel?waterObject(S.wObjSel):waterHome();
-  if(S.ukSec==='debt')return debtView();
-  if(S.ukSec==='waste')return wasteView();
-  if(S.ukSec==='park')return pkView();
-  if(S.ukSec==='res')return resView();
-  if(S.ukSec&&UKS[S.ukSec])return ukSection(S.ukSec);
-  if(!S.fg)return fgHome();
-  if(S.fg==='insp')return inspView();
-  if(S.fg==='dev')return devView();
-  if(S.fg==='arch')return S.arB?arBuilding():arHome();
-  if(S.fg==='docs')return dkView();
-  if(S.fg==='clean')return clView();
-  if(S.fg!=='obl')return fgSection(S.fg);
-  const out=[el('section',{class:'uk-hero'},el('span',{class:'eyebrow',text:'Facility відділ'}),el('h2',{text:'Облік'}),el('p',{text:'Вода, сміття, дебіторка, паркінг, інвентар та електроенергія Duck’s Lake. Оберіть блок, щоб відкрити.'}))];
-  out.push(el('div',{class:'uk-grid'},Object.entries(UKS).map(([id,u])=>{const st=ukStat(id);return el('button',{type:'button',class:'uk-tile'+(st?'':' soon-t'),style:'--c1:'+u.c1+';--c2:'+u.c2,onclick:()=>openUk(id)},
-    el('div',{class:'uk-tt'},el('span',{class:'uk-ic'},svg(u.ic)),st?null:el('span',{class:'soon',text:'скоро'}),el('span',{class:'uk-go'},svg('<path d="m9 6 6 6-6 6"/>'))),
-    el('span',{class:'uk-t'},el('b',{text:u.name}),el('small',{text:u.sub})),
-    el('span',{class:'uk-st'},st?[el('b',{text:st[0]}),el('small',{text:st[1]})]:el('small',{text:'Блок у розробці'})));})));
-  return out;}
-function ukSection(id){const u=UKS[id];
-  return [el('section',{class:'uk-head',style:'--c1:'+u.c1+';--c2:'+u.c2},el('span',{class:'uk-ic big'},svg(u.ic)),el('div',{},el('span',{class:'eyebrow',text:'Облік'}),el('h2',{text:u.name}),el('p',{text:u.sub}))),
-    el('div',{class:'card uk-soon'},el('span',{class:'soon',text:'у розробці'}),el('p',{style:'margin:0',text:'Структуру цього блоку наповнюємо поступово. Ось що тут планується:'})),
-    el('div',{class:'uk-plan'},u.plan.map(([e,t,d])=>el('div',{class:'card uk-pi'},el('span',{class:'uk-pe',text:e}),el('div',{},el('b',{text:t}),el('small',{text:d})),el('span',{class:'soon',text:'скоро'}))))];}
