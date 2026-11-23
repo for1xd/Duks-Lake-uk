@@ -4149,6 +4149,9 @@ html.gg .card.empty{padding:22px 16px!important}
 .scx-v2 .scx-dh b,.scx-v2 .scx-dh span{display:block}
 .scx-v2 .scx-t thead th.now .scx-dh b{color:var(--x-bg)!important}.scx-v2 .scx-t thead th.now .scx-dh span{color:var(--x-bg)!important;opacity:.85}
 .scx-v2 .scx-pl small{display:none}
+/* Graphite: без «затемнення» над стрічкою чату; нижнє меню при наведенні — лише яскравіший текст, без сірої пігулки */
+html.gg #chatFade{display:none!important}
+html.gg body nav.tabs button:not([aria-current="page"]):hover{background:transparent!important;box-shadow:none!important;color:var(--fg)!important}
 </style>
 
 <div id="dlSplash" class="dls" role="status" aria-live="polite" aria-label="Завантаження Duck’s Lake">
