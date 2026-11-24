@@ -34,7 +34,7 @@ function wlTileStat(){if(!S.wlLoaded)return null;const t=ymd(new Date());const p
 /* типові роботи людини: її найчастіші записи за всю історію (без різниці в пунктуації), доповнені запасними шаблонами */
 function wlTypical(sid){const cnt=new Map();const norm=t=>t.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim().slice(0,70);
   wlOf(sid,'0000-00-00',ymd(new Date())).forEach(x=>{const k=norm(x.text)+'|'+x.loc;const c=cnt.get(k)||{n:0,t:{text:x.text.trim(),loc:x.loc,src:x.src,cat:x.cat,by:x.by,sla:x.sla}};c.n++;c.t={text:x.text.trim(),loc:x.loc,src:x.src,cat:x.cat,by:x.by,sla:x.sla};cnt.set(k,c);});
-  const L=[...cnt.values()].filter(c=>c.n>1).sort((a,b)=>b.n-a.n).slice(0,8).map(c=>c.t);
+  const L=[...cnt.values()].filter(c=>c.n>1).sort((a,b)=>b.n-a.n).slice(0,6).map(c=>c.t);
   WL_PRESET.forEach(p=>{if(L.length<6&&!L.some(t=>norm(t.text).slice(0,24)===norm(p.text).slice(0,24)&&t.loc===p.loc))L.push(p);});
   return L;}
 function wlPick(list,val,on,label,mode){const box=el('div',{class:'wl-grid'+(mode==='g3'?' wl-g3':mode==='row'?' wl-row3':''),role:'group','aria-label':label,lang:'uk'});
@@ -58,7 +58,9 @@ function wlView(){const ppl=wlStaff();const m=myStaff();const today=ymd(new Date
   const L=wlOf(sid,day);
   if(canAdd){const prev=(S.wl||[]).filter(x=>x.sid===sid&&x.date<day).reduce((a,x)=>x.date>a?x.date:a,'');
     out.push(el('section',{class:'card stack wl-quick'},el('div',{class:'row between'},el('b',{text:'Типові роботи'}),el('span',{class:'muted small',text:'дотик — і запис майже готовий'})),
-      el('div',{class:'dz-chips wl-chips'},wlTypical(sid).map(t=>el('button',{type:'button',class:'dz-chip',title:t.text,onclick:()=>wlEdit(null,Object.assign({},t,{date:day,sid}))},el('span',{class:'wl-dot',style:'--cc:'+wlCat(t.cat)[2],'aria-hidden':'true'}),el('span',{class:'wl-ct'},(t.loc&&t.loc!=='Вся локація'?t.loc+' · ':'')+t.text)))),
+      el('div',{class:'wl-tps'},wlTypical(sid).map(t=>{const c=wlCat(t.cat);const name=t.text.replace(t.loc,'').replace(/\.{2,}/g,'.').replace(/[\s.,·]+$/,'').trim()||t.text;
+        return el('button',{type:'button',class:'wl-tp',title:t.text,onclick:()=>wlEdit(null,Object.assign({},t,{date:day,sid}))},
+          el('span',{class:'wl-tpm'},el('span',{class:'wl-dot',style:'--cc:'+c[2],'aria-hidden':'true'}),el('span',{text:t.loc||'Вся локація'})),el('b',{class:'wl-ct',text:name}));})),
       el('div',{class:'wl-acts'},el('button',{class:'btn',type:'button',onclick:()=>wlEdit(null,{date:day,sid})},'+ Новий запис'),
         prev?el('button',{class:'btn ghost',type:'button',onclick:()=>wlRepeat(sid,prev,day)},'Повтор '+dm(prev)):null)));}
   out.push(el('h2',{text:(mine?'Мої записи':'Записи · '+p.name)+' · '+L.length}));
@@ -85,17 +87,20 @@ function wlEdit(x,pre){const isNew=!x;const v=Object.assign({src:'Монітор
     else write(()=>S.db.doc('wlog/'+x.id).update(Object.assign(d,{editedAt:Date.now()})),'Збережено');};
   const who=staffById(v.sid);
   openSheet(el('h2',{text:isNew?'Новий запис':'Редагувати запис'}),who?el('p',{class:'muted',style:'margin:0',text:'Облік: '+who.name}):null,
-    el('label',{for:'wlT'},'Опис роботи та результат',tx),
-    el('span',{class:'flabel',text:'Категорія'}),wlPick(WL_CAT,v.cat,k=>{v.cat=k;},'Категорія'),
-    el('span',{class:'flabel',text:'Де'}),wlPick(WL_LOC.map(l=>[l,l]),v.loc,k=>{v.loc=k;},'Де','g3'),
-    el('span',{class:'flabel',text:'Джерело'}),wlPick(WL_SRC.map(s=>[s,s]),v.src,k=>{v.src=k;if(k==='Вказівка керівництва'&&by.value===WL_REG)by.focus();},'Джерело'),
-    el('div',{class:'grid2'},el('label',{for:'wlB'},'Хто призначив',by),el('label',{for:'wlD'},'Дата',dt)),
-    el('span',{class:'flabel',text:'Пріоритет'}),wlPick(WL_SLA,v.sla,k=>{v.sla=k;},'Пріоритет','row'),
-    el('span',{class:'flabel',text:'Статус'}),wlPick(WL_ST,v.st,k=>{v.st=k;},'Статус','row'),
-    others.length?el('span',{class:'flabel',text:'Разом із (запис з’явиться і в їхньому обліку)'}):null,others.length?withBox:null,
+    el('div',{class:'wl-form'},
+      el('div',{class:'wl-col'},el('label',{for:'wlT'},'Опис роботи та результат',tx),
+        el('div',{class:'grid2'},el('label',{for:'wlD'},'Дата',dt),el('label',{for:'wlB'},'Хто призначив',by)),
+        others.length?el('span',{class:'flabel',text:'Разом із (запис з’явиться і в їхньому обліку)'}):null,others.length?withBox:null),
+      el('div',{class:'wl-col'},
+        el('span',{class:'flabel',text:'Категорія'}),wlPick(WL_CAT,v.cat,k=>{v.cat=k;},'Категорія'),
+        el('span',{class:'flabel',text:'Де'}),wlPick(WL_LOC.map(l=>[l,l]),v.loc,k=>{v.loc=k;},'Де','g3'),
+        el('span',{class:'flabel',text:'Джерело'}),wlPick(WL_SRC.map(s=>[s,s]),v.src,k=>{v.src=k;if(k==='Вказівка керівництва'&&by.value===WL_REG)by.focus();},'Джерело'),
+        el('span',{class:'flabel',text:'Пріоритет'}),wlPick(WL_SLA,v.sla,k=>{v.sla=k;},'Пріоритет','row'),
+        el('span',{class:'flabel',text:'Статус'}),wlPick(WL_ST,v.st,k=>{v.st=k;},'Статус','row'))),
     el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:save},isNew?'Записати':'Зберегти'),
       !isNew?el('button',{class:'btn danger',type:'button',onclick:()=>confirmSheet('Видалити запис «'+x.text.slice(0,60)+'»?','Видалити',()=>write(()=>S.db.doc('wlog/'+x.id).delete(),'Видалено'))},'Видалити'):null),
     el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));
+  {const sh=document.querySelector('#sheetRoot .sheet');if(sh)sh.classList.add('wl-wide');}
   if(isNew&&!v.text)setTimeout(()=>tx.focus(),250);}
 /* повторити вибрані записи з останнього заповненого дня на обраний день */
 function wlRepeat(sid,from,to){const L=wlOf(sid,from).filter(x=>x.sid===sid);if(!L.length){toast('Немає власних записів за '+dm(from));return;}const pick=new Set(L.map(x=>x.id));
