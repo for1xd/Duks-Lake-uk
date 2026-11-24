@@ -3987,9 +3987,10 @@ html body :is(.uk-tile,button.card,a.card,.pcard)::after{content:"";display:bloc
 .wl-tp:active{transform:scale(.98)}@media (hover:hover) and (pointer:fine){.wl-tp:hover{border-color:var(--accent)}}
 .wl-tpm{display:inline-flex;align-items:center;font-size:12px;font-weight:700;color:var(--muted)}
 .wl-ct{min-width:0;font-size:14px;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-@media (max-width:520px){.wl-tps{grid-template-columns:minmax(0,1fr);grid-auto-rows:auto}.wl-tp{min-height:0}}
+@media (max-width:520px){.wl-tps{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:2px 16px 4px;scroll-padding-inline:16px;scrollbar-width:none}.wl-tps::-webkit-scrollbar{display:none}.wl-tp{flex:0 0 78%;scroll-snap-align:start}}
+@media (prefers-reduced-motion:reduce){.wl-tp,.wl-p{transition:none}.wl-tp:active,.wl-p:active,button.wl-row:active{transform:none}}
 .wl-form{display:flex;flex-direction:column;gap:12px}.wl-col{display:flex;flex-direction:column;gap:12px;min-width:0}
-@media (min-width:900px){.sheet.wl-wide{max-width:980px!important;padding:28px 32px!important}.wl-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:28px;align-items:start}.wl-form textarea{min-height:160px}}
+@media (min-width:900px){.sheet.wl-wide{max-width:980px!important;padding:28px 32px!important}.sheet.wl-wide>h2{font-size:22px}.wl-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:28px;align-items:start}.wl-form>.wl-col:first-child{position:sticky;top:0}.wl-form textarea{min-height:200px}}
 .wl-acts{display:flex;gap:8px}.wl-acts .btn{flex:1 1 0;min-height:48px;white-space:nowrap}.wl-word{align-self:flex-start;margin-top:10px}
 .wl-day .iconbtn.sm{width:44px;height:44px}.wl-day .iconbtn:disabled{opacity:.35}.wl-dt input{min-height:44px!important}
 .wl-dot{display:inline-block;flex:none;width:8px;height:8px;border-radius:50%;background:var(--cc);margin-right:6px;vertical-align:1px}
@@ -10352,7 +10353,7 @@ function wlView(){const ppl=wlStaff();const m=myStaff();const today=ymd(new Date
   const L=wlOf(sid,day);
   if(canAdd){const prev=(S.wl||[]).filter(x=>x.sid===sid&&x.date<day).reduce((a,x)=>x.date>a?x.date:a,'');
     out.push(el('section',{class:'card stack wl-quick'},el('div',{class:'row between'},el('b',{text:'Типові роботи'}),el('span',{class:'muted small',text:'дотик — і запис майже готовий'})),
-      el('div',{class:'wl-tps'},wlTypical(sid).map(t=>{const c=wlCat(t.cat);const name=t.text.replace(t.loc,'').replace(/\.{2,}/g,'.').replace(/[\s.,·]+$/,'').trim()||t.text;
+      el('div',{class:'wl-tps'},wlTypical(sid).map(t=>{const c=wlCat(t.cat);let name=t.text.replace(/\.{2,}/g,'.').replace(/[\s.,·]+$/,'');if(t.loc&&name.toLowerCase().endsWith(t.loc.toLowerCase()))name=name.slice(0,-t.loc.length).replace(/[\s.,·:—-]+$/,'');name=name.trim()||t.text;
         return el('button',{type:'button',class:'wl-tp',title:t.text,onclick:()=>wlEdit(null,Object.assign({},t,{date:day,sid}))},
           el('span',{class:'wl-tpm'},el('span',{class:'wl-dot',style:'--cc:'+c[2],'aria-hidden':'true'}),el('span',{text:t.loc||'Вся локація'})),el('b',{class:'wl-ct',text:name}));})),
       el('div',{class:'wl-acts'},el('button',{class:'btn',type:'button',onclick:()=>wlEdit(null,{date:day,sid})},'+ Новий запис'),
@@ -10384,11 +10385,11 @@ function wlEdit(x,pre){const isNew=!x;const v=Object.assign({src:'Монітор
     el('div',{class:'wl-form'},
       el('div',{class:'wl-col'},el('label',{for:'wlT'},'Опис роботи та результат',tx),
         el('div',{class:'grid2'},el('label',{for:'wlD'},'Дата',dt),el('label',{for:'wlB'},'Хто призначив',by)),
+        el('span',{class:'flabel',text:'Джерело'}),wlPick(WL_SRC.map(s=>[s,s]),v.src,k=>{v.src=k;if(k==='Вказівка керівництва'&&by.value===WL_REG)by.focus();},'Джерело'),
         others.length?el('span',{class:'flabel',text:'Разом із (запис з’явиться і в їхньому обліку)'}):null,others.length?withBox:null),
       el('div',{class:'wl-col'},
         el('span',{class:'flabel',text:'Категорія'}),wlPick(WL_CAT,v.cat,k=>{v.cat=k;},'Категорія'),
         el('span',{class:'flabel',text:'Де'}),wlPick(WL_LOC.map(l=>[l,l]),v.loc,k=>{v.loc=k;},'Де','g3'),
-        el('span',{class:'flabel',text:'Джерело'}),wlPick(WL_SRC.map(s=>[s,s]),v.src,k=>{v.src=k;if(k==='Вказівка керівництва'&&by.value===WL_REG)by.focus();},'Джерело'),
         el('span',{class:'flabel',text:'Пріоритет'}),wlPick(WL_SLA,v.sla,k=>{v.sla=k;},'Пріоритет','row'),
         el('span',{class:'flabel',text:'Статус'}),wlPick(WL_ST,v.st,k=>{v.st=k;},'Статус','row'))),
     el('div',{class:'row'},el('button',{class:'btn',type:'button',style:'flex:1',onclick:save},isNew?'Записати':'Зберегти'),
