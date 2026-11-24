@@ -46,8 +46,7 @@ function pcard(x){const isMe=S.myId&&x.userId===S.myId;const on=isOnline(x.id);
       x.phone?el('button',{type:'button',class:'pc-ic','aria-label':'Скопіювати номер '+x.name,title:fmtPhone(x.phone),onclick:()=>copyText(x.phone)},svg('<path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/>')):null,
       canAdmin()?el('button',{type:'button',class:'pc-ic','aria-label':'Редагувати '+x.name,onclick:()=>editPerson(x)},svg('<path d="M4 20h4L19 9l-4-4L4 16z"/>')):null)));
   return c;}
-function permCard(){
-  const R=[
+const PERM_TXT=[
     ['dev',['Усе в застосунку','Підтверджує вхід нових людей','Призначає ролі']],
     ['director',['Підтверджує вхід і призначає ролі','Змінює графік','Ставить задачі та оцінює']],
     ['senior',['Ставить задачі та оцінює','Дивиться графік'],'Не змінює графік і колектив'],
@@ -57,6 +56,8 @@ function permCard(){
     ['gardener',['Дивиться графік','Закриває свої задачі з фото'],'Нічого не змінює в графіку'],
     ['cleaner',['Дивиться графік','Закриває свої задачі з фото'],'Нічого не змінює в графіку']
   ];
+function permCard(){
+  const R=PERM_TXT;
   const ok='<path d="m5 12 5 5 9-10"/>';const no='<path d="M6 6l12 12M18 6 6 18"/>';
   return el('div',{class:'stack'},el('h2',{text:'Хто що може'}),
     el('div',{class:'roles'},R.map(([r,can,cant])=>el('div',{class:'rolecard'},roleTag(r),
