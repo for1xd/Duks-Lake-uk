@@ -24,7 +24,7 @@ function devView(){if(!isDev())return [el('div',{class:'card empty'},el('p',{cla
   const stats=[['Колектив',S.staff.length],['Задачі',S.tasks.length],['Повідомлення (останні)',S.chat.length],['Відмітки змін',S.shifts.length],['Лічильники води',S.wMet.length],['Рядки дебіторки',dzRowsN],['Паркомісця',cnt((S.pk.main||{}).rows)],['Інвентар',cnt((S.inv.main||{}).rows)],['Записів журналу',L.length]];
   out.push(el('div',{class:'dz-grid'},
     el('div',{class:'card dz-card'},el('div',{class:'dz-ch'},el('b',{text:'Стан бази'}),el('span',{class:'muted small',text:'з того, що завантажено'})),el('div',{class:'dv-st'},stats.map(([a,b])=>el('div',{},el('span',{text:a}),el('b',{text:String(b)})))),
-      el('div',{class:'row',style:'gap:6px;flex-wrap:wrap'},el('button',{class:'btn ghost sm',type:'button',onclick:devExport},svg(IC_DL),' Експорт бази (JSON)'),el('button',{class:'btn ghost sm',type:'button',onclick:()=>location.reload()},'↻ Перезавантажити'))),
+      el('div',{class:'row',style:'gap:6px;flex-wrap:wrap'},el('button',{class:'btn ghost sm',type:'button',onclick:expSheet},svg(IC_DL),' Повний експорт (ZIP)'),el('button',{class:'btn ghost sm',type:'button',onclick:devExport},svg(IC_DL),' Експорт бази (JSON)'),el('button',{class:'btn ghost sm',type:'button',onclick:()=>location.reload()},'↻ Перезавантажити'))),
     el('div',{class:'card dz-card'},el('div',{class:'dz-ch'},el('b',{text:'Активність людей'}),el('span',{class:'muted small',text:'останній вхід'})),
       el('div',{class:'dv-ppl'},S.staff.filter(x=>x.userId).sort((a,b)=>((S.pres[b.id]||{}).at||0)-((S.pres[a.id]||{}).at||0)).map(x=>{const n=d1.filter(l=>l.sid===x.id).length;return el('div',{class:'dv-p'},avatarP(x),el('span',{class:'grow'},el('b',{text:x.name}),el('small',{class:isOnline(x.id)?'online':'muted',text:seenText(x.id)})),el('em',{text:n?n+' дій':''}));})))));
   // log
@@ -78,8 +78,3 @@ function bpmSheet(mod){mod=mod||'all';const mods=mod==='all'?['water','waste']:[
       closeSheet();await write(()=>bpmApply(P),'Перерахунок періодів ('+mods.map(name).join(', ')+'): перенесено '+P.moves.length+', потребує уточнення '+P.unclear.length);}},'Зберегти копію і застосувати ('+P.moves.length+')'):null,
     el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
 /* кінець bpm */
-async function devExport(){const data={exportedAt:new Date().toISOString(),staff:S.staff,tasks:S.tasks,chat:S.chat,shifts:S.shifts,dz:S.dz,waste:S.ws,inv:S.inv,parking:S.pk,maint:S.pm,incidents:S.sos,wObjects:S.wObj,wMeters:S.wMet,wPeriods:S.wPerD,log:S.log};
-  const dl=await claude.use('downloads').catch(()=>null);if(!dl){toast('Завантаження файлів тут недоступне');return;}
-  try{await dl.save({filename:'ducks-lake-backup-'+ymd(new Date())+'.json',data:new Blob([JSON.stringify(data,null,1)],{type:'application/json'})});devLog('Експорт бази');}catch(e){if(e&&e.code!=='declined')toast('Не вдалося зберегти файл');}}
-function devPurge(){const old=(S.log||[]).filter(x=>Date.now()-x.at>30*864e5);if(!old.length){toast('Старих записів немає');return;}
-  confirmSheet('Видалити '+old.length+' записів журналу, старших за 30 днів?','Видалити',()=>write(async()=>{for(const x of old)await S.db.doc('log/'+x.id).delete();},'Журнал очищено'));}
