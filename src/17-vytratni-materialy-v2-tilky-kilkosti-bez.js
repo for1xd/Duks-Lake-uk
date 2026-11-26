@@ -45,9 +45,12 @@ function consInvInfo(){const inv=consOps().find(o=>o.kind==='inventory'&&!o.stor
 /* toast із посиланням */
 function consToast(msg,opId){const r=document.getElementById('toastRoot');r.replaceChildren(el('div',{class:'toast cs-toast',role:'status'},el('span',{text:msg}),opId?el('button',{type:'button',onclick:()=>{r.replaceChildren();consOpSheet(opId);}},'Відкрити запис'):null));clearTimeout(toast.t);toast.t=setTimeout(()=>r.replaceChildren(),7000);}
 /* запис операції: одна транзакційна послідовність — позиції, потім операція */
-async function consCommit(op,items){const me=consMe();const now=Date.now();const lines=[];const upd={};
-  for(const l of op.lines){const it=items&&items[l.itemId]||consItem(l.itemId);if(!it)continue;const base=upd[it.id]!=null?upd[it.id]:(+it.qty||0);let after=l.set!=null?cr(l.set):cr(base+l.delta);
-    if(after<0)throw Object.assign(new Error('neg'),{item:it,base});const delta=cr(after-base);if(!delta&&l.set==null&&op.kind!=='inventory')continue;upd[it.id]=after;lines.push({itemId:it.id,name:it.name,unit:it.unit,cat:it.cat,delta,before:base,after});}
+async function consCommit(op,items){const me=consMe();const now=Date.now();const lines=[];const upd={};const fresh={};
+  // shortcut: свіжі залишки читаємо перед записом, тож одночасні списання майже не перезаписують одне одного; лишається вікно в частки секунди, справжня транзакція — після переїзду на сервер
+  const gone=[];await Promise.all([...new Set(op.lines.map(l=>l.itemId))].map(id=>S.db.doc('consItems/'+id).get().then(d=>{if(d.exists)fresh[id]=+(d.data()||{}).qty||0;else gone.push(id);}).catch(()=>{})));
+  if(gone.length)throw Object.assign(new Error('gone'),{ids:gone});
+  for(const l of op.lines){const it=items&&items[l.itemId]||consItem(l.itemId);if(!it)continue;const base=upd[it.id]!=null?upd[it.id]:(fresh[it.id]!=null?fresh[it.id]:(+it.qty||0));let after=l.set!=null?cr(l.set):cr(base+l.delta);
+    if(after<0)throw Object.assign(new Error('neg'),{item:it,base});const delta=cr(after-base);if(!delta&&(l.set==null||op.kind==='adjust')&&op.kind!=='inventory')continue;upd[it.id]=after;lines.push({itemId:it.id,name:it.name,unit:it.unit,cat:it.cat,delta,before:base,after});}
   if(!lines.length)return null;const doc={...op,lines,at:now,...me};delete doc.items;
   const ref=await S.db.collection('consOps').add(doc);
   for(const [id,q] of Object.entries(upd))await S.db.doc('consItems/'+id).update({qty:q,lastOpAt:now,lastOpDate:op.date||ymd(new Date())});

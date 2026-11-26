@@ -72,7 +72,7 @@ async function boot(){
 function watchWeek(){if(unWeek)unWeek();S.week=null;S.weekExists=false;S.weekLoaded=false;
   unWeek=S.db.doc('weeks/'+S.weekStart).onSnapshot(d=>{S.weekExists=d.exists;S.week=d.exists?d.data():null;if(S.week&&S.scQ&&S.scQWs===S.weekStart){S.week.days=S.week.days||{};Object.assign(S.week.days,S.scQ);}S.weekLoaded=true;dlsCheck();render();},e=>fail(e));}
 function fail(e){if(e&&e.code==='revoked')return;console.warn(e);if(window.DLS&&DLS.active&&!S.loaded.staff){DLS.fail('Немає зв’язку з базою','Перевірте інтернет і спробуйте ще раз. Якщо не допомагає, зверніться до Віталія Головньова.');return;}toast('Немає зв’язку з базою. Спробуйте оновити сторінку.');}
-async function write(fn,okMsg){try{await fn();if(okMsg){toast(okMsg);devLog(okMsg);}}catch(e){logErr('Запис: '+((e&&(e.code||e.message))||e),okMsg||'');
+async function write(fn,okMsg){try{await fn();if(okMsg){toast(okMsg);devLog(okMsg);}}catch(e){if(e&&e.message==='neg'&&e.item){toast('На складі лише '+cq(e.base)+' '+(e.item.unit||'')+' «'+e.item.name+'». Оновіть кількість.');return;}if(e&&e.message==='gone'){toast('Цю позицію щойно видалили зі складу.');return;}logErr('Запис: '+((e&&(e.code||e.message))||e),okMsg||'');
   if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,600+Math.random()*600));try{await fn();if(okMsg)toast(okMsg);return;}catch(e2){}}
   console.warn('write failed',e);
   toast(e&&e.code==='quota_exceeded'?'База заповнена: видаліть старі задачі.':(e&&(e.code==='invalid_argument'||e.code==='not_granted')?'У вас доступ лише для перегляду. Попросіть власника змінити ваш доступ.':'Не вдалося зберегти. Спробуйте ще раз.'));}}

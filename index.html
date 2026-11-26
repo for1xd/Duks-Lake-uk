@@ -1504,7 +1504,7 @@ input[type="date"]::-webkit-date-and-time-value,input[type="time"]::-webkit-date
 .dt-time{width:260px}
 .dt-wheel{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;height:190px}
 .dt-band{position:absolute;left:4px;right:4px;top:50%;height:38px;transform:translateY(-50%);border-radius:12px;background:var(--mp-hi);pointer-events:none}
-.dt-col{position:relative;width:70px;height:190px;overflow-y:scroll;scrollbar-width:none;scroll-snap-type:y mandatory;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
+.dt-col{position:relative;width:70px;height:190px;overflow-y:scroll;overscroll-behavior:contain;scrollbar-width:none;scroll-snap-type:y mandatory;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
 .dt-col::-webkit-scrollbar{display:none}
 .dt-pad{height:76px}
 .dt-it{height:38px;display:flex;align-items:center;justify-content:center;font-size:22px;font-variant-numeric:tabular-nums;scroll-snap-align:center;cursor:pointer;transition:opacity .1s}
@@ -4424,7 +4424,7 @@ async function boot(){
 function watchWeek(){if(unWeek)unWeek();S.week=null;S.weekExists=false;S.weekLoaded=false;
   unWeek=S.db.doc('weeks/'+S.weekStart).onSnapshot(d=>{S.weekExists=d.exists;S.week=d.exists?d.data():null;if(S.week&&S.scQ&&S.scQWs===S.weekStart){S.week.days=S.week.days||{};Object.assign(S.week.days,S.scQ);}S.weekLoaded=true;dlsCheck();render();},e=>fail(e));}
 function fail(e){if(e&&e.code==='revoked')return;console.warn(e);if(window.DLS&&DLS.active&&!S.loaded.staff){DLS.fail('Немає зв’язку з базою','Перевірте інтернет і спробуйте ще раз. Якщо не допомагає, зверніться до Віталія Головньова.');return;}toast('Немає зв’язку з базою. Спробуйте оновити сторінку.');}
-async function write(fn,okMsg){try{await fn();if(okMsg){toast(okMsg);devLog(okMsg);}}catch(e){logErr('Запис: '+((e&&(e.code||e.message))||e),okMsg||'');
+async function write(fn,okMsg){try{await fn();if(okMsg){toast(okMsg);devLog(okMsg);}}catch(e){if(e&&e.message==='neg'&&e.item){toast('На складі лише '+cq(e.base)+' '+(e.item.unit||'')+' «'+e.item.name+'». Оновіть кількість.');return;}if(e&&e.message==='gone'){toast('Цю позицію щойно видалили зі складу.');return;}logErr('Запис: '+((e&&(e.code||e.message))||e),okMsg||'');
   if(e&&e.code==='unavailable'){await new Promise(r=>setTimeout(r,600+Math.random()*600));try{await fn();if(okMsg)toast(okMsg);return;}catch(e2){}}
   console.warn('write failed',e);
   toast(e&&e.code==='quota_exceeded'?'База заповнена: видаліть старі задачі.':(e&&(e.code==='invalid_argument'||e.code==='not_granted')?'У вас доступ лише для перегляду. Попросіть власника змінити ваш доступ.':'Не вдалося зберегти. Спробуйте ще раз.'));}}
@@ -4734,7 +4734,10 @@ function liveH(since){return el('span',{'data-since':String(since),text:fmtH((Da
 setInterval(()=>document.querySelectorAll('[data-since]').forEach(e=>{e.textContent=fmtH((Date.now()-(+e.dataset.since))/3600e3);}),20000);
 function shiftsIn(sid,from,to){return S.shifts.filter(x=>x.staffId===sid&&x.date>=from&&x.date<=to).sort((a,b)=>a.startAt-b.startAt);}
 function pickPhoto(){return new Promise(res=>{const i=el('input',{type:'file',accept:'image/*',capture:'environment',style:'position:fixed;left:-999px'});i.addEventListener('change',()=>{res(i.files&&i.files[0]||null);i.remove();});document.body.append(i);i.click();});}
-function thumbBtn(ph,label){return ph?el('button',{type:'button',class:'sh-th','aria-label':label,onclick:e=>{e.stopPropagation();viewPhoto(ph.id);}},el('img',{src:ph.thumb,alt:''})):null;}
+/* мініатюра зміни: старі відмітки тримають її в собі, нові — окремим документом photos_th/<id>, який читаємо лише коли показуємо */
+const _thC=new Map();function shThumb(id){if(!S.db)return Promise.resolve('');if(!_thC.has(id))_thC.set(id,S.db.doc('photos_th/'+id).get().then(d=>d.exists?(d.data()||{}).t||'':'').catch(()=>{_thC.delete(id);return '';}));return _thC.get(id);}
+function thumbBtn(ph,label){if(!ph)return null;const img=el('img',{alt:''});if(ph.thumb)img.src=ph.thumb;const b=el('button',{type:'button',class:'sh-th','aria-label':label,onclick:e=>{e.stopPropagation();viewPhoto(ph.id);}},img);
+  if(!ph.thumb)shThumb(ph.id).then(t=>{if(t)img.src=t;else img.replaceWith(svg(I_CAM));});return b;}
 function shiftSheet(kind){const m=myStaff();if(!m)return;let img=null;
   const prev=el('button',{type:'button',class:'sh-prev'},svg(I_CAM),el('span',{text:'Натисніть, щоб зробити фото'}));
   const ok=el('button',{class:'btn',type:'button',disabled:true},kind==='start'?'Почати зміну':'Завершити зміну');
@@ -4742,7 +4745,7 @@ function shiftSheet(kind){const m=myStaff();if(!m)return;let img=null;
     prev.classList.add('has');prev.replaceChildren(el('img',{src:shrink(img,700,0.72),alt:'Фото з об’єкта'}),el('span',{class:'sh-re',text:'Перезняти'}));ok.disabled=false;};
   prev.onclick=shoot;
   ok.onclick=async()=>{if(!img)return;ok.disabled=true;ok.textContent='Збереження…';
-    await write(async()=>{const now=Date.now();const r=await S.db.collection('photos').add({taskId:null,shift:true,img:shrinkFit(img),by:S.myId,at:now});const ph={id:r.id,thumb:shrink(img,240,0.6)};
+    await write(async()=>{const now=Date.now();const r=await S.db.collection('photos').add({taskId:null,shift:true,img:shrinkFit(img),by:S.myId,at:now});const ph={id:r.id};const th=shrink(img,240,0.6);await S.db.doc('photos_th/'+r.id).set({t:th,at:now}).catch(()=>{});_thC.set(r.id,Promise.resolve(th));
       if(kind==='start')await S.db.collection('shifts').add({staffId:m.id,by:S.myId,date:ymd(new Date()),startAt:now,startPhoto:ph,endAt:null,endPhoto:null});
       else{const o=myOpenShift(m);if(o)await S.db.doc('shifts/'+o.id).update({endAt:now,endPhoto:ph});}},kind==='start'?'Зміну розпочато. Гарної роботи!':'Зміну завершено. Дякуємо!');
     closeSheet();};
@@ -4778,7 +4781,7 @@ function shiftEdit(x,preset){const isNew=!x;const plan=canPlan();preset=preset||
     needRsn?el('label',{for:'shRsn'},'Причина ручної відмітки (обов’язково)',rsn):null,
     el('div',{class:'row',style:'gap:10px;flex-wrap:nowrap'},el('label',{for:'shSt',style:'flex:1'},'Початок',st),el('label',{for:'shEn',style:'flex:1'},'Кінець',en)),
     sum,
-    el('div',{class:'row'},save,!isNew&&(plan||x.by===S.myId)?el('button',{class:'btn danger',type:'button',onclick:()=>confirmSheet('Видалити цю відмітку зміни?','Видалити',()=>write(async()=>{await S.db.doc('shifts/'+x.id).delete();for(const ph of [x.startPhoto,x.endPhoto])if(ph)await S.db.doc('photos/'+ph.id).delete().catch(()=>{});},'Відмітку видалено'))},'Видалити'):null),
+    el('div',{class:'row'},save,!isNew&&(plan||x.by===S.myId)?el('button',{class:'btn danger',type:'button',onclick:()=>confirmSheet('Видалити цю відмітку зміни?','Видалити',()=>write(async()=>{await S.db.doc('shifts/'+x.id).delete();for(const ph of [x.startPhoto,x.endPhoto])if(ph){await S.db.doc('photos/'+ph.id).delete().catch(()=>{});await S.db.doc('photos_th/'+ph.id).delete().catch(()=>{});}},'Відмітку видалено'))},'Видалити'):null),
     el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
 function staleCard(x){return el('div',{class:'card sh-warn'},el('span',{class:'sh-wi',text:'!'}),el('div',{class:'grow'},el('b',{text:'Ви не завершили зміну '+dm(x.date)}),el('span',{class:'muted small',text:'Почали о '+hm(x.startAt)+'. Вкажіть, коли закінчили.'})),el('button',{class:'btn sm',type:'button',onclick:()=>shiftEdit(x)},'Вказати'));}
 function staleShift(m){return m?S.shifts.find(x=>x.staffId===m.id&&!x.endAt&&Date.now()-x.startAt>=20*3600e3):null;}
@@ -6291,9 +6294,12 @@ function consInvInfo(){const inv=consOps().find(o=>o.kind==='inventory'&&!o.stor
 /* toast із посиланням */
 function consToast(msg,opId){const r=document.getElementById('toastRoot');r.replaceChildren(el('div',{class:'toast cs-toast',role:'status'},el('span',{text:msg}),opId?el('button',{type:'button',onclick:()=>{r.replaceChildren();consOpSheet(opId);}},'Відкрити запис'):null));clearTimeout(toast.t);toast.t=setTimeout(()=>r.replaceChildren(),7000);}
 /* запис операції: одна транзакційна послідовність — позиції, потім операція */
-async function consCommit(op,items){const me=consMe();const now=Date.now();const lines=[];const upd={};
-  for(const l of op.lines){const it=items&&items[l.itemId]||consItem(l.itemId);if(!it)continue;const base=upd[it.id]!=null?upd[it.id]:(+it.qty||0);let after=l.set!=null?cr(l.set):cr(base+l.delta);
-    if(after<0)throw Object.assign(new Error('neg'),{item:it,base});const delta=cr(after-base);if(!delta&&l.set==null&&op.kind!=='inventory')continue;upd[it.id]=after;lines.push({itemId:it.id,name:it.name,unit:it.unit,cat:it.cat,delta,before:base,after});}
+async function consCommit(op,items){const me=consMe();const now=Date.now();const lines=[];const upd={};const fresh={};
+  // shortcut: свіжі залишки читаємо перед записом, тож одночасні списання майже не перезаписують одне одного; лишається вікно в частки секунди, справжня транзакція — після переїзду на сервер
+  const gone=[];await Promise.all([...new Set(op.lines.map(l=>l.itemId))].map(id=>S.db.doc('consItems/'+id).get().then(d=>{if(d.exists)fresh[id]=+(d.data()||{}).qty||0;else gone.push(id);}).catch(()=>{})));
+  if(gone.length)throw Object.assign(new Error('gone'),{ids:gone});
+  for(const l of op.lines){const it=items&&items[l.itemId]||consItem(l.itemId);if(!it)continue;const base=upd[it.id]!=null?upd[it.id]:(fresh[it.id]!=null?fresh[it.id]:(+it.qty||0));let after=l.set!=null?cr(l.set):cr(base+l.delta);
+    if(after<0)throw Object.assign(new Error('neg'),{item:it,base});const delta=cr(after-base);if(!delta&&(l.set==null||op.kind==='adjust')&&op.kind!=='inventory')continue;upd[it.id]=after;lines.push({itemId:it.id,name:it.name,unit:it.unit,cat:it.cat,delta,before:base,after});}
   if(!lines.length)return null;const doc={...op,lines,at:now,...me};delete doc.items;
   const ref=await S.db.collection('consOps').add(doc);
   for(const [id,q] of Object.entries(upd))await S.db.doc('consItems/'+id).update({qty:q,lastOpAt:now,lastOpDate:op.date||ymd(new Date())});
@@ -7545,7 +7551,7 @@ function bpmSheet(mod){mod=mod||'all';const mods=mod==='all'?['water','waste']:[
     el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
 /* кінець bpm */
 /* ---------- Повний експорт (ZIP): усі розділи бази з ID і зв'язками, оригінали файлів, зведення для звірки ---------- */
-const EXP_COLS=[['staff','Працівники: користувачі, ролі'],['tasks','Задачі'],['chat','Повідомлення чатів'],['photos','Фото до задач, змін і чату'],['rooms','Чати: групи та налаштування'],['reads','Чати: позначки прочитання'],['tickets','Звернення в підтримку з відповідями'],['requests','Запити'],['shifts','Відмітки змін'],['weeks','Графіки по тижнях'],['wlog','Облік роботи за день'],['wl_rem','Облік роботи: надіслані нагадування'],['incidents','Екстрені ситуації'],['maint','Планове ТО'],['inspections','Обходи будівель'],['inspection_photos','Обходи: фото'],['inspection_exports','Обходи: сформовані звіти'],['buildings_assignments','Обходи: призначення будівель'],['cl_objects','Клінінг: об’єкти'],['cl_locs','Клінінг: локації'],['cl_cleaners','Клінінг: прибиральники'],['cl_exc','Клінінг: винятки графіка'],['cl_revisions','Клінінг: ревізії'],['cl_rev_photos','Клінінг: фото ревізій'],['docs','Документи УК'],['dz','Дебіторка'],['dzSnap','Дебіторка: знімки'],['waste','Сміття'],['parking','Паркінг'],['inv','Інвентар'],['consItems','Розхідники: позиції'],['consOps','Розхідники: операції'],['consHist','Розхідники: історія'],['wObjects','Вода: об’єкти'],['wMeters','Вода: лічильники'],['wPeriods','Вода: періоди'],['map_zones','Карта: зони'],['map_zones_hist','Карта: історія змін зон'],['log','Журнал дій (історія змін)'],['settings','Налаштування'],['resolve','Службове'],['presence','Службове: хто в мережі'],['games','Ігри'],['poker','Ігри: покер'],['wallets','Ігри: гаманці']];
+const EXP_COLS=[['staff','Працівники: користувачі, ролі'],['tasks','Задачі'],['chat','Повідомлення чатів'],['photos','Фото до задач, змін і чату'],['photos_th','Мініатюри фото змін'],['rooms','Чати: групи та налаштування'],['reads','Чати: позначки прочитання'],['tickets','Звернення в підтримку з відповідями'],['requests','Запити'],['shifts','Відмітки змін'],['weeks','Графіки по тижнях'],['wlog','Облік роботи за день'],['wl_rem','Облік роботи: надіслані нагадування'],['incidents','Екстрені ситуації'],['maint','Планове ТО'],['inspections','Обходи будівель'],['inspection_photos','Обходи: фото'],['inspection_exports','Обходи: сформовані звіти'],['buildings_assignments','Обходи: призначення будівель'],['cl_objects','Клінінг: об’єкти'],['cl_locs','Клінінг: локації'],['cl_cleaners','Клінінг: прибиральники'],['cl_exc','Клінінг: винятки графіка'],['cl_revisions','Клінінг: ревізії'],['cl_rev_photos','Клінінг: фото ревізій'],['docs','Документи УК'],['dz','Дебіторка'],['dzSnap','Дебіторка: знімки'],['waste','Сміття'],['parking','Паркінг'],['inv','Інвентар'],['consItems','Розхідники: позиції'],['consOps','Розхідники: операції'],['consHist','Розхідники: історія'],['wObjects','Вода: об’єкти'],['wMeters','Вода: лічильники'],['wPeriods','Вода: періоди'],['map_zones','Карта: зони'],['map_zones_hist','Карта: історія змін зон'],['log','Журнал дій (історія змін)'],['settings','Налаштування'],['resolve','Службове'],['presence','Службове: хто в мережі'],['games','Ігри'],['poker','Ігри: покер'],['wallets','Ігри: гаманці']];
 let _zipP=null;function loadZip(){if(window.JSZip)return Promise.resolve(window.JSZip);if(!_zipP){const ld=src=>new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src;sc.onload=()=>window.JSZip?res(window.JSZip):rej(new Error('zip'));sc.onerror=()=>{sc.remove();rej(new Error(src));};document.head.append(sc);});
   _zipP=ld('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js').catch(()=>ld('https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js')).catch(e=>{_zipP=null;throw e;});}return _zipP;}
 function expSheet(){let dm=true,busy=false;const st=el('p',{class:'muted small',role:'status','aria-live':'polite',style:'margin:0;min-height:1.4em'});
@@ -11999,7 +12005,7 @@ function sheetDrag(sh,bg){if(!IS_TOUCH)return;let y0=null,dy=0,act=false,raf=0;
     else{sh.style.transition='transform .35s cubic-bezier(.2,1,.3,1)';sh.style.transform='';bg.style.transition='background-color .3s';bg.style.backgroundColor='';}};
   sh.addEventListener('touchend',end);sh.addEventListener('touchcancel',end);}
 document.addEventListener('wheel',e=>{const sc=document.getElementById('scroller');if(!sc||e.ctrlKey)return;const t=e.target;if(!t||!t.closest)return;
-  if(sc.contains(t)||t.closest('.sheet,.sheet-bg,.fx-pop,.pk-3d,canvas,nav.tabs .in,.chataside,#onlPop,.mpop'))return;sc.scrollBy({top:e.deltaY,left:0});},{passive:true});
+  if(sc.contains(t)||t.closest('.sheet,.sheet-bg,.fx-pop,.pk-3d,canvas,nav.tabs .in,.chataside,#onlPop,.mpop,.dt-root,.menu,.menu-bg,.fl-root,.phx,.mpop-root,.chip-pop,.att-root,.cl-pop,textarea'))return;sc.scrollBy({top:e.deltaY,left:0});},{passive:true});
 function fancySel(root){(root||document).querySelectorAll('select:not([data-fx])').forEach(sel=>{if(sel.closest('.pk-3d'))return;sel.dataset.fx='1';
   const btn=el('button',{type:'button',class:'fx-btn'+(sel.classList.contains('dz-bsel')?' sm':'')+(sel.classList.contains('on')?' on':''),'aria-haspopup':'listbox'});
   const lab=()=>{const o=sel.options[sel.selectedIndex];btn.replaceChildren(el('span',{text:o?o.text:''}),svg('<path d="m6 9 6 6 6-6"/>'));};lab();

@@ -10,7 +10,10 @@ function liveH(since){return el('span',{'data-since':String(since),text:fmtH((Da
 setInterval(()=>document.querySelectorAll('[data-since]').forEach(e=>{e.textContent=fmtH((Date.now()-(+e.dataset.since))/3600e3);}),20000);
 function shiftsIn(sid,from,to){return S.shifts.filter(x=>x.staffId===sid&&x.date>=from&&x.date<=to).sort((a,b)=>a.startAt-b.startAt);}
 function pickPhoto(){return new Promise(res=>{const i=el('input',{type:'file',accept:'image/*',capture:'environment',style:'position:fixed;left:-999px'});i.addEventListener('change',()=>{res(i.files&&i.files[0]||null);i.remove();});document.body.append(i);i.click();});}
-function thumbBtn(ph,label){return ph?el('button',{type:'button',class:'sh-th','aria-label':label,onclick:e=>{e.stopPropagation();viewPhoto(ph.id);}},el('img',{src:ph.thumb,alt:''})):null;}
+/* мініатюра зміни: старі відмітки тримають її в собі, нові — окремим документом photos_th/<id>, який читаємо лише коли показуємо */
+const _thC=new Map();function shThumb(id){if(!S.db)return Promise.resolve('');if(!_thC.has(id))_thC.set(id,S.db.doc('photos_th/'+id).get().then(d=>d.exists?(d.data()||{}).t||'':'').catch(()=>{_thC.delete(id);return '';}));return _thC.get(id);}
+function thumbBtn(ph,label){if(!ph)return null;const img=el('img',{alt:''});if(ph.thumb)img.src=ph.thumb;const b=el('button',{type:'button',class:'sh-th','aria-label':label,onclick:e=>{e.stopPropagation();viewPhoto(ph.id);}},img);
+  if(!ph.thumb)shThumb(ph.id).then(t=>{if(t)img.src=t;else img.replaceWith(svg(I_CAM));});return b;}
 function shiftSheet(kind){const m=myStaff();if(!m)return;let img=null;
   const prev=el('button',{type:'button',class:'sh-prev'},svg(I_CAM),el('span',{text:'Натисніть, щоб зробити фото'}));
   const ok=el('button',{class:'btn',type:'button',disabled:true},kind==='start'?'Почати зміну':'Завершити зміну');
@@ -18,7 +21,7 @@ function shiftSheet(kind){const m=myStaff();if(!m)return;let img=null;
     prev.classList.add('has');prev.replaceChildren(el('img',{src:shrink(img,700,0.72),alt:'Фото з об’єкта'}),el('span',{class:'sh-re',text:'Перезняти'}));ok.disabled=false;};
   prev.onclick=shoot;
   ok.onclick=async()=>{if(!img)return;ok.disabled=true;ok.textContent='Збереження…';
-    await write(async()=>{const now=Date.now();const r=await S.db.collection('photos').add({taskId:null,shift:true,img:shrinkFit(img),by:S.myId,at:now});const ph={id:r.id,thumb:shrink(img,240,0.6)};
+    await write(async()=>{const now=Date.now();const r=await S.db.collection('photos').add({taskId:null,shift:true,img:shrinkFit(img),by:S.myId,at:now});const ph={id:r.id};const th=shrink(img,240,0.6);await S.db.doc('photos_th/'+r.id).set({t:th,at:now}).catch(()=>{});_thC.set(r.id,Promise.resolve(th));
       if(kind==='start')await S.db.collection('shifts').add({staffId:m.id,by:S.myId,date:ymd(new Date()),startAt:now,startPhoto:ph,endAt:null,endPhoto:null});
       else{const o=myOpenShift(m);if(o)await S.db.doc('shifts/'+o.id).update({endAt:now,endPhoto:ph});}},kind==='start'?'Зміну розпочато. Гарної роботи!':'Зміну завершено. Дякуємо!');
     closeSheet();};
@@ -54,7 +57,7 @@ function shiftEdit(x,preset){const isNew=!x;const plan=canPlan();preset=preset||
     needRsn?el('label',{for:'shRsn'},'Причина ручної відмітки (обов’язково)',rsn):null,
     el('div',{class:'row',style:'gap:10px;flex-wrap:nowrap'},el('label',{for:'shSt',style:'flex:1'},'Початок',st),el('label',{for:'shEn',style:'flex:1'},'Кінець',en)),
     sum,
-    el('div',{class:'row'},save,!isNew&&(plan||x.by===S.myId)?el('button',{class:'btn danger',type:'button',onclick:()=>confirmSheet('Видалити цю відмітку зміни?','Видалити',()=>write(async()=>{await S.db.doc('shifts/'+x.id).delete();for(const ph of [x.startPhoto,x.endPhoto])if(ph)await S.db.doc('photos/'+ph.id).delete().catch(()=>{});},'Відмітку видалено'))},'Видалити'):null),
+    el('div',{class:'row'},save,!isNew&&(plan||x.by===S.myId)?el('button',{class:'btn danger',type:'button',onclick:()=>confirmSheet('Видалити цю відмітку зміни?','Видалити',()=>write(async()=>{await S.db.doc('shifts/'+x.id).delete();for(const ph of [x.startPhoto,x.endPhoto])if(ph){await S.db.doc('photos/'+ph.id).delete().catch(()=>{});await S.db.doc('photos_th/'+ph.id).delete().catch(()=>{});}},'Відмітку видалено'))},'Видалити'):null),
     el('button',{class:'btn ghost',type:'button',onclick:closeSheet},'Скасувати'));}
 function staleCard(x){return el('div',{class:'card sh-warn'},el('span',{class:'sh-wi',text:'!'}),el('div',{class:'grow'},el('b',{text:'Ви не завершили зміну '+dm(x.date)}),el('span',{class:'muted small',text:'Почали о '+hm(x.startAt)+'. Вкажіть, коли закінчили.'})),el('button',{class:'btn sm',type:'button',onclick:()=>shiftEdit(x)},'Вказати'));}
 function staleShift(m){return m?S.shifts.find(x=>x.staffId===m.id&&!x.endAt&&Date.now()-x.startAt>=20*3600e3):null;}
